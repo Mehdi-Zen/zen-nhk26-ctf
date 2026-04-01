@@ -1,0 +1,34 @@
+[mysqld]
+# Configuration de base MariaDB
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+wait_timeout=28800
+log-warnings=0
+
+# Activation de Galera
+wsrep_on=ON
+
+# Chemin de la bibliothèque Galera (déjà incluse dans l'image Docker)
+wsrep_provider=/usr/lib/galera/libgalera_smm.so
+
+# Nom du cluster
+wsrep_cluster_name="ctfd_cluster"
+
+# Adresses des nœuds du cluster
+wsrep_cluster_address="gcomm://172.20.0.10,172.20.0.11,172.20.0.12"
+
+# Méthode de transfert d'état (SST)
+wsrep_sst_method=rsync
+
+# Configuration InnoDB pour Galera
+binlog_format=ROW
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+innodb_flush_log_at_trx_commit=0
+innodb_buffer_pool_size=512M
+
+# Réseau
+bind-address=0.0.0.0
+
+# Performance
+wsrep_slave_threads=4

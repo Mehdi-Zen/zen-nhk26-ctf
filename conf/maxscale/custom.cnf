@@ -1,0 +1,48 @@
+# Serveur db1
+[db1]
+type=server
+address=172.20.0.10
+port=3306
+protocol=MariaDBBackend
+
+# Serveur db2
+[db2]
+type=server
+address=172.20.0.11
+port=3306
+protocol=MariaDBBackend
+
+# Serveur db3
+[db3]
+type=server
+address=172.20.0.12
+port=3306
+protocol=MariaDBBackend
+
+# Monitor Galera
+[Galera-Monitor]
+type=monitor
+module=galeramon
+servers=db1,db2,db3
+user=maxscale
+password=maxscale_password
+monitor_interval=2000ms
+use_priority=true
+
+# Service Read/Write Split
+[RW-Split-Service]
+type=service
+router=readwritesplit
+servers=db1,db2,db3
+user=maxscale
+password=maxscale_password
+master_reconnection=true
+master_failure_mode=fail_on_write
+
+# Listener
+[RW-Split-Listener]
+type=listener
+service=RW-Split-Service
+protocol=MariaDBClient
+port=4006
+address=0.0.0.0

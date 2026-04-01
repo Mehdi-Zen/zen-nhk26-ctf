@@ -40,7 +40,7 @@ services:
     image: nginx:stable
     restart: always
     volumes:
-      - ./_archive/conf/nginx/http.conf:/etc/nginx/nginx.conf
+      - ./conf/nginx/http.conf:/etc/nginx/nginx.conf
     ports:
       - "80:80"
     depends_on:
@@ -69,7 +69,7 @@ services:
       - MARIADB_DATABASE=ctfd
     volumes:
       - .data/mysql1:/var/lib/mysql
-      - ./_archive/conf/galera/galera.cnf:/etc/mysql/mariadb.conf.d/60-galera.cnf
+      - ./conf/galera/galera.cnf:/etc/mysql/mariadb.conf.d/60-galera.cnf
       - ./scripts/init-maxscale-user.sql:/docker-entrypoint-initdb.d/init-maxscale-user.sql:ro
       - ./scripts/db1-entrypoint.sh:/scripts/db1-entrypoint.sh:ro
     networks:
@@ -84,7 +84,7 @@ services:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
       - .data/mysql2:/var/lib/mysql
-      - ./_archive/conf/galera/galera.cnf:/etc/mysql/mariadb.conf.d/60-galera.cnf
+      - ./conf/galera/galera.cnf:/etc/mysql/mariadb.conf.d/60-galera.cnf
     command:
       - --wsrep-node-address=db2
       - --wsrep-node-name=node2
@@ -102,7 +102,7 @@ services:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
       - .data/mysql3:/var/lib/mysql
-      - ./_archive/conf/galera/galera.cnf:/etc/mysql/mariadb.conf.d/60-galera.cnf
+      - ./conf/galera/galera.cnf:/etc/mysql/mariadb.conf.d/60-galera.cnf
     command:
       - --wsrep-node-address=db3
       - --wsrep-node-name=node3
@@ -120,7 +120,7 @@ services:
     hostname: mxs
     restart: always
     volumes:
-      - ./_archive/conf/maxscale/custom.cnf:/etc/maxscale.cnf.d/custom.cnf
+      - ./conf/maxscale/custom.cnf:/etc/maxscale.cnf.d/custom.cnf
     ports:
       - "8989:8989"
     depends_on:
