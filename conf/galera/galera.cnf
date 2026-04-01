@@ -18,7 +18,7 @@ wsrep_cluster_name="ctfd_cluster"
 wsrep_cluster_address="gcomm://172.20.0.10,172.20.0.11,172.20.0.12"
 
 # Méthode de transfert d'état (SST)
-wsrep_sst_method=rsync
+wsrep_sst_method=mariabackup
 
 # Configuration InnoDB pour Galera
 binlog_format=ROW

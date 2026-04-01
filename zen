@@ -47,9 +47,20 @@ get_token() {
   curl -s -c "$COOKIE_JAR" -b "$COOKIE_JAR" "$CTFD_URL/login" > /dev/null
   LOGIN_NONCE=$(curl -s -b "$COOKIE_JAR" "$CTFD_URL/login" | grep -oP 'name="nonce".*?value="\K[^"]+')
 
+  # Lire les credentials depuis .env si disponibles
+  if [ -f .env ]; then
+    ADMIN_USER="${ADMIN_USER:-$(grep -oP '^ADMIN_USER=\K.*' .env 2>/dev/null || echo '')}"
+    ADMIN_PASS="${ADMIN_PASS:-$(grep -oP '^ADMIN_PASS=\K.*' .env 2>/dev/null || echo '')}"
+  fi
+  ADMIN_USER="${ADMIN_USER:-admin}"
+  if [ -z "${ADMIN_PASS:-}" ]; then
+    read -s -p "  Mot de passe admin CTFd: " ADMIN_PASS
+    echo ""
+  fi
+
   curl -s -c "$COOKIE_JAR" -b "$COOKIE_JAR" -X POST "$CTFD_URL/login" \
     -H "Content-Type: application/x-www-form-urlencoded" \
-    -d "name=admin&password=admin&nonce=$LOGIN_NONCE&_submit=Submit" -L > /dev/null
+    -d "name=$ADMIN_USER&password=$ADMIN_PASS&nonce=$LOGIN_NONCE&_submit=Submit" -L > /dev/null
 
   CSRF_NONCE=$(curl -s -b "$COOKIE_JAR" "$CTFD_URL/settings" | grep -oP 'csrfNonce.*?"\K[^"]+')
 
@@ -130,6 +141,11 @@ cmd_setup() {
       -d "ctf_name=$CTF_NAME&ctf_description=Capture+The+Flag&user_mode=$CTF_MODE&name=$ADMIN_NAME&email=$ADMIN_EMAIL&password=$ADMIN_PASS&nonce=$NONCE&ctf_theme=cybernoir&_submit=Submit" \
       -L > /dev/null
     rm -f "$COOKIE_JAR"
+
+    # Sauvegarder les credentials admin dans .env pour deploy/cleanup
+    sed -i '/^ADMIN_USER=/d; /^ADMIN_PASS=/d' .env
+    echo "ADMIN_USER=$ADMIN_NAME" >> .env
+    echo "ADMIN_PASS=$ADMIN_PASS" >> .env
     ok "CTFd configure ($ADMIN_NAME / ***)"
   else
     ok "CTFd deja configure"

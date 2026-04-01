@@ -57,11 +57,11 @@ services:
     restart: always
     entrypoint: ["/scripts/db1-entrypoint.sh"]
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: ["CMD-SHELL", "mysql -u root -p$$MARIADB_ROOT_PASSWORD -e 'SHOW STATUS LIKE \"wsrep_ready\"' | grep -q ON"]
       interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 60s
+      retries: 6
+      start_period: 90s
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - MARIADB_USER=ctfd
@@ -80,6 +80,12 @@ services:
     image: mariadb:10.11
     hostname: db2
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "mysql -u root -p$$MARIADB_ROOT_PASSWORD -e 'SHOW STATUS LIKE \"wsrep_ready\"' | grep -q ON"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 180s
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
@@ -88,8 +94,10 @@ services:
     command:
       - --wsrep-node-address=db2
       - --wsrep-node-name=node2
+      - --wsrep-sst-auth=root:${DB_ROOT_PASSWORD}
     depends_on:
-      - db1
+      db1:
+        condition: service_healthy
     networks:
       internal:
         ipv4_address: 172.20.0.11
@@ -98,6 +106,12 @@ services:
     image: mariadb:10.11
     hostname: db3
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "mysql -u root -p$$MARIADB_ROOT_PASSWORD -e 'SHOW STATUS LIKE \"wsrep_ready\"' | grep -q ON"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 180s
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
@@ -106,8 +120,10 @@ services:
     command:
       - --wsrep-node-address=db3
       - --wsrep-node-name=node3
+      - --wsrep-sst-auth=root:${DB_ROOT_PASSWORD}
     depends_on:
-      - db1
+      db1:
+        condition: service_healthy
     networks:
       internal:
         ipv4_address: 172.20.0.12
@@ -125,6 +141,10 @@ services:
       - "8989:8989"
     depends_on:
       db1:
+        condition: service_healthy
+      db2:
+        condition: service_healthy
+      db3:
         condition: service_healthy
     networks:
       - internal

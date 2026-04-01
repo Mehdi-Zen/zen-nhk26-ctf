@@ -22,19 +22,21 @@ if check_node "172.20.0.11" || check_node "172.20.0.12"; then
     # Lancer MariaDB SANS --wsrep-new-cluster
     exec docker-entrypoint.sh mysqld \
         --wsrep-node-address=db1 \
-        --wsrep-node-name=node1
+        --wsrep-node-name=node1 \
+        --wsrep-sst-auth="root:${MARIADB_ROOT_PASSWORD}"
 else
     echo "✗ Aucun autre nœud détecté, BOOTSTRAP d'un nouveau cluster"
-    
+
     # Forcer safe_to_bootstrap à 1 pour permettre le bootstrap
     if [ -f /var/lib/mysql/grastate.dat ]; then
         sed -i 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/' /var/lib/mysql/grastate.dat
         echo "✓ grastate.dat modifié : safe_to_bootstrap = 1 (forcé pour bootstrap)"
     fi
-    
+
     # Lancer MariaDB AVEC --wsrep-new-cluster
     exec docker-entrypoint.sh mysqld \
         --wsrep-new-cluster \
         --wsrep-node-address=db1 \
-        --wsrep-node-name=node1
+        --wsrep-node-name=node1 \
+        --wsrep-sst-auth="root:${MARIADB_ROOT_PASSWORD}"
 fi
