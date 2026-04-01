@@ -121,12 +121,13 @@ Pour que les challenges container fonctionnent, configurez le plugin dans **Admi
 
 Pour plus d'infos sur le plugin : [github.com/TheFlash2k/containers](https://github.com/TheFlash2k/containers)
 
-> **⚠️ Work in progress** — La documentation et les walkthroughs des challenges sont en cours de redaction. Ils arriveront tres prochainement !
+> **⚠️ Work in progress**  La documentation et les walkthroughs des challenges sont en cours de redaction. Ils arriveront tres prochainement !
 
 ## Inspirations
 
-- [CTFd](https://github.com/CTFd/CTFd) — La plateforme CTF open source
+- [CTFd](https://github.com/CTFd/CTFd)  La plateforme CTF open source
 - [TheFlash2k/containers](https://github.com/TheFlash2k/containers) — Plugin de challenges containerises
+- [PwnTheMall](https://github.com/pwnthemall/pwnthemall) les cracks 
 
 ## Licence
 
