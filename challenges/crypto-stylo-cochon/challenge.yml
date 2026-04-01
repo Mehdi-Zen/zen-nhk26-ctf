@@ -1,0 +1,49 @@
+name: "Stylo Cochon"
+author: "EnderMan"
+category: Crypto
+
+description_image: files/challenge.png
+
+description: |
+  Dans les archives d'Elizebeth Smith Friedman , cryptanalyste de génie oubliée de l'histoire ,
+  une page de carnet couverte de symboles étranges. Pas de clé. Pas d'explication, juste un mot : "pigpen"
+
+  Chaque image cache quelque chose. À toi de trouver quoi.
+  Rends l'image plus petite ou éloigne-toi de ton écran et plisse les yeux , les formes ressortent mieux.
+
+  `Format du Flag : NHK26{message}`
+
+  
+
+value: 50
+type: dynamic
+state: visible
+
+extra:
+  initial: 50
+  decay: 40
+  minimum: 20
+
+tags:
+  - INTRO
+  - CRYPTO
+
+flags:
+  - flag: "NHK26{superpigpen}"
+    type: static
+
+files:
+  - files/challenge.png
+  - files/01_pigpen.png
+  - files/02_pigpen.png
+  - files/03_pigpen.png
+  - files/04_pigpen.png
+  - files/05_pigpen.png
+  - files/06_pigpen.png
+  - files/07_pigpen.png
+  - files/08_pigpen.png
+  - files/09_pigpen.png
+  - files/10_pigpen.png
+  - files/11_pigpen.png
+
+max_attempts: 0

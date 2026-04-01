@@ -1,0 +1,37 @@
+name: "The Last Transmission"
+author: "segfault"
+category: OSINT                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Un homme.
+  Une catastrophe nucléaire.
+  Des enregistrements audio supprimé.
+
+  Valéri Legassov a laissé des traces avant sa mort.
+  Saurez vous les retrouver ?
+
+value: 300                       # Voir document de Camille
+type: firstblood                   # ou: container, firstblood
+state : hidden                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+first_blood_bonus:
+  - 150
+
+tags:
+  - MOYEN                        # OBLIGATOIRE en premier (voir tableau)
+  - OSINT
+  - FIRST BLOOD
+
+flags:
+  - flag: "NHK26{RECORDINGS1988}"
+    type: static
+hints:
+  - content : "https://github.com/ValeriLegassov"
+    cost: 25

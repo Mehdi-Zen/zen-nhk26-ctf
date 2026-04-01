@@ -1,0 +1,56 @@
+# TEMPLATE: Challenge Docker (Web, Pwn, etc.)
+# Dossier: categorie-nom (ex: web-sqli)
+
+name: "Helix2"
+author: "Katarak"
+category: Crypto                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.jpg    # OBLIGATOIRE
+
+description: |
+  ## 🧬 HELIX 2
+  En 1953, Watson et Crick dévoilaient au monde la structure en double hélice de l’ADN.  
+  Une spirale élégante, porteuse d’un code universel.
+  L'ADN peut être vu comme un codage informatique, saurez-vous trouver la clé pour décoder ce message génétique ?
+
+# Points: voir document de Camille
+value: 300
+type: container
+state: visible
+
+extra:
+  initial: 300                   # = value
+  decay: 13
+  minimum: 100                    # ~50% de initial
+
+# Docker
+image: registry.gitlab.com/nhk/crypto-helix:latest
+port: 5000
+protocol: web                    # web | tcp
+
+flags:
+  - flag: "NHK26{helix-base4}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - MOYEN
+  - CRYPTO
+  - MASTERCLASS
+
+# Optionnel - cout des indices: voir document de Camille
+hints:
+  - content: "Indice 1: Base 4"
+    cost: 25
+  - content: "Indice 2: Helix sert de référence pour comprendre le schéma de conversion"
+    cost: 60
+
+# files:
+#   - files/wordlist.txt
+
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

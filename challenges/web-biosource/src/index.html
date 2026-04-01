@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rachel Carson — Biographie</title>
+  <meta name="description" content="Biographie de Rachel Carson, biologiste marine et autrice de Printemps silencieux." />
+
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --card: #ffffff;
+      --accent: #006d5b;
+      --accent-dark: #004d40;
+      --text: #1a1a1a;
+      --muted: #5f6c7b;
+      --shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #004d40 0%, #006d5b 100%);
+      color: white;
+      text-align: center;
+      padding: 4.5rem 1.5rem 3.5rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      font-size: clamp(2.6rem, 7vw, 4.2rem);
+      margin-bottom: 0.6rem;
+    }
+
+    header p {
+      font-size: 1.3rem;
+      max-width: 720px;
+      margin: 0 auto;
+      opacity: 0.95;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: -3rem auto 4rem;
+      padding: 0 1.5rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 340px 1fr;
+    }
+
+    .portrait {
+      background: #e8f5f2;
+    }
+
+    .portrait img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+
+    .bio {
+      padding: 2.5rem;
+    }
+
+    .bio h2 {
+      font-size: 2.4rem;
+      color: var(--accent-dark);
+      margin-bottom: 0.8rem;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 1.6rem;
+      font-style: italic;
+    }
+
+    .content p {
+      margin-bottom: 1.3rem;
+      font-size: 1.1rem;
+    }
+
+    .sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.8rem;
+      margin-top: 2.2rem;
+    }
+
+    .section {
+      background: #f9fcfb;
+      padding: 1.6rem;
+      border-radius: 12px;
+      border: 1px solid #e0f0ed;
+    }
+
+    .section h3 {
+      color: var(--accent-dark);
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .quote {
+      font-style: italic;
+      color: var(--accent);
+      padding: 1.2rem 1.6rem;
+      background: #e6f4f1;
+      border-left: 5px solid #26a69a;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      font-size: 1.15rem;
+    }
+
+    .controls {
+      margin-top: 1.8rem;
+    }
+
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.9rem 1.8rem;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    #more {
+      margin-top: 1.6rem;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    @media (max-width: 850px) {
+      .card {
+        grid-template-columns: 1fr;
+      }
+      .portrait {
+        height: 420px;
+      }
+      .bio {
+        padding: 2rem 1.8rem;
+      }
+    }
+
+    @media (max-width: 500px) {
+      header {
+        padding: 3.5rem 1rem 2.5rem;
+      }
+      header h1 {
+        font-size: 2.4rem;
+      }
+      header p {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+
+  <!--
+  FLAG: NHK26{Charlie}
+  -->
+
+</head>
+<body>
+
+<header>
+  <h1>Rachel Carson</h1>
+  <p>Biologiste marine, écrivaine et pionnière de la conscience écologique mondiale (1907–1964)</p>
+</header>
+
+<main>
+  <article class="card">
+
+    <div class="portrait">
+      <img 
+        src="https://imgs.search.brave.com/mei5IERoauBpd5XjhLZCTNAnNiFYwAP75QrYEsujilI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9yYWNo/ZWxjYXJzb25jb3Vu/Y2lsLm9yZy93cC1j/b250ZW50L3VwbG9h/ZHMvMjAxNi8wNi8y/OF9yY19wb3J0cmFp/dHg0MDAuanBn" 
+        alt="Portrait officiel de Rachel Carson"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="bio">
+      <h2>Rachel Louise Carson</h2>
+      <div class="meta">Née le 27 mai 1907 à Springdale (Pennsylvanie) — Décédée le 14 avril 1964</div>
+
+      <div class="content">
+        <p>Rachel Carson est l'une des figures les plus influentes du mouvement environnemental moderne. Biologiste marine de formation, elle a su allier rigueur scientifique et talent littéraire pour sensibiliser le grand public aux menaces pesant sur la nature.</p>
+        <p>Son ouvrage majeur, <em>Printemps silencieux</em> (1962), a révélé les effets dévastateurs des pesticides (notamment le DDT) sur les écosystèmes et la santé humaine, déclenchant un débat mondial et contribuant à l’interdiction progressive de plusieurs substances dangereuses.</p>
+      </div>
+
+      <div class="sections">
+        <div class="section">
+          <h3>Jeunesse et formation</h3>
+          <p>Issue d’un milieu modeste, Rachel Carson développe très tôt un amour profond pour la nature. Elle obtient un master en zoologie marine et travaille pour le Bureau of Fisheries, où elle rédige des publications scientifiques et de vulgarisation.</p>
+        </div>
+
+        <div class="section">
+          <h3>Citation emblématique</h3>
+          <div class="quote">
+            « L’humanité est engagée dans un immense pari avec la nature. Nous ne pouvons pas nous permettre de perdre. »
+          </div>
+
+          <div class="controls">
+            <button id="toggle-more">En savoir plus</button>
+          </div>
+
+          <div id="more">
+            <h3>Héritage</h3>
+            <p>Son travail a inspiré la création de l’EPA (Environmental Protection Agency) en 1970 et continue d’influencer les politiques de protection de l’environnement et les débats sur les pesticides et la biodiversité.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </article>
+</main>
+
+<footer>
+  <p>Document pédagogique — Challenge CTF</p>
+</footer>
+
+<script>
+  document.getElementById('toggle-more').addEventListener('click', function() {
+    const more = document.getElementById('more');
+    const isHidden = more.style.display === 'none' || more.style.display === '';
+    more.style.display = isHidden ? 'block' : 'none';
+    this.textContent = isHidden ? 'Réduire' : 'En savoir plus';
+  });
+</script>
+
+</body>
+</html>

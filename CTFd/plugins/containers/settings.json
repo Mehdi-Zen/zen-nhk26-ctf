@@ -1,0 +1,25 @@
+{
+  "modes": {
+    "USERS_MODE": "users",
+    "TEAMS_MODE": "teams"
+  },
+  "plugin-info": {
+    "id": "container",
+    "name": "container",
+    "templates": {
+      "create": "/plugins/containers/assets/create.html",
+      "update": "/plugins/containers/assets/update.html",
+      "view": "/plugins/containers/assets/view.html"
+    },
+    "scripts": {
+      "create": "/plugins/containers/assets/create.js",
+      "update": "/plugins/containers/assets/update.js",
+      "view": "/plugins/containers/assets/view.js"
+    },
+    "base_path": "/plugins/containers/assets/"
+  },
+  "blueprint": {
+    "template_folder": "templates",
+    "static_folder": "assets"
+  }
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V01D.onion — Leaks Directory</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon_V01D.svg">
+<style>
+  @view-transition {
+    navigation: auto;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root { 
+    --bg: #050505; --bg2: #0a0a0a; --bg3: #0f0f0f; 
+    --border: #1a1a1a; --border2: #222; 
+    --green: #00ff41; --green-dim: #00aa2a; 
+    --red: #ff2020; --red-dim: #801010; 
+    --amber: #ffb300; 
+    --gray: #444; 
+    --text: #b0b0b0; --text-dim: #555; --white: #d0d0d0; 
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Courier Prime', monospace; font-size: 14px; line-height: 1.6; min-height: 100vh; cursor: crosshair; }
+  body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px); pointer-events: none; z-index: 9999; }
+  @keyframes flicker { 0%, 100% { opacity: 1; } 92% { opacity: 1; } 93% { opacity: 0.8; } 94% { opacity: 1; } 96% { opacity: 0.9; } 97% { opacity: 1; } }
+  body { animation: flicker 8s infinite; }
+  #wrapper { max-width: 860px; margin: 0 auto; padding: 0 16px 80px; }
+  
+  header { border-bottom: 1px solid var(--border2); padding: 24px 0 16px; margin-bottom: 32px; }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .site-logo { font-family: 'VT323', monospace; font-size: 52px; color: var(--green); text-shadow: 0 0 20px rgba(0,255,65,0.4); letter-spacing: 4px; line-height: 1; }
+  .site-logo span { color: var(--red); }
+  .site-tagline { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 4px; letter-spacing: 2px; line-height: 1.5; }
+  .readonly-badge { border: 1px dotted var(--red-dim); background: rgba(255, 32, 32, 0.05); padding: 6px 12px; font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text-dim); text-align: right; line-height: 1.4; letter-spacing: 1px; flex-shrink: 0; }
+  .readonly-badge span { color: var(--red); }
+  .site-nav { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 20px; font-family: 'Share Tech Mono', monospace; font-size: 11px; }
+  .site-nav a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+  .site-nav a:hover { color: var(--green); }
+  .site-nav a.active { color: var(--amber); }
+
+  @media (max-width: 450px) { .site-logo { font-size: 36px; } }
+
+  .thread-header { border-left: 3px solid #4fc3f7; padding: 16px 20px; background: var(--bg2); margin-bottom: 2px; }
+  .thread-title { font-family: 'VT323', monospace; font-size: 26px; color: var(--white); letter-spacing: 1px; }
+
+  .messages { border: 1px solid var(--border2); border-top: none; padding: 20px 30px; background: var(--bg); }
+  .tool-item { border-bottom: 1px dashed var(--border2); padding: 15px 0; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+  .tool-item:last-child { border-bottom: none; }
+  .tool-item > div:first-child { flex: 1; }
+  .tool-name { font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--white); }
+  .tool-desc { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+  .tool-status { flex-shrink: 0; }
+  .tool-status a { font-family: 'Share Tech Mono', monospace; font-size: 12px; text-decoration: none; padding: 6px 12px; border: 1px solid; transition: all 0.2s; white-space: nowrap; display: inline-block; }
+  
+  .status-seized { color: var(--red); border-color: var(--red-dim); background: rgba(255,0,0,0.05); }
+  .status-expired { color: var(--text-dim); border-color: var(--gray); background: transparent; }
+  .status-active { color: var(--green); border-color: var(--green-dim); background: rgba(0,255,65,0.05); }
+  .status-active:hover { background: var(--green-dim); color: var(--bg); }
+
+  footer { border-top: 1px solid var(--border2); padding: 20px 0; margin-top: 60px; font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--text-dim); letter-spacing: 1px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+<div id="wrapper">
+
+  <header>
+    <div class="header-top">
+      <div style="min-width: 0;">
+        <div class="site-logo">V<span>0</span>1D.onion</div>
+        <div class="site-tagline">// anonymous bulletin — no logs — no trust — no gods //</div>
+      </div>
+      <div class="readonly-badge">
+        USER: ANONYMOUS<br>
+        PERMS: <span>READ-ONLY</span>
+      </div>
+    </div>
+    
+    <nav class="site-nav">
+      <a href="/">[boards]</a>
+      <a href="/leaks" class="active">[leaks]</a>
+      <a href="/tools">[tools]</a>
+      <a href="/pgp">[pgp]</a>
+      <a href="/rules">[rules]</a>
+    </nav>
+  </header>
+
+  <div class="thread-header" style="border-left-color: #4fc3f7;">
+    <div class="thread-title" style="color: #4fc3f7;">// INDEXED DATABASE DUMPS & SOURCE CODE</div>
+  </div>
+
+  <div class="messages">
+    <div class="tool-item">
+      <div>
+        <div class="tool-name" style="color:var(--green);">Global Contagion Control - Full Git Archive</div>
+        <div class="tool-desc">Source code (Frontend + Backend Python) of the quarantined pandemic simulator. ~2.1 MB. [UPLOADED: Today]</div>
+      </div>
+      <div class="tool-status"><a href="/downloads/global_contagion.zip" class="status-active">[ DOWNLOAD ZIP ]</a></div>
+    </div>
+
+    <div class="tool-item">
+      <div>
+        <div class="tool-name" style="color:var(--amber);">ISP Customer Logs - EU Region (12k rows)</div>
+        <div class="tool-desc">Contains plain-text passwords, billing info, MAC addresses. [UPLOADED: 2 days ago]</div>
+      </div>
+      <div class="tool-status"><a href="/error" class="status-seized">[ PURGED BY ADMIN ]</a></div>
+    </div>
+
+    <div class="tool-item">
+      <div>
+        <div class="tool-name" style="color:var(--text-dim);">University Medical R&D Network</div>
+        <div class="tool-desc">Credentials and network maps for bio-research labs. (Related to Dr. Eggo intel?)</div>
+      </div>
+      <div class="tool-status"><a href="/error" class="status-expired">[ LINK EXPIRED ]</a></div>
+    </div>
+
+    <div class="tool-item">
+      <div>
+        <div class="tool-name" style="color:var(--text-dim);">Crypto Exchange KYC Dump</div>
+        <div class="tool-desc">150GB of passports and selfies from a tier-3 exchange.</div>
+      </div>
+      <div class="tool-status"><a href="/error" class="status-expired">[ 404 NOT FOUND ]</a></div>
+    </div>
+  </div>
+
+  <footer>
+    <span>V01D.onion — est. ████ — no logs kept — jurisdiction: none</span>
+    <span>tor only — js disabled recommended — pgp key: 0x████████</span>
+  </footer>
+
+</div>
+</body>
+</html>

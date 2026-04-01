@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Containers Challenge Management</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <ul class="nav nav-pills flex-column">
+                    {% block menu %}
+                    {% endblock %}
+                </ul>
+            </div>
+            <div class="col-md-10">
+                <div class="tab-content">
+                    {% block panel %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

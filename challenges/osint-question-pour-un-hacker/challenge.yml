@@ -1,0 +1,29 @@
+name: "Question pour un hacker"
+author: "Wumbou"
+category: OSINT                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Seriez-vous trouvez la personne que l'on recherche ?
+
+  `Format du flag : NHK26{Prenom_Nom}`
+
+value: 50                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 50                   # POur gerer le dynamisme du scoring
+  decay: 40                      # facteur de decroissance
+  minimum: 20                   # Minimum
+
+tags:
+  - INTRO
+  - OSINT
+files:
+  - files/question_pour_un_hacker.mp3
+
+flags:
+  - flag: "NHK26{Pierre_Curie}"
+    type: static

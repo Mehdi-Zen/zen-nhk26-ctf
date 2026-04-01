@@ -1,0 +1,28 @@
+name: "Tentacules révélatrices"
+author: "Leo"
+category: Forensic
+
+description_image: files/challenge.png
+
+description: |
+  Le docteur Octopus a mystérieusement disparu, laissant derrière lui un ancien disque dur dans son laboratoire secret. Vous venez de le retrouver, essayez de retrouver l'informations secrète.
+
+value: 500
+type: dynamic
+state: visible
+
+extra:
+  initial: 500
+  decay: 6
+  minimum: 300
+
+tags:
+  - DIFFICILE
+  - FORENSIC
+
+flags:
+  - flag: "NHK26{D0cTo_r0ctoPu_SIsAGr3at_Sci3n7!f_ic}"
+    type: static
+
+files:
+  - files/octopus_lab.img

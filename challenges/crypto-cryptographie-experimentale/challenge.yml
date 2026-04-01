@@ -1,0 +1,32 @@
+name: "Cryptographie expérimentale"
+author: "Luckm4n"
+category: Crypto
+
+description_image: files/challenge.png
+
+description: |
+  Un serveur “rebelle” testant la capacité des scientifiques à résoudre un problème cryptographique dans un temps limité. Montrez lui dont sont capables les humains !
+
+value: 500
+type: container
+image: registry.gitlab.com/ex-ex1/ex-ex/CATEGORIE-NOM:latest # à MODIFIER
+port: 5000
+protocol: web
+state: visible
+
+flags:
+  - flag: "NHK26{TH3_GHOST_IN_TH3_HASH_5f8a2b}"
+    type: static
+
+extra:
+  initial: 500
+  decay: 6
+  minimum: 300
+
+tags:
+  - DIFFICILE
+  - CRYPTO
+
+hints:
+  - content: "Les machines lisent toujours les panneaux."
+    cost: 80

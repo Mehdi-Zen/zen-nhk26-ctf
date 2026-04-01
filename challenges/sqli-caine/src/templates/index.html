@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAINE // SECURE ADMIN PORTAL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --phosphor: #00ff9d;
+            --phosphor-dim: #00ff9d40;
+            --phosphor-glow: #00ff9d80;
+            --terminal-bg: #0a0a0f;
+            --terminal-surface: #12121a;
+            --terminal-border: #1a1a25;
+            --scan-line: rgba(0, 255, 157, 0.03);
+            --error-red: #ff3e3e;
+            --warning-amber: #ffaa00;
+            --text-dim: #4a4a5a;
+            --text-mid: #7a7a8a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--terminal-bg);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--phosphor);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated grid background */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--phosphor-dim) 1px, transparent 1px),
+                linear-gradient(90deg, var(--phosphor-dim) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.15;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Scan lines overlay */
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                var(--scan-line) 2px,
+                var(--scan-line) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* CRT vignette effect */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 100%);
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--phosphor);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatUp 8s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(1);
+            }
+        }
+
+        /* Main terminal container */
+        .terminal {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            margin: 20px;
+            z-index: 10;
+        }
+
+        /* Terminal window chrome */
+        .terminal-chrome {
+            background: linear-gradient(180deg, #1a1a25 0%, #15151f 100%);
+            border: 1px solid var(--terminal-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow:
+                0 0 0 1px rgba(0, 255, 157, 0.1),
+                0 25px 80px rgba(0, 0, 0, 0.8),
+                0 0 100px rgba(0, 255, 157, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            animation: terminalBoot 0.5s ease-out;
+        }
+
+        @keyframes terminalBoot {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Window title bar */
+        .title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--terminal-surface);
+            border-bottom: 1px solid var(--terminal-border);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: default;
+        }
+
+        .window-btn.close { background: #ff5f57; }
+        .window-btn.minimize { background: #febc2e; }
+        .window-btn.maximize { background: #28c840; }
+
+        .window-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-mid);
+            text-transform: uppercase;
+        }
+
+        .window-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.65rem;
+            color: var(--phosphor);
+        }
+
+        .status-indicator {
+            width: 6px;
+            height: 6px;
+            background: var(--phosphor);
+            border-radius: 50%;
+            animation: statusPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--phosphor);
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--phosphor); }
+            50% { opacity: 0.5; box-shadow: 0 0 5px var(--phosphor); }
+        }
+
+        /* Terminal content */
+        .terminal-content {
+            padding: 30px;
+        }
+
+        /* ASCII Header */
+        .ascii-header {
+            font-size: 0.5rem;
+            line-height: 1.1;
+            color: var(--phosphor);
+            text-align: center;
+            margin-bottom: 20px;
+            opacity: 0.8;
+            white-space: pre;
+            text-shadow: 0 0 20px var(--phosphor-glow);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 20px var(--phosphor-glow); }
+            50% { text-shadow: 0 0 30px var(--phosphor), 0 0 60px var(--phosphor-dim); }
+        }
+
+        /* System info block */
+        .system-info {
+            background: rgba(0, 255, 157, 0.03);
+            border: 1px solid rgba(0, 255, 157, 0.1);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 0.75rem;
+        }
+
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            color: var(--text-mid);
+        }
+
+        .info-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            color: var(--phosphor);
+            opacity: 0.7;
+        }
+
+        .info-value {
+            color: var(--phosphor);
+            font-weight: 500;
+        }
+
+        /* Quote block */
+        .quote-block {
+            position: relative;
+            padding: 15px 15px 15px 20px;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, rgba(0, 255, 157, 0.08) 0%, transparent 100%);
+            border-left: 2px solid var(--phosphor);
+            font-size: 0.8rem;
+            font-style: italic;
+            color: var(--text-mid);
+            line-height: 1.5;
+        }
+
+        .quote-block::before {
+            content: '"';
+            position: absolute;
+            left: 8px;
+            top: 5px;
+            font-size: 1.5rem;
+            color: var(--phosphor);
+            opacity: 0.3;
+            font-style: normal;
+        }
+
+        .quote-author {
+            display: block;
+            margin-top: 8px;
+            font-style: normal;
+            font-size: 0.7rem;
+            color: var(--phosphor);
+            opacity: 0.6;
+        }
+
+        /* Message alerts */
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            0% {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .message::before {
+            font-size: 1.2rem;
+        }
+
+        .message.error {
+            background: rgba(255, 62, 62, 0.1);
+            border: 1px solid rgba(255, 62, 62, 0.3);
+            color: var(--error-red);
+        }
+
+        .message.error::before {
+            content: '⚠';
+        }
+
+        .message.success {
+            background: rgba(0, 255, 157, 0.1);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            color: var(--phosphor);
+        }
+
+        .message.success::before {
+            content: '✓';
+        }
+
+        /* Form styling */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--phosphor);
+            opacity: 0.8;
+        }
+
+        .input-label::before {
+            content: '>';
+            color: var(--phosphor);
+            animation: cursorBlink 1s step-end infinite;
+        }
+
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--terminal-bg);
+            border: 1px solid var(--terminal-border);
+            border-radius: 6px;
+            color: var(--phosphor);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .input-field:focus {
+            border-color: var(--phosphor);
+            box-shadow:
+                0 0 0 3px rgba(0, 255, 157, 0.1),
+                0 0 20px rgba(0, 255, 157, 0.15),
+                inset 0 0 20px rgba(0, 255, 157, 0.03);
+        }
+
+        .input-field:focus + .input-glow {
+            opacity: 1;
+        }
+
+        .input-glow {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--phosphor), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Submit button */
+        .submit-btn {
+            position: relative;
+            width: 100%;
+            padding: 16px;
+            margin-top: 10px;
+            background: transparent;
+            border: 1px solid var(--phosphor);
+            border-radius: 6px;
+            color: var(--phosphor);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, var(--phosphor-dim), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .submit-btn:hover {
+            background: rgba(0, 255, 157, 0.1);
+            box-shadow:
+                0 0 30px rgba(0, 255, 157, 0.2),
+                inset 0 0 30px rgba(0, 255, 157, 0.05);
+            text-shadow: 0 0 10px var(--phosphor);
+        }
+
+        .submit-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Footer section */
+        .terminal-footer {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--terminal-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+        }
+
+        .security-tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(0, 255, 157, 0.05);
+            border: 1px solid rgba(0, 255, 157, 0.2);
+            border-radius: 20px;
+            color: var(--phosphor);
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .security-tag::before {
+            content: '🛡';
+            font-size: 0.8rem;
+        }
+
+        .version-info {
+            text-align: right;
+            line-height: 1.6;
+        }
+
+        /* Decorative corner brackets */
+        .corner-bracket {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--phosphor);
+            opacity: 0.3;
+        }
+
+        .corner-bracket.tl {
+            top: -5px;
+            left: -5px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner-bracket.tr {
+            top: -5px;
+            right: -5px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner-bracket.bl {
+            bottom: -5px;
+            left: -5px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner-bracket.br {
+            bottom: -5px;
+            right: -5px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* Glitch effect on title */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitch-1 2s infinite linear alternate-reverse;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+            color: #ff3e3e;
+        }
+
+        .glitch::after {
+            animation: glitch-2 3s infinite linear alternate-reverse;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+            color: #00ffff;
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 1px); }
+            40% { transform: translate(2px, -1px); }
+            60% { transform: translate(-1px, 2px); }
+            80% { transform: translate(1px, -2px); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(2px, -1px); }
+            40% { transform: translate(-2px, 1px); }
+            60% { transform: translate(1px, -2px); }
+            80% { transform: translate(-1px, 2px); }
+        }
+
+        /* Typing animation for boot sequence */
+        .boot-text {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 0.8s steps(20) forwards;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        /* Responsive */
+        @media (max-width: 560px) {
+            .terminal-content {
+                padding: 20px;
+            }
+
+            .ascii-header {
+                font-size: 0.35rem;
+            }
+
+            .terminal-footer {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .version-info {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background effects -->
+    <div class="grid-bg"></div>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+
+    <!-- Floating particles -->
+    <div class="particles">
+        <script>
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (5 + Math.random() * 5) + 's';
+                document.querySelector('.particles').appendChild(particle);
+            }
+        </script>
+    </div>
+
+    <!-- Main terminal -->
+    <div class="terminal">
+        <div class="terminal-chrome">
+            <!-- Title bar -->
+            <div class="title-bar">
+                <div class="window-controls">
+                    <span class="window-btn close"></span>
+                    <span class="window-btn minimize"></span>
+                    <span class="window-btn maximize"></span>
+                </div>
+                <span class="window-title">caine@secure-portal ~ /admin</span>
+                <div class="window-status">
+                    <span class="status-indicator"></span>
+                    <span>ENCRYPTED</span>
+                </div>
+            </div>
+
+            <!-- Terminal content -->
+            <div class="terminal-content">
+                <!-- Corner brackets -->
+                <div style="position: relative;">
+                    <div class="corner-bracket tl"></div>
+                    <div class="corner-bracket tr"></div>
+                    <div class="corner-bracket bl"></div>
+                    <div class="corner-bracket br"></div>
+
+                    <!-- ASCII Art Header -->
+                    <pre class="ascii-header">
+ ██████╗ █████╗ ██╗███╗   ██╗███████╗
+██╔════╝██╔══██╗██║████╗  ██║██╔════╝
+██║     ███████║██║██╔██╗ ██║█████╗
+██║     ██╔══██║██║██║╚██╗██║██╔══╝
+╚██████╗██║  ██║██║██║ ╚████║███████╗
+ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚══════╝
+    [ SECURE ADMIN PORTAL v2.4.1 ]</pre>
+
+                    <!-- System info -->
+                    <div class="system-info">
+                        <div class="info-line">
+                            <span class="info-label">SESSION</span>
+                            <span class="info-value">0x4A7F2D9E</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">PROTOCOL</span>
+                            <span class="info-value">TLS 1.3 / AES-256-GCM</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">STATUS</span>
+                            <span class="info-value" style="color: var(--phosphor);">● AWAITING AUTH</span>
+                        </div>
+                    </div>
+
+                    <!-- Grace Hopper Quote -->
+                    <div class="quote-block">
+                        The most dangerous phrase in the language is: 'We've always done it this way.'
+                        <span class="quote-author">— Rear Admiral Grace Hopper</span>
+                    </div>
+
+                    <!-- Message display -->
+                    {% if message %}
+                    <div class="message {{ message_type }}">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+
+                    <!-- Login form -->
+                    <form class="login-form" method="POST" action="/">
+                        <div class="input-group">
+                            <label class="input-label" for="username">Username</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                class="input-field"
+                                placeholder="enter_username"
+                                required
+                                autocomplete="off"
+                                spellcheck="false"
+                            >
+                            <div class="input-glow"></div>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label" for="password">Password</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="input-field"
+                                placeholder="••••••••••••"
+                                required
+                            >
+                            <div class="input-glow"></div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <span class="glitch" data-text="AUTHENTICATE">AUTHENTICATE</span>
+                        </button>
+                    </form>
+
+                    <!-- Footer -->
+                    <div class="terminal-footer">
+                        <div class="security-tag">PROTECTED</div>
+                        <div class="version-info">
+                            CAINE SYSTEMS © 2024<br>
+                            BUILD 2.4.1-STABLE
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add subtle glitch effect on random intervals
+        setInterval(() => {
+            if (Math.random() > 0.95) {
+                document.body.style.transform = `translate(${Math.random() * 2 - 1}px, ${Math.random() * 2 - 1}px)`;
+                setTimeout(() => {
+                    document.body.style.transform = 'translate(0, 0)';
+                }, 50);
+            }
+        }, 100);
+
+        // Focus effect enhancement
+        document.querySelectorAll('.input-field').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.01)';
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

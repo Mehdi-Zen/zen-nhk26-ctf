@@ -1,0 +1,43 @@
+name: "Hash Hunter"
+author: "segfault"
+category: Crypto                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Voici 3 hash obtenu avec SHA-256.
+  Ils ont tous 5 charactères
+  
+  1- 
+  `hash=b66584fcc55796bc5d391137d673e2ddbbb6fb4c069b3dbc69b3a42f1d347b58
+  salt=CTF2026
+  salt + password`
+
+  2-
+  `hash=c192d9b63763b1922b58214856c5d5aa6d70784d964341ee958988a085bab0d2
+  salt=CCI2026
+  salt + password`
+
+  3-
+  `hash=494e42bab5c641e55c7b1f3c06f47a04d1ecfead93489e551fef8e4c86f10346
+  salt=repas
+  password + salt`
+
+  `Format du flag : NHK26{plaintext}`
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - CRYPTO
+
+flags:
+  - flag: "NHK26{hashyparmentier}"
+    type: static

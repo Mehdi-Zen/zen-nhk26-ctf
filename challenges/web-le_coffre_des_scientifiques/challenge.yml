@@ -1,0 +1,30 @@
+name: Le coffre des scientifiques
+author: Luckm4n
+category: Web
+
+description_image: files/challenge.png
+
+description: |
+  Identifier une faiblesse dans la gestion des mécanismes d’authentification d’une application et l’exploiter pour obtenir des privilèges supérieurs. Le but est d’accéder à une ressource sensible réservée aux «vrais scientifiques» et d’extraire le flag.
+
+value: 300           
+
+type: container
+
+image: registry.gitlab.com/ex-ex1/ex-ex/web-le_coffre_des_scientifiques:latest # à MODIFIER
+port: 5000
+protocol: web
+state : visible
+
+extra:
+  initial: 300                   
+  decay: 13       # à MODIFIER
+  minimum: 100                   
+
+tags:
+  - MOYEN
+  - WEB
+
+flags:
+  - flag: "NHK26{JWT_5IGN4TUR3_BYP455_GR4NT5_4CC355_T0_TH3_SC13NT15T_V4ULT}"
+    type: static

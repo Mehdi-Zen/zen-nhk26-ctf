@@ -1,0 +1,33 @@
+name: "Le dossier verrouillé de Ronald Aylmer Fisher"
+author: "Malth"
+category: Misc
+
+description_image: files/challenge.png
+
+description: |
+  Nous sommes l’assistant de Ronald Aylmer Fisher.
+  Il vous a expressément ordonné de récupérer ses derniers travaux dans son bureau afin de les présenter sans délai au président de la London School of Economics.
+
+  Le problème ? M. Ronald Aylmer Fisher ne vous a pas remis les clés du casier où sont entreposées ses recherches, bien que la porte de son bureau vous ait été ouverte.
+
+  Votre mission : crocheter la serrure de ce maudit casier.
+  Pour ce faire, vous devrez d’abord localiser l’agent du service technique connu sous le pseudonyme de Malth afin qu’il vous fournisse les outils nécessaires.
+  Une fois équipé, vous n’aurez que deux minutes pour déverrouiller le casier.
+
+
+value: 50
+type: dynamic                    
+state : visible
+
+extra:
+  initial: 50
+  decay: 40
+  minimum: 20
+
+tags:
+  - INTRO
+  - MISC
+
+flags:
+  - flag: "NHK26{Unl0ck_Th3_D3sK}"
+    type: static

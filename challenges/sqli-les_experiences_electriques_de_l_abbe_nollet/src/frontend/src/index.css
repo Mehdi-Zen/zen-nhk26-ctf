@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=IM+Fell+English:ital@0;1&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --parchment: #f5ead7;
+  --parchment-dark: #e8d5b0;
+  --ink: #2c1e0f;
+  --copper: #b5651d;
+  --copper-light: #d4843a;
+  --amber: #d4930a;
+  --electric: #4ab3d4;
+  --electric-glow: #7dd4f0;
+  --ember: #c0392b;
+  --gold: #c9a84c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--parchment);
+  color: var(--ink);
+  font-family: 'Crimson Text', Georgia, serif;
+}
+
+/* Parchment texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--parchment-dark); }
+::-webkit-scrollbar-thumb { background: var(--copper); border-radius: 4px; }
+
+/* Animations */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+@keyframes spark {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-20px) scale(0.3); opacity: 0; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px 2px rgba(74, 179, 212, 0.3); }
+  50% { box-shadow: 0 0 18px 6px rgba(74, 179, 212, 0.6); }
+}
+
+@keyframes drawLine {
+  from { stroke-dashoffset: 500; }
+  to { stroke-dashoffset: 0; }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.animate-fade-up-delay {
+  opacity: 0;
+  animation: fadeUp 0.5s ease 0.15s forwards;
+}
+
+.animate-fade-up-delay-2 {
+  opacity: 0;
+  animation: fadeUp 0.5s ease 0.3s forwards;
+}
+
+.electric-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* Typography */
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+.display-title {
+  font-family: 'IM Fell English', serif;
+}
+
+/* Ornamental divider */
+.ornament::before,
+.ornament::after {
+  content: '❧';
+  color: var(--copper);
+  margin: 0 12px;
+  font-size: 1.1em;
+}
+
+/* Card style */
+.nollet-card {
+  background: linear-gradient(135deg, #fdf6e8 0%, #f5e8c8 100%);
+  border: 1px solid var(--parchment-dark);
+  border-radius: 2px;
+  box-shadow: 
+    0 2px 8px rgba(44, 30, 15, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+  position: relative;
+}
+
+.nollet-card::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(181, 101, 29, 0.15);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+/* Nav button */
+.nav-btn {
+  font-family: 'Crimson Text', serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  padding: 6px 16px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  color: var(--ink);
+  cursor: pointer;
+  background: transparent;
+  white-space: nowrap;
+}
+
+.nav-btn:hover {
+  background: rgba(255,255,255,0.35);
+  border-color: rgba(44,30,15,0.15);
+}
+
+.nav-btn.active {
+  background: var(--ink);
+  color: var(--parchment);
+  border-color: var(--ink);
+  box-shadow: 0 2px 8px rgba(44,30,15,0.25);
+}
+
+/* Input fields */
+.nollet-input {
+  background: rgba(255,255,255,0.5);
+  border: 1px solid var(--copper);
+  border-radius: 2px;
+  padding: 8px 12px;
+  font-family: 'Crimson Text', serif;
+  font-size: 1rem;
+  color: var(--ink);
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.nollet-input:focus {
+  outline: none;
+  border-color: var(--electric);
+  box-shadow: 0 0 0 3px rgba(74,179,212,0.15);
+}
+
+/* Button */
+.nollet-btn {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  padding: 10px 24px;
+  background: var(--copper);
+  color: var(--parchment);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(181,101,29,0.3);
+}
+
+.nollet-btn:hover {
+  background: var(--copper-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(181,101,29,0.4);
+}
+
+.nollet-btn:active {
+  transform: translateY(0);
+}
+
+/* Bar chart */
+.bar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-fill {
+  height: 14px;
+  background: linear-gradient(90deg, var(--copper), var(--amber));
+  border-radius: 1px;
+  position: relative;
+  transition: width 1s cubic-bezier(.34,1.56,.64,1);
+}
+
+.bar-fill.electric {
+  background: linear-gradient(90deg, var(--electric), var(--electric-glow));
+}
+
+/* Section fade on enter */
+.section-enter {
+  animation: fadeUp 0.4s ease forwards;
+}
+
+/* Meter gauge */
+@keyframes fillArc {
+  from { stroke-dasharray: 0 200; }
+  to { stroke-dasharray: var(--arc-len) 200; }
+}

@@ -1,0 +1,34 @@
+name: "Constantia"
+author: "segfault"
+category: Misc                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Un coffre numérique ne s’ouvre qu’avec une valeur unique, calculée à partir d’une suite de chiffres soigneusement dissimulée dans le projet.
+  Les scientifiques à l’origine de ce programme avaient une obsession : rien n’était laissé au hasard, chaque chiffre avait un poids différent selon sa place. 
+  Ignorer l’ordre mènera forcément à une mauvaise réponse.
+  Observez attentivement la position de chaque élément et laissez-les contribuer à la valeur finale.
+  Ce n’est pas seulement la valeur qui compte, mais l’endroit où elle se trouve.
+
+   `Format du flag : NHK26{constantia_resultat}`
+
+value: 500                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                   # Minimum
+
+tags:
+  - DIFFICILE
+  - MISC
+
+flags:
+  - flag: "NHK26{constantia_122}"
+    type: static
+
+files:
+  - files/Constantia.zip

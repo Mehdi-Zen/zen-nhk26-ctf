@@ -1,0 +1,32 @@
+name: "Corp Leak"
+author: "Leo"
+category: Misc                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.gif   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+
+  Une entreprise a été compromise de l'intérieur.
+
+  Un employé a exfiltré des données sensibles via l'infrastructure réseau sans fil de la société. 
+  Une borne WiFi émet dans les environs de la salle.
+  Les réseaux de l'entreprise suivent tous la convention de nommage `"Corp-""`.
+
+  À toi de retrouver ce qui a été caché avant qu'il ne soit trop tard.
+
+value: 500                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                   # Minimum
+
+tags:
+  - DIFFICILE                        # OBLIGATOIRE en premier (voir tableau)
+  - Misc
+
+flags:
+  - flag: "NHK26{S1l3nt_B34c0n_0wn3d_by_w1r3l3ss}"
+    type: static

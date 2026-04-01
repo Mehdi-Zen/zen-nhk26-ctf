@@ -1,0 +1,28 @@
+name: "Connexion perdue..."
+author: "Leo"
+category: Misc
+
+description_image: files/challenge.png
+
+description: |
+  Guglielmo Marconi a révolutionné les communications radio. Cependant, certaines de ses transmissions semblent désordonnées…
+
+value: 100
+type: dynamic
+state: visible
+
+extra:
+  initial: 100
+  decay: 30
+  minimum: 50
+
+tags:
+  - FACILE
+  - MISC
+
+flags:
+  - flag: "NHK26{MarconiAPerduSesOndes}"
+    type: static
+
+files:
+  - files/guglielmo_marconi.pcap

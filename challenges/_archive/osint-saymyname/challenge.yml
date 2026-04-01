@@ -1,0 +1,32 @@
+name: "Say My Name"
+author: "NHK26"
+category: OSINT
+
+description_image: files/challenge.jpg
+
+description: |
+  Werner Heisenberg a prouvé qu'on ne peut jamais tout savoir avec certitude. Et pourtant... Un certain individu pensait que son identité resterait secrète. Prouvez-lui que l'incertitude n'est pas une option.
+
+value: 300
+type: dynamic
+state: visible
+
+extra:
+  initial: 100
+  decay: 20
+  minimum: 50
+
+flags:
+  - flag: "NHK26{3628 Piermont Drive NE}"
+    type: static
+
+tags:
+  - MOYEN
+  - OSINT
+
+files:
+  - files/desert.jpg
+
+
+max_attempts: 0
+version: "1.0"

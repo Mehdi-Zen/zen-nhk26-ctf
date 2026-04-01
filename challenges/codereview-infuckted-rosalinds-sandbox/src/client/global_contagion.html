@@ -1,0 +1,580 @@
+<!--
+    Musiques libres de droits :
+        https://pixabay.com/fr/music/optimiste-technology-innovation-calm-minimal-electronica-275609/
+        https://pixabay.com/fr/music/roche-an-invitation-master-track-191478/
+    
+    Bruitages :
+        https://www.myinstants.com/fr/index/fr/
+-->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Global Contagion Control - CTF</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon_Global_Contagion_Control.svg">
+    <style>
+        @view-transition { navigation: auto; }
+        body { font-family: 'Courier New', Courier, monospace; background-color: #050505; color: #0f0; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        h1 { text-transform: uppercase; text-shadow: 0 0 10px #0f0; margin-bottom: 10px;}
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(5px); }
+        #start-screen { background: rgba(0, 0, 0, 0.9); }
+        #start-screen h2 { color: #f00; font-size: 3em; text-shadow: 0 0 20px red; margin-bottom: 10px; }
+        #start-screen p { color: #0f0; font-size: 1.2em; max-width: 600px; text-align: center; line-height: 1.5; margin-bottom: 40px;}
+        #game-over-screen { background: rgba(40, 0, 0, 0.95); }
+        #game-over-screen h2 { color: #ff3333; font-size: 4em; text-shadow: 0 0 30px #ff0000; margin-bottom: 10px; }
+        #game-over-screen p { color: #ffaaaa; font-size: 1.5em; text-align: center; margin-bottom: 40px;}
+        #victory-screen { background: rgba(0, 20, 50, 0.95); }
+        #victory-screen h2 { color: #00ccff; font-size: 4em; text-shadow: 0 0 30px #00aaff; margin-bottom: 10px; }
+        #victory-screen p { color: #aaddff; font-size: 1.5em; text-align: center; margin-bottom: 20px;}
+        .flag-box { border: 2px dashed #00ccff; padding: 20px; font-size: 2em; background: #000; color: #fff; margin-bottom: 40px; text-shadow: none; font-weight: bold;}
+        .btn-overlay { background: transparent; border: 2px solid; padding: 15px 40px; font-size: 1.5em; font-family: inherit; cursor: pointer; transition: all 0.3s; }
+        .btn-start { border-color: #f00; color: #f00; } .btn-start:hover { background: #f00; color: #000; box-shadow: 0 0 20px #f00; }
+        .btn-restart { border-color: #ff3333; color: #ff3333; } .btn-restart:hover { background: #ff3333; color: #000; box-shadow: 0 0 20px #ff3333; }
+        .btn-win { border-color: #00ccff; color: #00ccff; } .btn-win:hover { background: #00ccff; color: #000; box-shadow: 0 0 20px #00ccff; }
+        #notification-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 10000; pointer-events: none; }
+        .toast { background: rgba(10, 0, 0, 0.9); border: 1px solid #f00; color: #f00; padding: 15px 20px; font-size: 14px; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5); opacity: 0; transform: translateX(100%); animation: slideIn 0.3s forwards, fadeOut 0.5s 2.5s forwards; font-weight: bold; }
+        .toast.success { border-color: #0f0; color: #0f0; background: rgba(0, 10, 0, 0.9); box-shadow: 0 0 15px rgba(0, 255, 0, 0.5); }
+        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeOut { to { opacity: 0; } }
+        #map-container { position: relative; width: 100%; max-width: 1200px; aspect-ratio: 2000 / 857; background: #0a192f; border: 2px solid #0f0; box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); overflow: hidden; cursor: crosshair; }
+        #svg-wrapper { width: 100%; height: 100%; }
+        #svg-wrapper svg { width: 100%; height: 100%; display: block; }
+        #svg-wrapper svg path { fill: #2a2a2a; stroke: #111; stroke-width: 0.5; transition: fill 0.5s ease; cursor: crosshair; }
+        #svg-wrapper svg path:hover { stroke: #0f0 !important; stroke-width: 1.5 !important; }
+        #pins-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .event-pin { position: absolute; width: 35px; height: 35px; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" fill="%23ffff00" stroke="%23000" stroke-width="1"/></svg>'); transform: translate(-50%, -100%); cursor: pointer; pointer-events: auto; filter: drop-shadow(0 0 5px #ffffff) drop-shadow(0 0 10px #ffff00); animation: dangerPulse 0.5s infinite alternate; z-index: 10; }
+        @keyframes dangerPulse { 0% { transform: translate(-50%, -100%) scale(1); filter: drop-shadow(0 0 5px #ffffff); } 100% { transform: translate(-50%, -100%) scale(1.3); filter: drop-shadow(0 0 15px #ffff00); } }
+        #fx-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; }
+        .floating-text { position: absolute; font-family: 'Courier New', Courier, monospace; font-weight: bold; pointer-events: none; transform: translate(-50%, -50%); animation: floatUp 1.5s ease-out forwards; }
+        @keyframes floatUp { 0% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -200%) scale(1.2); } }
+        .text-bonus { color: #0f0; text-shadow: 0 0 8px #0f0, 0 0 3px #000; font-size: 16px; }
+        .text-malus { color: #f00; text-shadow: 0 0 8px #f00, 0 0 3px #000; font-size: 18px; }
+        .text-pr { color: #ffff00; text-shadow: 0 0 8px #ffff00, 0 0 3px #000; font-size: 14px; }
+        #ui-panel { margin-top: 20px; display: flex; gap: 20px; width: 100%; max-width: 1200px; }
+        .panel-box { flex: 1; border: 1px solid #0f0; padding: 15px; background: rgba(0, 255, 0, 0.05); }
+        input, button { background: #111; color: #0f0; border: 1px solid #0f0; padding: 10px; font-family: inherit; transition: opacity 0.3s; box-sizing: border-box; }
+        button:hover:not(:disabled) { background: #0f0; color: #111; cursor: pointer; }
+        button:disabled { background: #333; color: #777; border-color: #555; cursor: not-allowed; }
+        .btn-danger { border-color: #f00; color: #f00; float: right; padding: 5px 10px;} .btn-danger:hover { background: #f00; color: #111; }
+        @keyframes criticalPulse { 0% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.5); border-color: #f00; } 100% { box-shadow: 0 0 40px rgba(255, 0, 0, 1); border-color: #ff5555; } }
+        .critical-mode { animation: criticalPulse 0.5s infinite alternate !important; }
+        .critical-text { color: #f00 !important; text-shadow: 0 0 15px #f00 !important; }
+    </style>
+</head>
+<body>
+
+    <div id="notification-container"></div>
+
+    <div id="start-screen" class="overlay-screen" style="display: flex;">
+        <h2>PANDÉMIE CRITIQUE</h2>
+        <p>Un pathogène inconnu se propage à une vitesse exponentielle. <br><br>Utilisez la console de déploiement pour administrer des vaccins. Si vous détectez des anomalies dans le code génétique viral (Payload), exploitez-les pour synthétiser l'Antidote Absolu.</p>
+        <button id="btn-start-game" class="btn-overlay btn-start">SYNCHRONISATION...</button>
+    </div>
+
+    <div id="game-over-screen" class="overlay-screen">
+        <h2>SYSTÈME COMPROMIS</h2>
+        <p>Le taux d'infection mondial a dépassé le seuil critique (50%).<br>L'humanité est tombée.</p>
+        <button class="btn-overlay btn-restart" onclick="transmitResetState()">REDÉMARRER LA SIMULATION</button>
+    </div>
+
+    <div id="victory-screen" class="overlay-screen">
+        <h2>PANDÉMIE ÉRADIQUÉE</h2>
+        <p>Antidote Absolu déployé avec succès. Vous avez sauvé le monde.</p>
+        <div class="flag-box" id="victory-flag">CTF{...}</div>
+        <button class="btn-overlay btn-win" onclick="transmitResetState()">NOUVELLE SIMULATION</button>
+    </div>
+    
+    <audio id="bg-normal" loop><source src="/static/audio/ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="bg-critical" loop><source src="/static/audio/critical.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-spawn"><source src="/static/audio/spawn.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-click"><source src="/static/audio/click.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-success"><source src="/static/audio/success.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-error"><source src="/static/audio/error.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-reset"><source src="/static/audio/reset.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-malus"><source src="/static/audio/malus.mp3" type="audio/mpeg"></audio>
+
+    <h1>Global Contagion Control</h1>
+
+    <div id="global-stats-bar" style="width: 100%; max-width: 1200px; height: 25px; display: flex; border: 1px solid #0f0; margin-bottom: 15px; background: #111;">
+        <div id="bar-sains" style="width: 100%; background: #004400; color: #fff; text-align: center; font-size: 14px; line-height: 25px; transition: width 0.5s;">Sains: 100%</div>
+        <div id="bar-infectes" style="width: 0%; background: #aa0000; color: #fff; text-align: center; font-size: 14px; line-height: 25px; transition: width 0.5s; overflow: hidden; white-space: nowrap;">Infectés: 0%</div>
+        <div id="bar-gueris" style="width: 0%; background: #0000aa; color: #fff; text-align: center; font-size: 14px; line-height: 25px; transition: width 0.5s; overflow: hidden; white-space: nowrap;">Guéris: 0%</div>
+    </div>
+
+    <div id="map-container">
+        <div id="svg-wrapper">Chargement des données satellites...</div>
+        <div id="pins-layer"></div>
+        <div id="fx-layer"></div>
+    </div>
+
+    <div id="ui-panel">
+        <div class="panel-box">
+            <h3>Cible: <span id="selected-country">Monde Entier</span></h3>
+            <p>Population: <span id="info-pop">0</span></p>
+            <p>Sains: <span id="info-sains">0</span></p>
+            <p>Infectés: <span id="info-infected">0</span></p>
+            <p>Guéris: <span id="info-cured">0</span></p>
+            <hr style="border-color: #0f0;">
+            <input type="text" id="vaccine-payload" placeholder="Séquence génétique (Payload)..." style="width: 100%; margin-bottom: 10px;">
+            <button id="btn-deploy" onclick="dispatchPatch()" style="width: 100%;">Déployer Vaccin (+100k guéris) - 10 PR</button>
+        </div>
+        
+        <div class="panel-box">
+            <h3>Laboratoire</h3>
+            <p style="font-size: 1.2em;">Points de Recherche (PR): <span id="info-pr" style="color: #ffff00; font-weight: bold; text-shadow: 0 0 5px #ffff00;">0</span></p>
+            <hr style="border-color: #0f0;">
+            <button id="btn-upg-2" onclick="allocateTier('lvl2')" style="width: 100%; margin-bottom: 5px;">Améliorer Vaccin (500k) - 25 PR</button>
+            <button id="btn-upg-3" onclick="allocateTier('lvl3')" style="width: 100%; margin-bottom: 5px;">Super Vaccin (2M) - 100 PR</button>
+            <button id="btn-upg-antidote" onclick="allocateTier('antidote')" style="width: 100%; border-color: #f0f; color: #f0f;">Antidote Absolu - 999 999 PR</button>
+        </div>
+
+        <div class="panel-box">
+            <h3>Système Log 
+                <button class="btn-danger" onclick="transmitResetState()">Reset</button>
+            </h3>
+            <pre id="logs" style="height: 220px; overflow-y: auto; font-size: 12px; margin:0; white-space: pre-wrap; word-wrap: break-word;"></pre>
+        </div>
+    </div>
+
+    <script>
+        let ws;
+        let activeSelection = "GLOBAL"; 
+        let gameState = null;
+        let anomalyTracker = {};
+        
+        let audioCriticalState = false; 
+        let displaySynced = false;
+
+        function emitSound(id, volume = 1.0) {
+            const audio = document.getElementById(id);
+            if (audio) {
+                audio.volume = volume;
+                audio.currentTime = 0; 
+                audio.play().catch(e => console.log("Audio bloqué", e));
+            }
+        }
+
+        function triggerToast(msg, isError = true) {
+            if (isError) {
+                emitSound("sfx-error", 0.5);
+            } else {
+                emitSound("sfx-success", 0.5);
+            }
+
+            const container = document.getElementById("notification-container");
+            const toast = document.createElement("div");
+            toast.className = `toast ${isError ? '' : 'success'}`;
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 3000);
+        }
+
+        function appendLog(msg) {
+            const logs = document.getElementById("logs");
+            logs.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}<br>${logs.innerHTML}`;
+        }
+
+        async function initSatelliteLayer() {
+            try {
+                const response = await fetch('/static/map.svg');
+                if (!response.ok) throw new Error("SVG non trouvé");
+                const svgContent = await response.text();
+                document.getElementById('svg-wrapper').innerHTML = svgContent;
+                
+                setTimeout(() => {
+                    bindMapEvents();
+                    establishStream();
+                }, 100);
+            } catch (error) {
+                appendLog("ERREUR CRITIQUE: Échec du chargement de la carte.");
+            }
+        }
+
+        function establishStream() {
+            const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+            ws = new WebSocket(protocol + window.location.host + "/ws");
+            
+            ws.onopen = () => appendLog("Lien orbital établi.");
+            ws.onmessage = (event) => {
+                gameState = JSON.parse(event.data);
+                
+                const btnStart = document.getElementById("btn-start-game");
+                
+                if (gameState.game_active || gameState.phase === "playing") {
+                    btnStart.innerText = "REJOINDRE LA SIMULATION";
+                    btnStart.onclick = syncDisplayState; 
+                } else {
+                    btnStart.innerText = "INITIALISER LE SYSTÈME";
+                    btnStart.onclick = transmitInitState;
+                }
+
+                if (!displaySynced) {
+                    document.getElementById('start-screen').style.display = 'flex';
+                } else {
+                    document.getElementById('start-screen').style.display = 'none';
+                    document.getElementById('game-over-screen').style.display = 'none';
+                    document.getElementById('victory-screen').style.display = 'none';
+
+                    if (gameState.phase === "game_over") {
+                        document.getElementById('game-over-screen').style.display = 'flex';
+                    } else if (gameState.phase === "victory") {
+                        document.getElementById('victory-screen').style.display = 'flex';
+                        document.getElementById('victory-flag').innerText = gameState.flag;
+                    }
+                }
+
+                refreshMapLayer(gameState);
+                refreshGlobalMetrics(gameState);
+                
+                document.getElementById("info-pr").innerText = gameState.research_points;
+                
+                const btnDeploy = document.getElementById("btn-deploy");
+                let metricScale = "100k";
+                if (gameState.vaccine_power >= 2000000) metricScale = "2M";
+                else if (gameState.vaccine_power >= 500000) metricScale = "500k";
+                
+                btnDeploy.innerText = `Déployer Vaccin (+${metricScale} guéris) - 10 PR`;
+                
+                if (gameState.vaccine_power >= 500000) {
+                    document.getElementById("btn-upg-2").innerText = "Acquis (500k)";
+                    document.getElementById("btn-upg-2").style.opacity = "0.5";
+                    document.getElementById("btn-upg-2").disabled = true;
+                } else {
+                    document.getElementById("btn-upg-2").innerText = "Améliorer Vaccin (500k) - 25 PR";
+                    document.getElementById("btn-upg-2").style.opacity = "1";
+                    document.getElementById("btn-upg-2").disabled = false;
+                }
+                
+                if (gameState.vaccine_power >= 2000000) {
+                    document.getElementById("btn-upg-3").innerText = "Acquis (2M)";
+                    document.getElementById("btn-upg-3").style.opacity = "0.5";
+                    document.getElementById("btn-upg-3").disabled = true;
+                } else {
+                    document.getElementById("btn-upg-3").innerText = "Super Vaccin (2M) - 100 PR";
+                    document.getElementById("btn-upg-3").style.opacity = "1";
+                    document.getElementById("btn-upg-3").disabled = false;
+                }
+
+                if (activeSelection) updateFocusPanel(activeSelection);
+            };
+        }
+
+        function bindMapEvents() {
+            const svgWrapper = document.getElementById('svg-wrapper');
+            svgWrapper.addEventListener('click', (e) => {
+                if (!gameState || !gameState.game_active) return;
+                
+                if (e.target.tagName.toLowerCase() === 'path') {
+                    const identifier = e.target.id || e.target.getAttribute('class');
+                    if (identifier) {
+                        lockSelection(identifier);
+                    }
+                } else {
+                    lockSelection("GLOBAL");
+                }
+            });
+        }
+
+        function refreshMapLayer(state) {
+            for (const [key, data] of Object.entries(state.countries)) {
+                let elements = [];
+                const elById = document.getElementById(key);
+                if (elById) elements.push(elById);
+                
+                const elsByClass = document.getElementsByClassName(key);
+                if (elsByClass.length > 0) {
+                    elements = elements.concat(Array.from(elsByClass));
+                }
+                
+                elements.forEach(el => {
+                    const cleanCount = data.population - data.infected - data.cured;
+                    
+                    if (cleanCount <= 0 && data.infected === 0 && data.population > 0) {
+                        el.style.fill = '#0066ff'; 
+                    } else {
+                        const ratio = data.infected / data.population;
+                        const red = Math.floor(42 + (Math.min(ratio, 1) * 213)); 
+                        el.style.fill = `rgb(${red}, 42, 42)`;
+                    }
+                });
+            }
+
+            const activeIds = new Set();
+            if (state.anomalies) {
+                state.anomalies.forEach(e => activeIds.add(e.id));
+            }
+
+            for (const [id, data] of Object.entries(anomalyTracker)) {
+                if (!activeIds.has(id)) {
+                    if (data.clicked) {
+                        const healedStr = "+" + (data.healed_value !== undefined ? data.healed_value : 2000);
+                        renderFxFloat(data.x, data.y, healedStr, "text-bonus");
+                        renderFxFloat(data.x, data.y - 5, "+" + data.yield_value + " PR", "text-pr");
+                    } else {
+                        emitSound("sfx-malus", 0.7);
+                        renderFxFloat(data.x, data.y, "⚠️ +15%", "text-malus");
+                        appendLog(`*ÉCHEC* Alerte manquée sur ${data.target}.`);
+                    }
+                    delete anomalyTracker[id];
+                }
+            }
+
+            const pinsLayer = document.getElementById("pins-layer");
+            pinsLayer.innerHTML = ''; 
+            
+            let anomalyDetected = false; 
+
+            if (state.anomalies && state.game_active) {
+                state.anomalies.forEach(evt => {
+                    const targetEl = document.getElementById(evt.target) || document.getElementsByClassName(evt.target)[0];
+                    if (targetEl) {
+                        const bbox = targetEl.getBBox();
+                        const cx = bbox.x + bbox.width / 2;
+                        const cy = bbox.y + bbox.height / 2;
+
+                        const percentX = (cx / 2000 * 100);
+                        const percentY = (cy / 857 * 100);
+
+                        if (!anomalyTracker[evt.id]) {
+                            anomalyDetected = true;
+
+                            anomalyTracker[evt.id] = { 
+                                x: percentX, 
+                                y: percentY, 
+                                clicked: false,
+                                yield_value: evt.yield_value,
+                                target: evt.target
+                            };
+                        }
+
+                        const pin = document.createElement('div');
+                        pin.className = 'event-pin';
+                        pin.style.left = percentX + '%';
+                        pin.style.top = percentY + '%';
+                        pin.title = `Alerte: ${evt.type}`;
+                        
+                        pin.onclick = (e) => {
+                            e.stopPropagation();
+                            
+                            emitSound("sfx-click", 0.6);
+
+                            if (anomalyTracker[evt.id]) {
+                                anomalyTracker[evt.id].clicked = true;
+                                const nData = state.countries[evt.target];
+                                if (nData) {
+                                    anomalyTracker[evt.id].healed_value = Math.min(2000, nData.infected);
+                                }
+                            }
+                            pin.style.display = 'none'; 
+                            ws.send(JSON.stringify({ type: "resolve_anomaly", id: evt.id }));
+                            appendLog(`Alerte maîtrisée sur ${evt.target}.`);
+                        };
+                        pinsLayer.appendChild(pin);
+                    }
+                });
+
+                if (anomalyDetected) {
+                    emitSound("sfx-spawn", 0.4);
+                }
+            }
+        }
+
+        function renderFxFloat(x, y, text, cssClass) {
+            const fxLayer = document.getElementById("fx-layer");
+            if (!fxLayer) return;
+            const el = document.createElement("div");
+            el.className = `floating-text ${cssClass}`;
+            el.innerText = text;
+            el.style.left = x + '%';
+            el.style.top = y + '%';
+            fxLayer.appendChild(el);
+            setTimeout(() => { if(el.parentNode) el.remove(); }, 1500);
+        }
+
+        function refreshGlobalMetrics(state) {
+            let totalPop = 0, totalInf = 0, totalCured = 0;
+            for (const key in state.countries) {
+                totalPop += state.countries[key].population;
+                totalInf += state.countries[key].infected;
+                totalCured += state.countries[key].cured;
+            }
+            const cleanCount = totalPop - totalInf - totalCured;
+            
+            const pctSains = totalPop > 0 ? (cleanCount / totalPop) * 100 : 100;
+            const pctInf = totalPop > 0 ? (totalInf / totalPop) * 100 : 0;
+            const pctCured = totalPop > 0 ? (totalCured / totalPop) * 100 : 0;
+            
+            document.getElementById("bar-sains").style.width = pctSains + "%";
+            document.getElementById("bar-sains").innerText = `Sains: ${pctSains.toFixed(1)}%`;
+            
+            document.getElementById("bar-infectes").style.width = pctInf + "%";
+            document.getElementById("bar-infectes").innerText = `Infectés: ${pctInf.toFixed(1)}%`;
+            
+            document.getElementById("bar-gueris").style.width = pctCured + "%";
+            document.getElementById("bar-gueris").innerText = `Guéris: ${pctCured.toFixed(1)}%`;
+
+            const mapContainer = document.getElementById("map-container");
+            const mainTitle = document.querySelector("h1");
+            const bgNormal = document.getElementById("bg-normal");
+            const bgCritical = document.getElementById("bg-critical");
+            
+            if (pctInf >= 30.0) {
+                mapContainer.classList.add("critical-mode");
+                mainTitle.classList.add("critical-text");
+                mainTitle.innerText = "GLOBAL CONTAGION CONTROL - ÉTAT CRITIQUE !";
+                
+                if (!audioCriticalState && gameState && gameState.phase === "playing") {
+                    audioCriticalState = true;
+                    if(bgNormal) bgNormal.pause();
+                    if(bgCritical) {
+                        bgCritical.volume = 0.4; 
+                        bgCritical.play().catch(e => console.log("Audio bloqué", e));
+                    }
+                }
+            } else {
+                mapContainer.classList.remove("critical-mode");
+                mainTitle.classList.remove("critical-text");
+                mainTitle.innerText = "Global Contagion Control";
+                
+                if (audioCriticalState && gameState && gameState.phase === "playing") {
+                    audioCriticalState = false;
+                    if(bgCritical) bgCritical.pause();
+                    if(bgNormal) bgNormal.play().catch(e => console.log("Audio bloqué", e));
+                }
+            }
+        }
+
+        function lockSelection(key) {
+            activeSelection = key;
+            updateFocusPanel(key);
+        }
+
+        function updateFocusPanel(key) {
+            if (!gameState) return;
+
+            if (key === "GLOBAL") {
+                let totalPop = 0, totalInf = 0, totalCured = 0;
+                for (const k in gameState.countries) {
+                    totalPop += gameState.countries[k].population;
+                    totalInf += gameState.countries[k].infected;
+                    totalCured += gameState.countries[k].cured;
+                }
+                const cleanCount = totalPop - totalInf - totalCured;
+                
+                document.getElementById("selected-country").innerText = "Monde Entier";
+                document.getElementById("info-pop").innerText = totalPop.toLocaleString();
+                document.getElementById("info-sains").innerText = cleanCount.toLocaleString();
+                document.getElementById("info-infected").innerText = totalInf.toLocaleString();
+                document.getElementById("info-cured").innerText = totalCured.toLocaleString();
+            } else {
+                const data = gameState.countries[key];
+                if (!data) return;
+                
+                const cleanCount = data.population - data.infected - data.cured;
+                
+                document.getElementById("selected-country").innerText = data.name;
+                document.getElementById("info-pop").innerText = data.population.toLocaleString();
+                document.getElementById("info-sains").innerText = cleanCount.toLocaleString();
+                document.getElementById("info-infected").innerText = data.infected.toLocaleString();
+                document.getElementById("info-cured").innerText = data.cured.toLocaleString();
+            }
+        }
+
+        function allocateTier(uid) {
+            if (!gameState) return;
+            
+            let cost = 0;
+            if (uid === 'lvl2') cost = 25;
+            else if (uid === 'lvl3') cost = 100;
+            else if (uid === 'antidote') cost = 999999;
+
+            if (gameState.research_points < cost) {
+                return triggerToast(`[ERREUR] Fonds insuffisants (${cost} PR requis) !`);
+            }
+
+            if(ws?.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: "buy_upgrade", upgrade_id: uid }));
+                triggerToast(`[SUCCÈS] Amélioration acquise !`, false); 
+            }
+        }
+
+        function syncDisplayState() {
+            displaySynced = true;
+            document.getElementById('start-screen').style.display = 'none';
+            
+            if (gameState) {
+                let totalPop = 0, totalInf = 0;
+                for (const key in gameState.countries) {
+                    totalPop += gameState.countries[key].population;
+                    totalInf += gameState.countries[key].infected;
+                }
+                const pctInf = totalPop > 0 ? (totalInf / totalPop) * 100 : 0;
+                
+                if (pctInf >= 30.0) {
+                    audioCriticalState = true;
+                    emitSound("bg-critical", 0.4);
+                } else {
+                    audioCriticalState = false;
+                    emitSound("bg-normal", 0.3);
+                }
+            }
+        }
+
+        function transmitInitState() {
+            if(ws?.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: "init_game" }));
+                
+                displaySynced = true;
+                document.getElementById('start-screen').style.display = 'none';
+                
+                audioCriticalState = false;
+                document.getElementById("bg-critical").pause();
+                emitSound("bg-normal", 0.3); 
+            }
+        }
+
+        function transmitResetState() {
+            emitSound("sfx-reset", 0.6);
+            ws.send(JSON.stringify({ type: "reset_game" }));
+            appendLog("Système redémarré.");
+        }
+
+        function dispatchPatch() {
+            const dataLoad = document.getElementById("vaccine-payload").value;
+
+            if ((!activeSelection || activeSelection === "GLOBAL") && dataLoad !== "MONDE" && dataLoad !== "10PR") {
+                return triggerToast("[ERREUR] Cible invalide. Sélectionnez un pays.");
+            }
+
+            if (gameState.research_points < 10 && dataLoad !== "PAYS" && dataLoad !== "MONDE" && dataLoad !== "10PR") {
+                return triggerToast("[ERREUR] Fonds insuffisants (10 PR requis).");
+            }
+            
+            ws.send(JSON.stringify({
+                type: "deploy_vaccine",
+                target: activeSelection,
+                payload: dataLoad || "STD_01"
+            }));
+            
+            if (dataLoad === "10PR") {
+                triggerToast("[DEBUG] +10 Points de Recherche octroyés.", false);
+                appendLog("Commande d'administration : Injection de fonds (+10 PR).");
+            } else if (dataLoad === "MONDE") {
+                triggerToast("[DEBUG] Protocole d'urgence : Monde entier soigné.", false);
+                appendLog("Commande d'administration : Guérison globale.");
+            } else if (dataLoad === "PAYS") {
+                triggerToast(`[DEBUG] Guérison instantanée sur ${activeSelection}.`, false);
+                appendLog(`Commande d'administration : ${activeSelection} soigné.`);
+            } else {
+                triggerToast(`[DÉPLOIEMENT] Vaccin administré sur ${activeSelection}`, false);
+                appendLog(`Vaccin déployé sur ${activeSelection}.`);
+            }
+            
+            document.getElementById("vaccine-payload").value = ""; 
+        }
+
+        window.onload = initSatelliteLayer;
+    </script>
+</body>
+</html>

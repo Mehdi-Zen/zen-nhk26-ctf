@@ -1,0 +1,34 @@
+name: "Lost in Transmission"
+author: "BloDiZz"
+category: Misc                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+
+  Vous êtes chargé d’analyser un document mystérieux retrouvé dans les archives d’un laboratoire de renom dirigé par des scientifiques visionnaires comme Blaise de Vigenere, avait pour habitude de dissimuler ses informations sensibles derrière des méthodes de communication chiffrées et sophistiquées.
+
+  Ce laboratoire, dirigé par des scientifiques renommés, avait pour habitude de dissimuler ses informations sensibles derrière des méthodes de communication anciennes.
+
+  Un fichier texte nommé document.txt vous est transmis. Son contenu ne ressemble à aucun langage moderne, mais il pourrait s’agir d’un système de communication historique, autrefois utilisé par les scientifiques pour transmettre des données de manière discrète. Le laboratoire compte sur vous pour décoder le contenu de ce fichier ! 
+
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : hidden                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - MISC
+
+flags:
+  - flag: "NHK26{Message_En_Morse_CTF2026}"
+    type: static
+    
+files:
+  - files/document.txt

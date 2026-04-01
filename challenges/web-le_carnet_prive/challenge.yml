@@ -1,0 +1,32 @@
+name: " Le carnet perdu de Ocean Ramsey et Juan Oliphant"
+author: "Malth"
+category: Web
+
+description_image: files/challenge.jpeg
+
+description: |
+  Ocean Ramsey et Juan Oliphant sont deux zoologiste qui ont participé à des travaux de recherches sur le lien entre le comportement des grands requins blanc et le réchauffement climatique.
+  Un serveur web montre des extraits de carnets personnels pour les exposer lors d’un colloque mais certains carnets sont marqués « privé ».
+  Vous devez retrouver le carnet privé de Ocean & Juan.
+
+value: 100
+type: container
+state : visible
+
+extra:
+  initial: 100
+  decay: 30
+  minimum: 50
+
+tags:
+  - FACILE
+  - WEB
+
+flags:
+  - flag: "NHK26{1D0R_D4nS_L3S_PR0F0ND3URS}"
+    type: static
+    
+type: container
+image: registry.gitlab.com/ex-ex1/ex-ex/CATEGORIE-NOM:latest
+port: 5544 # Port exposé dans votre Dockerfile
+protocol: web                    # ou: tcp

@@ -1,0 +1,42 @@
+name: "Projet de  Feifei-li"
+author: "Andy"
+category: Misc
+
+description_image: files/challenge.png
+
+description: |
+  Vous travaillez sur un projet de vision par ordinateur inspiré des travaux de **Fei-Fei Li**,
+  pionnière dans l’analyse d’images et la reconnaissance visuelle à grande échelle.
+
+  Une image issue d’un ancien jeu de données vous a été transmise.
+  À première vue, elle semble parfaitement normale…
+  Pourtant une information y a été dissimulée.
+
+value: 300
+type: dynamic
+state: hidden
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+tags:
+  - MOYEN
+  - MISC
+
+flags:
+  - flag: "NHK26{Vision_secrete}"
+    type: static
+
+files:
+  - files/challenge.png
+  - files/challenge_image.png
+
+hints:
+  - content: "Pense aux bits de poids faible (LSB) dans les canaux RGB : extrais-les et visualise le résultat."
+    cost: 25
+  - content: "Essaie plusieurs ordres/canaux (R/G/B) et différentes profondeurs (1 bit, 2 bits). Une simple extraction ne suffit pas toujours."
+    cost: 60
+
+max_attempts: 0

@@ -1,0 +1,28 @@
+name: "Copernic cherche la Terre"
+author: "M€dus@"
+category: Code Review                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Oups… les planètes sont en désordre ! En corrigeant une seule ligne, la Terre retrouvera sa place à vraie distance du soleil. Remets le système solaire en ordre et le flag cosmique te sera révélé.
+
+value: 50                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 50                   # POur gerer le dynamisme du scoring
+  decay: 40                      # facteur de decroissance
+  minimum: 20                   # Minimum
+
+tags:
+  - INTRO
+  - CODE REVIEW
+
+flags:
+  - flag: "NHK26{COPERNIC-b1fa0d81}"
+    type: static
+
+files:
+  - files/copernic.py

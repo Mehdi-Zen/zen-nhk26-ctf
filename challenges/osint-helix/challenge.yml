@@ -1,0 +1,56 @@
+# TEMPLATE: Challenge Docker (Web, Pwn, etc.)
+# Dossier: categorie-nom (ex: web-sqli)
+
+name: "Helix"
+author: "Katarak"
+category: OSINT                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: src/files/challenge.jpg    # OBLIGATOIRE
+
+description: |
+  ## 🧬
+  En 1953, Watson et Crick dévoilaient au monde la structure en double hélice de l’ADN.  
+  Une spirale élégante, porteuse d’un code universel.
+  Saurez-vous dévoiler la vérité enfouie dans une spirale.
+
+  `Flag Format : NHK26{Flag}`
+
+# Points: voir document de Camille
+value: 300
+type: container
+state: visible
+
+extra:
+  initial: 300                   # = value
+  decay: 13
+  minimum: 100                    # ~50% de initial
+
+# Docker
+image: 192.168.213.11:5000/osint-helix:latest
+port: 5000
+protocol: web                    # web | tcp
+
+flags:
+  - flag: "NHK26{Opossum}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - MOYEN
+  - OSINT
+  - MASTERCLASS
+
+# Optionnel - cout des indices: voir document de Camille
+hints:
+  - content: "Adenine, Guanine, Cytosine, Thymine"
+    cost: 25
+
+# files:
+#   - files/wordlist.txt
+
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

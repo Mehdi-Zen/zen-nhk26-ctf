@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap');
+
+:root {
+    --bg: #0f1216;
+    --card: #1a1f26;
+    --accent: #cfa75d;
+    --text: #e6e6e6;
+    --muted: #9aa0a6;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+
+    background-image: url("fadegreen-orange-red.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    background-color: #0f1216;
+    color: var(--text);
+}
+
+.hero, .sub-hero {
+    padding: 60px 20px;
+    text-align: center;
+    background: linear-gradient(145deg, #151a20, #0c0f14);
+    border-bottom: 1px solid #222;
+}
+
+.hero h1, .sub-hero h1 {
+    margin: 0;
+    font-size: 2.8rem;
+    color: var(--accent);
+}
+
+.hero p, .sub-hero p {
+    color: var(--muted);
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.card, .archive {
+    background: var(--card);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    margin-bottom: 30px;
+}
+
+.card h2, .archive h2 {
+    margin-top: 0;
+    color: var(--accent);
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    background: var(--accent);
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.search input {
+    flex: 1;
+    padding: 12px;
+    background: #0c0f14;
+    border: 1px solid #333;
+    color: var(--text);
+    border-radius: 4px;
+}
+
+.search button {
+    padding: 12px 20px;
+    background: var(--accent);
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #ffffff;
+    font-size: 0.9rem;
+}

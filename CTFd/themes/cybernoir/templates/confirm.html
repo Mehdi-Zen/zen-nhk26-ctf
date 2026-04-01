@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="jumbotron">
+    <div class="container">
+      <h1 data-text="{% trans %}Confirm{% endtrans %}">
+        <span class="glow-cyan">//</span> {% trans %}Confirm{% endtrans %}
+      </h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+        {% include "components/errors.html" %}
+
+        <div class="settings-section text-center">
+          <i class="fas fa-envelope-open-text fa-4x text-neon-cyan mb-4"></i>
+          <h4>{% trans %}Email Confirmation{% endtrans %}</h4>
+          <p class="text-muted">{% trans %}Please confirm your email address{% endtrans %}</p>
+
+          {% if User.verified %}
+            <div class="alert alert-success">
+              <i class="fas fa-check-circle me-2"></i>
+              {% trans %}Your email has been verified!{% endtrans %}
+            </div>
+          {% else %}
+            <p>{% trans %}A confirmation email has been sent to your email address.{% endtrans %}</p>
+            <form method="POST">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane me-2"></i>
+                {% trans %}Resend Confirmation{% endtrans %}
+              </button>
+              <input type="hidden" name="nonce" value="{{ Session.nonce }}">
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

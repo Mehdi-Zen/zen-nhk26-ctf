@@ -1,0 +1,43 @@
+name: "Byte Me"
+author: "EnderMan"
+category: Web
+
+description_image: files/challenge.png
+
+description: |
+  Jon Ellman a consacré sa carrière à la chimie des C-H et à la synthèse combinatoire.
+  Ses travaux sont cités partout , mais ses archives internes, elles, sont censées rester privées.
+
+  L'Institut Ellman vient de mettre en ligne un portail d'archives publiques.
+  Le catalogue propose plusieurs rapports en téléchargement au format PDF.
+
+  Une rumeur circule : un dossier interne (#67) aurait été laissé sur le serveur par erreur.
+  L'équipe assure que seuls les PDF sont accessibles.
+
+  Prouve le contraire.
+
+value: 300
+type: container
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+image: registry.gitlab.com/nhk26/challenges/web-byte-me:latest
+port: 5000
+protocol: web
+
+tags:
+  - MOYEN
+  - WEB
+
+flags:
+  - flag: "NHK26{You_byt3_m3_wi1h_success}"
+    type: static
+
+files:
+  - files/challenge.png
+
+max_attempts: 0

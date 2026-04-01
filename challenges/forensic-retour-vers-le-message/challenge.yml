@@ -1,0 +1,29 @@
+name: "Retour vers le message"
+author: "Kisane"
+category: Forensic                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Nom de Zeus, Doc a disparu en laissant derrière lui plusieurs fichiers avec pleins de fautes d'orthographes. Votre but est de découvrir le message caché laissé par doc pour comprendre ce qu'il lui est arrivé.
+
+value: 300                       # Voir document de Camille
+type: dynamic
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100
+
+tags:
+  - MOYEN
+  - FORENSIC
+
+flags:
+  - flag: "NHK26{T1ME_TR5V3L_88MPH_FROM_R3L471V1TY}"
+    type: static
+
+files:
+  - files/Brown.wav
+  - files/DeLorean.jpg
+  - files/s6cr4t.zip

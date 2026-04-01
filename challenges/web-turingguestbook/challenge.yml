@@ -1,0 +1,25 @@
+name: "TuringGuestBook"
+author: "will"
+category: "Web"
+description_image: "files/challenge.jpeg"
+
+description: |
+  Le musée Alan Turing tient un livre d’or en ligne.  
+  Laissez-y un petit message. Attention, **un administrateur vérifie chacun des commentaires postés**.
+  
+value: 100
+type: container
+state: visible
+image: registry.gitlab.com/.../web-turingguestbook:latest   # adapte au vrai registry
+port: 80
+protocol: web
+extra:
+  initial: 100
+  decay: 30
+  minimum: 50
+tags:
+  - FACILE
+  - WEB
+flags:
+  - flag: "NHK26{Turing_would_never_trust_user_input}"
+    type: "static"

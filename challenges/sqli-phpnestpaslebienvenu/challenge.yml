@@ -1,0 +1,32 @@
+name: "PHP n'est pas le bienvenu"
+author: "N0culus"
+category: SQLi
+
+description_image: files/challenge.png
+
+description: |
+  Rasmus Lerdorf est bien embêté : il n'arrive pas à téléverser son fichier PHP comme prévu. Aidez-le à trouver un autre moyen pour révéler le message caché.
+
+value: 100
+
+type: container
+
+image: registry.gitlab.com/nhk/sqli-phpnestpaslebienvenue:latest
+port: 80
+protocol: web
+
+extra:
+  initial: 100
+  decay: 30
+  minimum: 50
+
+tags:
+  - FACILE
+  - SQLI
+
+flags:
+  - flag: "NHK26{ghoEKwdlZTqH}"
+    type: static
+
+files:
+  - files/fichier.php

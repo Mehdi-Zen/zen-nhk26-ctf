@@ -1,0 +1,31 @@
+name: "L'Algorithme de l'Oubli"
+author: "Lou"
+category: Reverse
+
+description_image: files/challenge.png
+
+description: |
+  Un petit programme nommé "lovelace_oubli" laissé par Ada Lovelace.  
+  Analyse-le pour retrouver la phrase cachée.
+
+value: 50
+type: dynamic
+state: visible
+
+extra:
+  initial: 50
+  decay: 40
+  minimum: 20
+
+tags:
+  - INTRO
+  - REVERSE
+
+flags:
+  - flag: "NHK26{souvenir_de_lovelace}"
+    type: static
+
+files:
+  - files/lovelace_oubli
+
+max_attempts: 0

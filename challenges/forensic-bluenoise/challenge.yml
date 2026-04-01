@@ -1,0 +1,38 @@
+name: "Bluenoise"
+author: "BloDiZz"
+category: Forensic                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.jpg   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+
+  Dans ce challenge forensic, vous devrez adopter une approche méthodique digne d’un pionnier des communications sans fil comme Harald Bluetooth, dont le nom a inspiré la technologie Bluetooth moderne.
+
+  Vous êtes un hacker et vous avez intercepté des communications d’un protocole bien connu de tous.
+
+  On entend dire dans les couloirs qu’une adresse  MAC est suivie d’un tiret puis d’une chaîne propre à ce protocole.
+
+  Vos collaborateurs comptent sur vous pour retrouver des informations cruciales ! 
+
+
+
+value: 500                       
+type: dynamic                    # ou: container, firstblood
+state : visible                
+
+extra:
+  initial: 500                   
+  decay: 6                      
+  minimum: 300                   
+
+tags:
+  - DIFFICILE
+  - FORENSIC
+
+flags:
+  - flag: "NHK26{Commu_BLE_CTF2026}"
+    type: static
+    
+files:
+  - files/blue_noise.pcap
+  - files/communication_locked.7z

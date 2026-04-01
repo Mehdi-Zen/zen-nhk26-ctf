@@ -1,0 +1,32 @@
+name: "gaillardement_instable_1"
+author: "Malth"
+category: OSINT                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+files : 
+ - files/billet.png
+
+description: |
+  Nous commençons ici un périple afin de retrouver la trace d'un ingénieur français nommé Michel Gaillard.
+  Ce challenge sera en 4 étapes liée les unes des autres. Dans cette première étape, les service secret français on réussi a retrouvé le billet d'avion de Mr Gaillard. Un indice y est disséminé. le flag sera sous la forme NHK26{xxx_xx_xxxxxx}. Attention l'agent qui a créer cela a une passion pour mélanger les lettres et les chiffres.
+
+value: 1
+type: dynamic
+state : visible
+
+extra:
+  initial: 1                   
+  decay: 13                     
+  minimum: 1
+
+tags:
+  - TIROIR
+  - DIFFICILE
+  - OSINT
+
+flags:
+  - flag: "NHK26{Fly_T0_R0v}"
+    type: static
+
+next: "gaillardement_instable_2"

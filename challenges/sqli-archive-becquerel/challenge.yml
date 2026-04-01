@@ -1,0 +1,36 @@
+name: "Archive de Becquerel"
+author: "Lou"
+category: SQLi
+
+description_image: files/challenge.png
+
+description: |
+  Une seule archive est publiquement accessible.
+  Pourtant d'autres données existent…
+
+  Saurez-vous les révéler ?
+
+  `Format du flag : NHK26{texte_en_minuscules_avec_underscores}`
+
+value: 300
+type: container
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+tags:
+  - MOYEN
+  - SQLi
+
+flags:
+  - flag: "NHK26{proprietes_de_la_radioactivite}"
+    type: static
+
+image: 192.168.213.11:5000/sqli-archive-becquerel:latest
+port: 80
+protocol: web
+
+max_attempts: 0

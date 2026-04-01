@@ -1,0 +1,27 @@
+name: "Revision Rift"
+author: "BloDiZz"
+category: OSINT                    
+
+description_image: files/challenge.png   
+
+description: |
+  Une scientifique de renommée internationale malheureusement décédée en 2012 a marqué l’histoire de la biologie et des neurosciences par ses travaux fondamentaux sur le développement du système nerveux. Une personne à modifier sa biographie le 4 Janvier 2010 en ajoutant une photo plus récente de cette scientifique. Retrouvez-la ! 
+
+  `Format du Flag : NHK26{flag}`
+
+value: 50                      
+type: dynamic                    # ou: container, firstblood
+state : visible                  
+
+extra:
+  initial: 50                   
+  decay: 40                    
+  minimum: 20                   
+
+tags:
+  - INTRO                       
+  - OSINT
+
+flags:
+  - flag: "NHK26{Wikinade}"
+    type: static

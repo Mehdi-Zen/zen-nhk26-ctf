@@ -1,0 +1,51 @@
+# TEMPLATE: Challenge Docker (Web, Pwn, etc.)
+# Dossier: categorie-nom (ex: web-sqli)
+
+name: "Nom du Challenge"
+author: "TonPseudo"
+category: Web                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+  Description du challenge.
+  Supporte le **markdown**.
+
+# Points: voir document de Camille
+value: 100
+type: container
+state: visible
+
+extra:
+  initial: 100                   # = value
+  decay: 20
+  minimum: 50                    # ~50% de initial
+
+# Docker
+image: registry.gitlab.com/music-music1/music-music/CATEGORIE-NOM:latest
+port: 5000
+protocol: web                    # web | tcp
+
+flags:
+  - flag: "NHK26{your_flag_here}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - FACILE
+  - Web
+
+# Optionnel - cout des indices: voir document de Camille
+hints:
+  - content: "Premier indice"
+    cost: 0
+
+# files:
+#   - files/wordlist.txt
+
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

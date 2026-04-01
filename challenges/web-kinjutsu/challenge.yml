@@ -1,0 +1,35 @@
+name: "Kinjutsu"
+author: "ErEn"
+category: Crypto
+
+description_image: files/challenge.jpg
+
+description: |
+  *« Un système cryptographique doit être sûr même si tout est connu, sauf la clé. »* , Auguste Kerckhoffs.
+
+  Le système est connu. L'algorithme est visible. Montrez que la théorie ne suffit pas quand l'implémentation est faible.
+
+value: 300
+type: container
+state: hidden
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+image: 192.168.213.11:5000/crypto-kinjutsu:latest
+port: 5000
+protocol: web
+
+flags:
+  - flag: "NHK26{Jwt_Br0k3n_S3cr3ts_4r3_D4ng3r0us}"
+    type: static
+
+tags:
+  - MOYEN
+  - WEB
+
+
+max_attempts: 0
+version: "1.0"

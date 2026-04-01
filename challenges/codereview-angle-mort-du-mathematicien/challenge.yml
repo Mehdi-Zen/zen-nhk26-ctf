@@ -1,0 +1,33 @@
+name: "L'angle mort du Mathematicien"
+author: "Wumbou"
+category: Code Review
+
+description_image: files/challenge.png
+
+description: |
+  J'ai implémenté le protocole de partage de secret standard. Le seuil de reconstruction est strict : si vous n'avez pas toutes les parts, les mathématiques garantissent que vous ne trouverez rien.
+
+  Le code est propre. L'algorithme est prouvé. Inutile d'essayer de le casser.
+
+  N'oublier pas de mettre le bon format du flag !
+
+value: 100
+type: dynamic 
+state: visible
+
+extra:
+  initial: 100
+  decay: 30
+  minimum: 50
+
+
+tags:
+  - FACILE
+  - CODE REVIEW
+files:
+  - files/joueur.py
+
+
+flags:
+  - flag: "NHK26{T0CT0U_R4c3_C0nd1t10n_Pwn3d}" 
+    type: static

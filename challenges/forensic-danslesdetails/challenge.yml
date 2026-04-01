@@ -1,0 +1,37 @@
+name: "Dans les détails"
+author: "EL NiMoS"
+category: Forensic                   # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Un historien passionné de chronophotographie vous a transmis une vidéo mystérieuse d'Eadweard Muybridge datant de 1878. Mais derrière ces images d'un autre temps, quelque chose cloche...
+
+  C'est en 1882 que le médecin et physiologiste français Jules Marey révolutionne l'analyse du mouvement avec son fusil photographique — un appareil capable de capturer ce que l'œil humain ne peut tout simplement pas percevoir, image par image, instant par instant. Marey voyait là où personne d'autre ne regardait.
+
+  Un siècle et demi plus tard, quelqu'un semble s'être inspiré de sa méthode pour dissimuler un message dans cette vidéo. Comme Marey, il faudra décomposer, analyser, et regarder là où l'œil ne va pas naturellement. Le secret ne se révèle pas — il se cherche.
+
+value: 500                       # Voir document de Camille
+type: firstblood                    # ou: container, firstblood
+state : hidden                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                    # Minimum
+
+tags:
+  - DIFFICILE
+  - FORENSIC
+  - FIRST BLOOD
+
+first_blood_bonus:
+  - 250
+
+flags:
+  - flag: "NHK26{chr0n0ph0t0Horse}"
+    type: static
+files : 
+  - files/TheHorseInMotion.avi
+
+max_attempts: 0

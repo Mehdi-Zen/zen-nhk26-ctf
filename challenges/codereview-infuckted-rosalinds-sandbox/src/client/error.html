@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V01D.onion — SYSTEM EXCEPTION</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon_V01D.svg">
+<style>
+  @view-transition {
+    navigation: auto;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root {
+    --bg: #050505;
+    --bg2: #0a0a0a;
+    --bg3: #0f0f0f;
+    --border: #1a1a1a;
+    --border2: #222;
+    --green: #00ff41;
+    --green-dim: #00aa2a;
+    --red: #ff2020;
+    --red-dim: #801010;
+    --amber: #ffb300;
+    --gray: #444;
+    --text: #b0b0b0;
+    --text-dim: #555;
+    --white: #d0d0d0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    cursor: crosshair;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    92% { opacity: 1; }
+    93% { opacity: 0.8; }
+    94% { opacity: 1; }
+    96% { opacity: 0.9; }
+    97% { opacity: 1; }
+  }
+  body { animation: flicker 8s infinite; }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  #error-wrapper {
+    max-width: 600px;
+    width: 100%;
+    padding: 20px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .site-logo {
+    font-family: 'VT323', monospace;
+    font-size: 42px;
+    color: var(--green);
+    text-shadow: 0 0 20px rgba(0,255,65,0.4), 0 0 60px rgba(0,255,65,0.1);
+    letter-spacing: 4px;
+    line-height: 1;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .site-logo span { color: var(--red); }
+
+  .error-box {
+    border: 1px solid var(--red-dim);
+    background: #0a0000;
+    padding: 30px;
+    position: relative;
+  }
+
+  .error-box::before {
+    content: 'EXCEPTION THROWN';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--bg);
+    padding: 0 10px;
+    color: var(--red);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  .error-code {
+    font-family: 'VT323', monospace;
+    font-size: 80px;
+    color: var(--red);
+    line-height: 1;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(255,32,32,0.4);
+    text-align: center;
+  }
+
+  .error-msg {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 16px;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+  }
+
+  .terminal {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    padding: 15px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 30px;
+  }
+
+  .terminal p { margin-bottom: 5px; }
+  .terminal .prompt { color: var(--green-dim); }
+  .terminal .err-output { color: var(--red); }
+
+  .action-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    background: transparent;
+    color: var(--green);
+    border: 1px solid var(--green-dim);
+    padding: 12px 0;
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+  }
+
+  .action-btn:hover {
+    background: var(--green-dim);
+    color: var(--bg);
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--green);
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+    margin-left: 5px;
+  }
+
+</style>
+</head>
+<body>
+
+<div id="error-wrapper">
+  <div class="site-logo">V<span>0</span>1D.onion</div>
+  
+  <div class="error-box">
+    <div class="error-code">404</div>
+    <div class="error-msg">// NODE NOT FOUND //</div>
+    
+    <div class="terminal">
+      <p><span class="prompt">daemon@v01d:~$</span> trace route /target_node</p>
+      <p>> Initiating trace...</p>
+      <p>> Bypassing proxy layers [████████--]</p>
+      <p class="err-output">> FATAL: End node does not exist or has been purged.</p>
+      <p>> Connection dropped. Logs wiped.</p>
+    </div>
+
+    <a href="/" class="action-btn">[ RETURN TO SECURE CHANNEL ] <span class="cursor"></span></a>
+  </div>
+</div>
+
+<script>
+</script>
+
+</body>
+</html>

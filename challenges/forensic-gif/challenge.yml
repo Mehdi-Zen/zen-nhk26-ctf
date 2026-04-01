@@ -1,0 +1,56 @@
+# TEMPLATE: Challenge sans Docker (Crypto, Forensic, OSINT, etc.)
+# Dossier: categorie-nom (ex: crypto-caesar)
+
+name: "GIF des idées de génie"
+author: "Twistyle"
+category: Forensic                 # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+  Un employé affirme qu’il n’a “absolument rien caché” dans ce GIF.  
+  Techniquement, il a raison. Enfin… peut-être.
+
+  Le fichier semble parfaitement normal.  
+  Aucun pixel suspect. Aucun glitch étrange.  
+  Bref, un GIF comme on en voit mille par jour.
+
+  Mais selon son créateur, il serait inspiré des travaux de Erwin Schrödinger.
+
+  Donc soit il n’y a rien dedans…  
+  soit il y a quelque chose…  
+  soit les deux à la fois.
+
+  À vous d’ouvrir la boîte. 🐱
+
+# Points: voir document de Camille
+value: 1000
+type: dynamic
+state: visible
+
+extra:
+  initial: 1000                  # = value
+  decay: 3
+  minimum: 500                  # ~50% de initial
+
+flags:
+  - flag: "NHK26{D3D1C4C3_4_Mr_M140U}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - TIROIR
+  - INSANE
+  - FORENSIC
+
+# Fichiers donnes aux participants
+files:
+  - files/giphy.gif
+  - files/Lopotichat.zip
+# Optionnel - cout des indices: voir document de Camille
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+requirements:
+  prerequisites:
+    - "Schrödinger’s Backup"
+
+max_attempts: 0

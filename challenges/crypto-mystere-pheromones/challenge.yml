@@ -1,0 +1,39 @@
+name: "Mystère des Phéromones"
+author: "Andy"
+category: Crypto
+
+description_image: files/challenge.png
+
+description: |
+  Inspiré des travaux d’Audrey Dussutour (CNRS) sur le comportement collectif des fourmis,
+  ce challenge vous plonge dans un laboratoire étudiant la communication chimique des colonies.
+  Un message secret a été fragmenté et protégé via un mécanisme simple (mais collectif).
+
+
+value: 300
+type: dynamic
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+tags:
+  - MOYEN
+  - CRYPTO
+
+flags:
+  - flag: "NHK26{CamponotusPennsylvanicus_Pheromones}"
+    type: static
+
+files:
+  - files/fourmis.zip
+
+hints:
+  - content: "Commence par reconstituer le flux complet : concaténation dans le bon ordre, puis inspecte le résultat (hex/strings)."
+    cost: 25
+  - content: "Le déchiffrement repose sur une opération très simple et répétitive (pense à un masque/clé qui se répète)."
+    cost: 60
+
+max_attempts: 0

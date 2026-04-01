@@ -1,0 +1,57 @@
+# TEMPLATE: Challenge sans Docker (Crypto, Forensic, OSINT, etc.)
+# Dossier: categorie-nom (ex: crypto-caesar)
+
+name: "Galileo Guessr"
+author: "Valou"
+category: OSINT                 # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+
+  Vous trouvez un ancien globe terrestre signé par **Galilée**.
+
+  Gravés sur celui-ci, quatre mots attirent immédiatement votre attention :  
+  **crawfish marvelous snare unrobed**.
+
+  Ces mots vous mèneront à une ville bien réelle.
+
+  Vous devrez identifier cette ville, puis retrouver une caméra qui la filme en direct.
+
+  Une fois la caméra localisée, votre objectif sera de déterminer **le modèle de la caméra**, ainsi que **son adresse IP publique**.
+
+  `Format du Flag : NHK26{Modèle_de_la_caméra-IP}`
+
+value: 300
+type: dynamic
+state: visible
+
+extra:
+  initial: 300                   # = value
+  decay: 13
+  minimum: 100                    # ~50% de initial
+
+flags:
+  - flag: "NHK26{Mobotix_M16-5.1.102.205}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - MOYEN
+  - OSINT
+
+# Fichiers donnes aux participants
+#files:
+ # - files/message.txt
+
+# Optionnel - cout des indices: voir document de Camille
+hints:
+   - content: "Ces 4 mots sont peut-être des coordonnées ?"
+     cost: 25     
+
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

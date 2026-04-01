@@ -1,0 +1,51 @@
+# TEMPLATE: Challenge Docker (Web, Pwn, etc.)
+# Dossier: categorie-nom (ex: web-sqli)
+
+name: "Ctrl+Alt+Cookie"
+author: "Valou"
+category: Web                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+  L’ingénieur Lou Montulli, inventeur des cookies HTTP, souhaite analyser les conséquences d’une mauvaise utilisation de cette technologie dans le cadre d’un système d’authentification web. 
+
+  Pour illustrer les risques liés à une confiance excessive accordée aux données stockées côté client, il a conçu une page de connexion volontairement simplifiée pour la gestion de son site web.
+
+value: 50
+type: container
+state: visible
+
+extra:
+  initial: 50                   # = value
+  decay: 40
+  minimum: 20                    # ~50% de initial
+
+# Docker
+image: registry.gitlab.com/CTF-2026/ctf-g7-cyber/web-ctrl-alt-cookie:latest
+port: 5000
+protocol: web                    # web | tcp
+
+flags:
+  - flag: "NHK26{l0u_m0n7ull1_41m3_l35_c00k135}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - INTRO
+  - WEB
+
+# Optionnel - cout des indices: voir document de Camille
+hints:
+  - content: "Connaissez-vous l'inspecteur d'éléments de votre navigateur web ?"
+    cost: 0
+
+# files:
+#   - files/wordlist.txt
+
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

@@ -1,0 +1,39 @@
+name: "Forencile"
+author: "ErEn"
+category: Forensic
+
+description_image: files/challenge.jpg
+
+description: |
+  "Tout contact laisse une trace" — Principe d'Edmond Locard
+
+  Une clé USB mystérieuse a été retrouvée. L'équipe soupçonne que des informations ont été dissimulées dans les fichiers. Une image semble anodine, mais selon le principe de Locard, toute interaction avec un fichier laisse des traces...
+
+  Votre mission : analyser l'image et extraire la preuve cachée.
+
+# Se referer au document transmis par Camille pour les valeurs de points
+value: 50
+type: dynamic
+state: visible
+
+extra:
+  initial: 50
+  decay: 40
+  minimum: 20
+
+flags:
+  - flag: "NHK26{L0c4rd_Pr1nc1pl3_0f_Tr4c3s}"
+    type: static
+
+tags:
+  - INTRO
+  - FORENSIC
+
+files:
+  - files/image.jpg
+
+hints:
+  - content: "L'oeil humain ne voit pas tout. Les métadonnées sont parfois bavardes..."
+    cost: 0
+
+max_attempts: 0

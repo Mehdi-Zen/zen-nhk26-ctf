@@ -1,0 +1,30 @@
+name: "Tout est relatif"
+author: "EL NiMoS"
+category: Code Review                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Désireux de démontrer sa célèbre formule, le célèbre physicien **Albert Einstein** aurait écrit un petit programme… mais, distrait comme à son habitude, il y aurait laissé plusieurs erreurs et imprécisions.
+  Votre mission consiste à effectuer un *code review* de ce programme afin d’identifier les failles, bugs ou comportements inattendus permettant de retrouver **l'énergie de la pomme** définie dans le programme.
+
+value: 50                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 50                   # POur gerer le dynamisme du scoring
+  decay: 40                      # facteur de decroissance
+  minimum: 20                    # Minimum
+
+tags:
+  - INTRO
+  - CODE REVIEW
+
+flags:
+  - flag: "NHK26{13481327681052264}"
+    type: static
+files : 
+  - files/ToutEstRelatif.py
+
+max_attempts: 0

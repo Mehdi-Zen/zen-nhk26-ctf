@@ -1,0 +1,44 @@
+name: "Schrödinger’s Backup"
+author: "Bruce"
+category: Forensic
+
+description_image: files/challenge.png
+
+description: |
+  Ce challenge est composé de deux challenges difficile en Forensic, donc après avoir réussi cette première parti vous débloquerez la suite du challenge.
+  Un employé paranoïaque a développé un système de sauvegarde “quantique”.
+
+  L’archive semble complète… mais inutilisable.
+  Les fragments existent, l’ordre est inconnu,
+  et un trafic réseau étrange a été capturé au même moment.
+
+  Peut-être que la sauvegarde est à la fois valide et inutilisable…
+  jusqu’à ce que vous l’observiez correctement.
+
+  **Ce challenge est un challenge tiroir, les points seront attribués après avoir fini :**
+  - Schrödinger’s Backup
+  - GIF des idées de génie
+
+value: 1
+type: dynamic
+state: visible
+
+extra:
+  initial: 1
+  decay: 3
+  minimum: 1
+
+tags:
+  - TIROIR
+  - INSANE
+  - FORENSIC
+
+flags:
+  - flag: "NHK26{quantum_backup_recovered}"
+    type: static
+
+files:
+  - files/backup.tar.gz
+  - files/traffic.pcap
+
+next: "GIF des idées de génie"

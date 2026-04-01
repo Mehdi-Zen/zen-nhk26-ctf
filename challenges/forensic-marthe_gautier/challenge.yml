@@ -1,0 +1,36 @@
+name: "Le Chromosome Oublié de Marthe Gautier"
+author: "Malth"
+category: Forensic                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.jpeg   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+ 1958, Dans un petit laboratoire de pédiatrie parisien, le Dr Marthe Gautier observe des anomalies chromosomiques chez des nouveau-nés. Ses notes et clichés, soigneusement consignés, disparaissent mystérieusement. Aujourd’hui, des artefacts numériques : une image disque d’époque, un dump mémoire d’un simulateur expérimental et un caryotype entaché de secrets ont refait surface. Votre mission : fouiller ces traces numériques, recoller des fragments et révéler le message
+  caché qui témoigne d’une découverte scientifique volée. Les indices sont dispersés dans des
+  couches variées.
+
+  Pour vous connecter à la machine veuillez utiliser la commande suivante :
+
+  **stty raw -echo; nc IP PORT; stty sane**
+
+value: 500                       # Voir document de Camille
+type: container
+state : visible                  # Permet de voir l'état dans le panel admin
+
+
+image: 192.168.213.11:5000/forensic-marthe-gautier:latest
+port: 7415
+protocol: tcp
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                   # Minimum
+
+tags:
+  - DIFFICILE                        # OBLIGATOIRE en premier (voir tableau)
+  - Forensic
+
+flags:
+  - flag: "NHK26{M@rth3_G@uth13R_Tr!s0m1e_21_!958}"
+    type: static

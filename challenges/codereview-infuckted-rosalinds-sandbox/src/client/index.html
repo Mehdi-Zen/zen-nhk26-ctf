@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V01D.onion — /tech/underground</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon_V01D.svg">
+<style>
+  @view-transition {
+    navigation: auto;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root {
+    --bg: #050505; --bg2: #0a0a0a; --bg3: #0f0f0f;
+    --border: #1a1a1a; --border2: #222;
+    --green: #00ff41; --green-dim: #00aa2a;
+    --red: #ff2020; --red-dim: #801010;
+    --amber: #ffb300; --text: #b0b0b0; --text-dim: #555; --white: #d0d0d0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Courier Prime', monospace; font-size: 14px;
+    line-height: 1.6; min-height: 100vh; cursor: crosshair;
+  }
+  
+  body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px); pointer-events: none; z-index: 9999; }
+  @keyframes flicker { 0%, 100% { opacity: 1; } 92% { opacity: 1; } 93% { opacity: 0.8; } 94% { opacity: 1; } 96% { opacity: 0.9; } 97% { opacity: 1; } }
+  body { animation: flicker 8s infinite; }
+
+  #wrapper { max-width: 860px; margin: 0 auto; padding: 0 16px 80px; }
+  
+  header { border-bottom: 1px solid var(--border2); padding: 24px 0 16px; margin-bottom: 32px; }
+  
+  /* On enlève flex-wrap: wrap pour FORCER les éléments à rester sur la même ligne */
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  
+  .site-logo { font-family: 'VT323', monospace; font-size: 52px; color: var(--green); text-shadow: 0 0 20px rgba(0,255,65,0.4); letter-spacing: 4px; line-height: 1; }
+  .site-logo span { color: var(--red); }
+  
+  .site-tagline { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 4px; letter-spacing: 2px; line-height: 1.5; }
+  
+  /* Le badge garde sa taille grâce à flex-shrink: 0 */
+  .readonly-badge { border: 1px dotted var(--red-dim); background: rgba(255, 32, 32, 0.05); padding: 6px 12px; font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text-dim); text-align: right; line-height: 1.4; letter-spacing: 1px; flex-shrink: 0; }
+  .readonly-badge span { color: var(--red); }
+  
+  .site-nav { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 20px; font-family: 'Share Tech Mono', monospace; font-size: 11px; }
+  .site-nav a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+  .site-nav a:hover { color: var(--green); }
+  .site-nav a.active { color: var(--amber); }
+
+  .warning-banner { border: 1px solid var(--red-dim); background: #100000; padding: 10px 16px; margin-bottom: 28px; font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--red); display: flex; align-items: center; gap: 12px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .warning-banner .dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; animation: blink 1s step-end infinite; }
+
+  .board-header { display: grid; grid-template-columns: 1fr 120px 90px; gap: 16px; padding: 0 8px 8px 8px; font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--amber); border-bottom: 2px solid var(--border2); margin-bottom: 10px; }
+  
+  .thread-row { display: grid; grid-template-columns: 1fr 120px 90px; gap: 16px; padding: 14px 8px; border-bottom: 1px solid var(--border); text-decoration: none; transition: background 0.2s; align-items: center;}
+  .thread-row:hover { background: var(--bg2); border-left: 3px solid var(--green); padding-left: 5px;}
+  .thread-row.sticky { background: rgba(255, 179, 0, 0.05); border-left: 3px solid var(--amber); padding-left: 5px; }
+  
+  .thread-title { font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--white); margin-bottom: 6px; }
+  .thread-row:hover .thread-title { color: var(--green); }
+  .thread-tags { display: flex; gap: 6px; font-size: 9px; margin-bottom: 4px; }
+  .tag { border: 1px solid var(--gray); padding: 1px 4px; color: var(--text-dim); }
+  .tag.danger { border-color: var(--red-dim); color: var(--red); }
+  .tag.intel { border-color: #4fc3f7; color: #4fc3f7; }
+
+  .thread-author { font-size: 10px; color: var(--text-dim); }
+  .thread-author span { color: var(--green-dim); }
+  .thread-stats { font-size: 11px; color: var(--text-dim); text-align: center; }
+  .thread-date { font-size: 11px; color: var(--text-dim); text-align: right; }
+
+  /* Ajustement de la taille du logo sur très petit écran pour éviter un dépassement */
+  @media (max-width: 450px) {
+    .site-logo { font-size: 36px; }
+  }
+
+  footer { border-top: 1px solid var(--border2); padding: 20px 0; margin-top: 60px; font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--text-dim); letter-spacing: 1px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+<div id="wrapper">
+
+  <header>
+    <div class="header-top">
+      <div style="min-width: 0;">
+        <div class="site-logo">V<span>0</span>1D.onion</div>
+        <div class="site-tagline">// anonymous bulletin — no logs — no trust — no gods //</div>
+      </div>
+      <div class="readonly-badge">
+        USER: ANONYMOUS<br>
+        PERMS: <span>READ-ONLY</span>
+      </div>
+    </div>
+    
+    <nav class="site-nav">
+      <a href="/" class="active">[boards]</a>
+      <a href="/leaks">[leaks]</a>
+      <a href="/tools">[tools]</a>
+      <a href="/pgp">[pgp]</a>
+      <a href="/rules">[rules]</a>
+    </nav>
+  </header>
+
+  <div class="warning-banner">
+    <div class="dot"></div>
+    <span>BOARD: /tech/underground &nbsp;|&nbsp; ACTIVE THREADS: 142 &nbsp;|&nbsp; THIS BOARD IS UNMODERATED. USE TOR. DO NOT TRUST.</span>
+  </div>
+
+  <div class="board-header">
+    <span>TOPIC</span>
+    <span style="text-align: center;">REPLIES / VIEWS</span>
+    <span style="text-align: right;">LAST POST</span>
+  </div>
+
+  <div class="thread-list">
+    <a href="/rules" class="thread-row sticky">
+      <div>
+        <div class="thread-title">⚠ READ FIRST: Board Rules & PGP Keys</div>
+        <div class="thread-author">Started by <span>SYSTEM</span></div>
+      </div>
+      <div class="thread-stats">Locked</div>
+      <div class="thread-date">2023-01-01</div>
+    </a>
+
+    <a href="/thread/Global_Contagion" class="thread-row">
+      <div>
+        <div class="thread-tags">
+          <span class="tag danger">MALWARE</span>
+          <span class="tag intel">FORENSICS</span>
+        </div>
+        <div class="thread-title">// OUTBREAK: "Global Contagion" sim archived + Sandbox live</div>
+        <div class="thread-author">Started by <span>0xPhr34k</span></div>
+      </div>
+      <div class="thread-stats">9 / 3,891</div>
+      <div class="thread-date">Today 08:12</div>
+    </a>
+
+    <a href="/thread/cisco" class="thread-row">
+      <div>
+        <div class="thread-tags"><span class="tag">0DAY</span></div>
+        <div class="thread-title">Cisco router firmware drop - exploit chaining</div>
+        <div class="thread-author">Started by <span>n0de_burn</span></div>
+      </div>
+      <div class="thread-stats">1 / 840</div>
+      <div class="thread-date">Yesterday</div>
+    </a>
+
+    <a href="/thread/reverse" class="thread-row">
+      <div>
+        <div class="thread-tags"><span class="tag">REVERSE</span></div>
+        <div class="thread-title">Need help unpacking heavily obfuscated binary</div>
+        <div class="thread-author">Started by <span>byteflayer</span></div>
+      </div>
+      <div class="thread-stats">0 / 210</div>
+      <div class="thread-date">Yesterday</div>
+    </a>
+
+    <a href="/error" class="thread-row">
+      <div>
+        <div class="thread-tags"><span class="tag">LEAK</span></div>
+        <div class="thread-title">Database dump - Local ISP (12k rows)</div>
+        <div class="thread-author">Started by <span>GhostRider</span></div>
+      </div>
+      <div class="thread-stats">89 / 4,102</div>
+      <div class="thread-date">4 days ago</div>
+    </a>
+
+    <a href="/error" class="thread-row">
+      <div>
+        <div class="thread-tags"><span class="tag">HARDWARE</span></div>
+        <div class="thread-title">Tutorial: Firmware dumping via SPI protocol</div>
+        <div class="thread-author">Started by <span>silicon_valley</span></div>
+      </div>
+      <div class="thread-stats">34 / 1,200</div>
+      <div class="thread-date">7 days ago</div>
+    </a>
+  </div>
+
+  <footer>
+    <span>V01D.onion — est. ████ — no logs kept — jurisdiction: none</span>
+    <span>tor only — js disabled recommended — pgp key: 0x████████</span>
+  </footer>
+
+</div>
+</body>
+</html>

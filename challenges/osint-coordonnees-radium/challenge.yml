@@ -1,0 +1,38 @@
+name: "Les coordonnées du Radium"
+author: "Lou"
+category: OSINT
+
+description_image: files/challenge.png
+
+description: |
+  Une photo ancienne d'un laboratoire, provenant des archives de Marie Curie.  
+  Analysez attentivement cette image, tout indice, visible ou non, pourrait vous aider à retrouver le lieu où elle a été prise.
+  
+  `Format du flag : NHK26{NOM_DU_LIEU_EN_MAJUSCULES_VILLE}`
+
+value: 100
+type: dynamic
+state: visible
+
+extra:
+  initial: 100
+  decay: 30
+  minimum: 50
+
+tags:
+  - FACILE
+  - OSINT
+  - EXIF
+
+flags:
+  - flag: "NHK26{INSTITUT_CURIE_PARIS}"
+    type: static
+
+hints:
+  - content: "Regardez dans les métadonnées de l’image… certaines informations pourraient vous mener à un lieu précis."
+    cost: 5
+
+files:
+  - files/Labo.JPEG
+
+max_attempts: 0

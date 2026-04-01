@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="jumbotron">
+    <div class="container">
+      <h1 data-text="{% trans %}Challenges{% endtrans %}">
+        <span class="glow-cyan">//</span> {% trans %}Challenges{% endtrans %}
+      </h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {% include "components/errors.html" %}
+      </div>
+    </div>
+
+    <div
+      x-data="ChallengeBoard"
+      @load-challenges.window="loadChallenges()"
+      @load-challenge.window="loadChallenge($event.detail)"
+    >
+      <div
+          x-ref="challengeWindow" id="challenge-window" class="modal fade" tabindex="-1" role="dialog" x-data=""
+          x-html="$store.challenge.data.view"
+      ></div>
+
+      <div x-show="!loaded">
+        <div class="min-vh-50 d-flex align-items-center">
+          <div class="text-center w-100">
+            <div class="cyber-loader">
+              <div class="loader-ring"></div>
+              <div class="loader-ring"></div>
+              <div class="loader-ring"></div>
+              <i class="fas fa-terminal loader-icon"></i>
+            </div>
+            <p class="mt-4 loading-text">INITIALIZING...</p>
+          </div>
+        </div>
+      </div>
+
+      <div x-show="loaded" class="challenges-container">
+        <template x-for="(category, idx) in getCategories()" :key="idx">
+          <div class="category-section">
+            <div class="category-header">
+              <span class="category-icon"><i class="fas fa-folder-open"></i></span>
+              <h3 x-text="category"></h3>
+              <span class="category-count" x-text="'[' + getChallenges(category).length + ']'"></span>
+            </div>
+
+            <div class="challenges-grid">
+              <template x-for="(c, idx) in getChallenges(category)" :key="c.id">
+                <div
+                  class="challenge-card"
+                  :class="{
+                    'solved': c.solved_by_me,
+                    'firstblood-card': c.tags && c.tags.some(t => t.value.toUpperCase() === 'FIRST BLOOD'),
+                    'tiroir-card': c.tags && c.tags.some(t => t.value.toUpperCase() === 'TIROIR'),
+                    'masterclass-card': c.tags && c.tags.some(t => t.value.toUpperCase() === 'MASTERCLASS')
+                  }"
+                  @click="loadChallenge(c.id)"
+                >
+                  <div class="card-glow"></div>
+                  <div class="card-border"></div>
+
+                  <div class="card-content">
+                    <div class="card-header-row">
+                      <span class="solve-indicator" x-show="c.solved_by_me">
+                        <i class="fas fa-check-circle"></i>
+                      </span>
+                      <div class="challenge-tags" x-show="c.tags && c.tags.some(t => ['INTRO', 'FACILE', 'MOYEN', 'DIFFICILE', 'INSANE'].includes(t.value.toUpperCase()))">
+                        <template x-for="tag in c.tags.filter(t => ['INTRO', 'FACILE', 'MOYEN', 'DIFFICILE', 'INSANE'].includes(t.value.toUpperCase()))" :key="tag.id">
+                          <span
+                            class="difficulty-tag"
+                            :class="{
+                              'tag-intro': tag.value.toUpperCase() === 'INTRO',
+                              'tag-easy': tag.value.toUpperCase() === 'FACILE',
+                              'tag-medium': tag.value.toUpperCase() === 'MOYEN',
+                              'tag-hard': tag.value.toUpperCase() === 'DIFFICILE',
+                              'tag-insane': tag.value.toUpperCase() === 'INSANE'
+                            }"
+                            x-text="tag.value"
+                          ></span>
+                        </template>
+                        <span class="difficulty-tag tag-tiroir" x-show="c.tags && c.tags.some(t => t.value.toUpperCase() === 'TIROIR')">TIROIR</span>
+                        <span class="difficulty-tag tag-masterclass" x-show="c.tags && c.tags.some(t => t.value.toUpperCase() === 'MASTERCLASS')">MASTERCLASS</span>
+                      </div>
+                    </div>
+
+                    <h4 class="challenge-name" x-text="c.name"></h4>
+
+                    <div class="card-footer-row">
+                      <span class="challenge-value">
+                        <i class="fas fa-star"></i>
+                        <span x-text="c.value"></span>
+                      </span>
+                      <span class="challenge-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ Assets.js("assets/js/challenges.js") }}
+
+  <style>
+    .warmup-overlay {
+      position: fixed; inset: 0; z-index: 99999;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(5,5,8,0.97);
+      animation: wo-fadeIn 0.3s ease-out;
+      cursor: pointer;
+    }
+    .warmup-overlay.hiding { animation: wo-fadeOut 0.5s ease-in forwards; pointer-events: none; }
+    .wo-content { text-align: center; }
+    .wo-countdown {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(6rem, 20vw, 12rem);
+      font-weight: 900;
+      color: #00fff5;
+      text-shadow: 0 0 40px #00fff580, 0 0 80px #00fff540, 0 0 120px #00fff520;
+      animation: wo-pulse 0.6s ease-in-out;
+    }
+    .wo-go {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 900;
+      color: #ff00ff;
+      text-shadow: 0 0 40px #ff00ff80, 0 0 80px #ff00ff40;
+      animation: wo-scaleIn 0.4s ease-out;
+    }
+    .wo-subtitle {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 16px;
+      color: #00fff580;
+      margin-top: 20px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+    /* Masterclass card - cosmic theme */
+    .masterclass-card {
+      position: relative;
+      overflow: hidden;
+    }
+    .masterclass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(1px 1px at 10% 20%, #ffffff90 0%, transparent 100%),
+        radial-gradient(1px 1px at 80% 10%, #ffffff70 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 30% 70%, #ffffffa0 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 50%, #ffffff60 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 80%, #ffffff80 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 50% 30%, #ffffff50 0%, transparent 100%),
+        radial-gradient(1px 1px at 20% 90%, #ffffff70 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 60%, #ffffff40 0%, transparent 100%),
+        radial-gradient(2px 2px at 15% 45%, #ffd70050 0%, transparent 100%),
+        radial-gradient(2px 2px at 85% 35%, #87ceeb40 0%, transparent 100%),
+        linear-gradient(135deg, #0a0020 0%, #1a0030 30%, #0d0028 60%, #050015 100%) !important;
+      z-index: 0;
+      animation: mc-twinkle 4s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    .masterclass-card .card-content { position: relative; z-index: 1; }
+    .masterclass-card .card-glow {
+      background: radial-gradient(ellipse at 50% 0%, #9b59b640 0%, transparent 60%) !important;
+    }
+    .masterclass-card .card-border {
+      border-color: #9b59b640 !important;
+    }
+    .masterclass-card:hover .card-border {
+      border-color: #9b59b6 !important;
+      box-shadow: 0 0 15px #9b59b630, inset 0 0 15px #9b59b610 !important;
+    }
+    .tag-masterclass {
+      background: linear-gradient(135deg, #1a0030, #2d1b69) !important;
+      color: #d4a0ff !important;
+      border: 1px solid #9b59b660 !important;
+      text-shadow: 0 0 6px #9b59b680;
+    }
+    .masterclass-card::after {
+      content: 'MASTERCLASS';
+      position: absolute;
+      bottom: 25px;
+      right: -30px;
+      background: linear-gradient(135deg, #9b59b6, #6c3483);
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 4px 40px;
+      transform: rotate(-35deg);
+      z-index: 10;
+      box-shadow: 0 0 10px #9b59b650;
+      text-shadow: 0 0 4px #d4a0ff;
+    }
+    @keyframes mc-twinkle {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.8; }
+    }
+
+    @keyframes wo-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes wo-fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    @keyframes wo-pulse {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes wo-scaleIn {
+      0% { transform: scale(0.5) rotate(-5deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+  </style>
+
+  <script>
+  (function() {
+    var origFetch = window.fetch;
+    window.fetch = function() {
+      var args = arguments;
+      var url = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url) || '';
+
+      return origFetch.apply(this, args).then(function(response) {
+        if (url.match(/\/api\/v1\/challenges\/attempt/)) {
+          var cloned = response.clone();
+          cloned.json().then(function(data) {
+            if (data && data.success && data.data && data.data.status === 'correct') {
+              if (!localStorage.getItem('nhk_warmup_done')) {
+                localStorage.setItem('nhk_warmup_done', '1');
+                setTimeout(function() { showWarmupCountdown(); }, 500);
+              }
+            }
+          }).catch(function() {});
+        }
+        return response;
+      });
+    };
+
+    function showWarmupCountdown() {
+      var overlay = document.createElement('div');
+      overlay.className = 'warmup-overlay';
+
+      var content = document.createElement('div');
+      content.className = 'wo-content';
+
+      var numEl = document.createElement('div');
+      numEl.className = 'wo-countdown';
+      numEl.id = 'wo-num';
+
+      content.appendChild(numEl);
+      overlay.appendChild(content);
+      document.body.appendChild(overlay);
+
+      var count = 3;
+
+      function tick() {
+        if (count > 0) {
+          numEl.className = 'wo-countdown';
+          numEl.textContent = count;
+          numEl.style.animation = 'none';
+          numEl.offsetHeight;
+          numEl.style.animation = 'wo-pulse 0.6s ease-in-out';
+          count--;
+          setTimeout(tick, 800);
+        } else {
+          numEl.className = 'wo-go';
+          numEl.textContent = "LET'S HACK!";
+          numEl.style.animation = 'none';
+          numEl.offsetHeight;
+          numEl.style.animation = 'wo-scaleIn 0.4s ease-out';
+
+          var sub = document.createElement('div');
+          sub.className = 'wo-subtitle';
+          sub.textContent = 'Les challenges sont maintenant accessibles';
+          content.appendChild(sub);
+
+          setTimeout(function() {
+            overlay.classList.add('hiding');
+            setTimeout(function() {
+              overlay.remove();
+              window.location.reload();
+            }, 500);
+          }, 3000);
+        }
+      }
+
+      tick();
+
+      overlay.addEventListener('click', function() {
+        overlay.classList.add('hiding');
+        setTimeout(function() {
+          overlay.remove();
+          window.location.reload();
+        }, 500);
+      });
+    }
+  })();
+  </script>
+{% endblock %}

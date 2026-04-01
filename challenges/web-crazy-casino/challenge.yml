@@ -1,0 +1,37 @@
+# Crazy Casino - INSANE Web Challenge
+name: "Crazy Casino"
+author: "ErEn"
+category: Web
+
+description_image: files/challenge.jpg
+
+description: |
+  Blaise Pascal a inventé la théorie des probabilités en analysant les jeux de hasard. Il pensait que le calcul pouvait tout prédire. Ce casino prétend que la maison gagne toujours... Prouvez que Pascal avait raison.
+
+  Ce challenge contient plusieurs vulnérabilités à exploiter. Le flag est fragmenté.
+
+value: 1000
+type: container
+state: visible
+
+extra:
+  initial: 1000
+  decay: 3
+  minimum: 500
+
+# Docker
+image: 192.168.213.11:5000/web-crazy-casino:latest
+port: 80
+protocol: web
+
+flags:
+  - flag: "NHK26{3ZJ61mvadGxV3M1J2Z1Zp57UtUbCEBp6}"
+    type: static
+
+tags:
+  - INSANE
+  - WEB
+
+
+
+max_attempts: 0

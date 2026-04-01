@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice | Crazy Casino</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/dice.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+</head>
+<body>
+    <div class="casino-bg">
+        <div class="dice-container">
+            <header class="site-header">
+                <div class="header-brand">
+                    <span class="brand-logo">🎲 Dice</span>
+                    <span class="brand-divider"></span>
+                    <span class="brand-tagline">Roll the Bones</span>
+                </div>
+                <div class="header-user">
+                    <div class="user-balance">
+                        <span class="balance-icon">◆</span>
+                        <span class="balance-amount" id="balance">0</span>
+                        <span class="balance-label">chips</span>
+                    </div>
+                    <a href="/dashboard" class="btn-secondary">Back to Floor</a>
+                </div>
+            </header>
+
+            <main class="dice-main">
+                <div class="dice-area">
+                    <div class="dice-display">
+                        <div class="die" id="die1">
+                            <span class="die-face">⚀</span>
+                        </div>
+                        <div class="die" id="die2">
+                            <span class="die-face">⚀</span>
+                        </div>
+                    </div>
+                    <div class="total-display">
+                        <span class="total-label">Total:</span>
+                        <span class="total-value" id="total">2</span>
+                    </div>
+                    <div class="result-message" id="result-message"></div>
+                </div>
+
+                <div class="betting-section">
+                    <div class="bet-amount-control">
+                        <label>Bet Amount</label>
+                        <input type="number" id="bet-amount" value="100" min="10" max="10000" step="10">
+                    </div>
+
+                    <div class="prediction-section">
+                        <h3>Predict the Total (2-12)</h3>
+
+                        <div class="bet-group">
+                            <h4>Over/Under</h4>
+                            <div class="slider-control">
+                                <label>Target: <span id="target-display">7</span></label>
+                                <input type="range" id="target-slider" min="3" max="11" value="7">
+                            </div>
+                            <div class="over-under-btns">
+                                <button class="bet-btn over" id="btn-over">Over <span id="over-target">7</span></button>
+                                <button class="bet-btn under" id="btn-under">Under <span id="under-target">7</span></button>
+                            </div>
+                        </div>
+
+                        <div class="bet-group">
+                            <h4>Exact Sum</h4>
+                            <div class="exact-btns" id="exact-buttons">
+                                <button class="exact-btn" data-value="2">2 (36x)</button>
+                                <button class="exact-btn" data-value="3">3 (18x)</button>
+                                <button class="exact-btn" data-value="4">4 (12x)</button>
+                                <button class="exact-btn" data-value="5">5 (9x)</button>
+                                <button class="exact-btn" data-value="6">6 (7x)</button>
+                                <button class="exact-btn" data-value="7">7 (6x)</button>
+                                <button class="exact-btn" data-value="8">8 (7x)</button>
+                                <button class="exact-btn" data-value="9">9 (9x)</button>
+                                <button class="exact-btn" data-value="10">10 (12x)</button>
+                                <button class="exact-btn" data-value="11">11 (18x)</button>
+                                <button class="exact-btn" data-value="12">12 (36x)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="site-footer">
+                <div class="footer-suits">♠ ♥ ♦ ♣</div>
+                <p>Play responsibly. The house always wins.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/dice.js"></script>
+</body>
+</html>

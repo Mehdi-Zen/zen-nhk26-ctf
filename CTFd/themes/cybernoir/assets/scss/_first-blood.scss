@@ -1,0 +1,528 @@
+// ============================================
+// FIRST BLOOD - CYBERPUNK EDITION
+// Clean, spectacular, memorable
+// ============================================
+
+// Color palette
+$fb-blood: #ff0a0a;
+$fb-blood-glow: #ff3333;
+$fb-blood-dark: #990000;
+$fb-cyan: #00fff5;
+$fb-pink: #ff0066;
+$fb-dark: #000000;
+
+// ============================================
+// OVERLAY
+// ============================================
+
+.first-blood-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($fb-dark, 0.95);
+  animation: fb-fadeIn 0.2s ease-out forwards;
+  cursor: pointer;
+
+  &.hiding {
+    animation: fb-fadeOut 0.4s ease-in forwards;
+    pointer-events: none;
+  }
+}
+
+@keyframes fb-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fb-fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+// ============================================
+// BLOOD PARTICLES (floating drops)
+// ============================================
+
+.fb-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fb-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: $fb-blood;
+  border-radius: 50%;
+  box-shadow: 0 0 6px $fb-blood-glow, 0 0 12px $fb-blood;
+  animation: fb-float 3s ease-in-out infinite;
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      left: #{random(100)}%;
+      top: #{random(100)}%;
+      width: #{2 + random(4)}px;
+      height: #{2 + random(4)}px;
+      animation-delay: #{$i * 0.15}s;
+      animation-duration: #{2 + random(2)}s;
+    }
+  }
+}
+
+@keyframes fb-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.2);
+    opacity: 1;
+  }
+}
+
+// ============================================
+// BLOOD DRIP EFFECT (top of screen)
+// ============================================
+
+.fb-drips {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 5%;
+}
+
+.fb-drip {
+  width: 8px;
+  height: 0;
+  background: linear-gradient(180deg, $fb-blood 0%, $fb-blood-dark 70%, transparent 100%);
+  border-radius: 0 0 4px 4px;
+  position: relative;
+  animation: fb-dripDown 1.5s ease-in forwards;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: $fb-blood;
+    border-radius: 50%;
+    box-shadow: 0 0 10px $fb-blood-glow;
+  }
+
+  @for $i from 1 through 8 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{0.1 + $i * 0.08}s;
+      animation-duration: #{1 + random(10) * 0.1}s;
+    }
+  }
+}
+
+@keyframes fb-dripDown {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    height: #{60 + random(60)}px;
+    opacity: 0.8;
+  }
+}
+
+// ============================================
+// MAIN CONTENT
+// ============================================
+
+.fb-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  animation: fb-contentIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+
+  .hiding & {
+    animation: fb-contentOut 0.3s ease-in forwards;
+  }
+}
+
+@keyframes fb-contentIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes fb-contentOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+  }
+}
+
+// ============================================
+// TITLE
+// ============================================
+
+.fb-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2.5rem, 10vw, 6rem);
+  font-weight: 900;
+  color: $fb-blood;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1.1;
+  text-shadow:
+    0 0 20px rgba($fb-blood, 0.8),
+    0 0 40px rgba($fb-blood, 0.6),
+    0 0 60px rgba($fb-blood, 0.4),
+    0 4px 0 $fb-blood-dark;
+  animation: fb-titlePulse 2s ease-in-out infinite;
+  position: relative;
+
+  // Glitch effect
+  &::before,
+  &::after {
+    content: 'FIRST BLOOD';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  &::before {
+    color: $fb-cyan;
+    animation: fb-glitch1 4s infinite linear;
+  }
+
+  &::after {
+    color: $fb-pink;
+    animation: fb-glitch2 4s infinite linear;
+  }
+}
+
+@keyframes fb-titlePulse {
+  0%, 100% {
+    text-shadow:
+      0 0 20px rgba($fb-blood, 0.8),
+      0 0 40px rgba($fb-blood, 0.6),
+      0 0 60px rgba($fb-blood, 0.4),
+      0 4px 0 $fb-blood-dark;
+  }
+  50% {
+    text-shadow:
+      0 0 30px rgba($fb-blood, 1),
+      0 0 60px rgba($fb-blood, 0.8),
+      0 0 90px rgba($fb-blood, 0.6),
+      0 4px 0 $fb-blood-dark;
+  }
+}
+
+@keyframes fb-glitch1 {
+  0%, 92%, 100% {
+    opacity: 0;
+    transform: translate(0);
+  }
+  93% {
+    opacity: 0.7;
+    transform: translate(-4px, -2px);
+  }
+  94% {
+    opacity: 0;
+  }
+  95% {
+    opacity: 0.5;
+    transform: translate(4px, 2px);
+  }
+  96% {
+    opacity: 0;
+  }
+}
+
+@keyframes fb-glitch2 {
+  0%, 94%, 100% {
+    opacity: 0;
+    transform: translate(0);
+  }
+  95% {
+    opacity: 0.7;
+    transform: translate(3px, -1px);
+  }
+  96% {
+    opacity: 0;
+  }
+  97% {
+    opacity: 0.5;
+    transform: translate(-3px, 1px);
+  }
+  98% {
+    opacity: 0;
+  }
+}
+
+// ============================================
+// SUBTITLE
+// ============================================
+
+.fb-subtitle {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(0.7rem, 2vw, 1rem);
+  color: $fb-cyan;
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+  margin-top: 0.5rem;
+  opacity: 0;
+  animation: fb-subtitleIn 0.5s ease-out 0.3s forwards;
+  text-shadow: 0 0 10px rgba($fb-cyan, 0.8);
+}
+
+@keyframes fb-subtitleIn {
+  from {
+    opacity: 0;
+    letter-spacing: 1em;
+  }
+  to {
+    opacity: 0.8;
+    letter-spacing: 0.5em;
+  }
+}
+
+// ============================================
+// DIVIDER
+// ============================================
+
+.fb-divider {
+  width: 200px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, $fb-blood, transparent);
+  margin: 1.5rem auto;
+  position: relative;
+  opacity: 0;
+  animation: fb-dividerIn 0.5s ease-out 0.4s forwards;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: $fb-blood;
+    border-radius: 50%;
+    box-shadow: 0 0 10px $fb-blood-glow;
+  }
+}
+
+@keyframes fb-dividerIn {
+  from {
+    opacity: 0;
+    width: 0;
+  }
+  to {
+    opacity: 1;
+    width: 200px;
+  }
+}
+
+// ============================================
+// CHALLENGE INFO
+// ============================================
+
+.fb-challenge {
+  opacity: 0;
+  animation: fb-slideUp 0.5s ease-out 0.5s forwards;
+}
+
+.fb-challenge-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.3rem;
+  text-shadow: 0 0 20px rgba($fb-cyan, 0.3);
+}
+
+.fb-challenge-category {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.85rem;
+  color: $fb-pink;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  opacity: 0.7;
+}
+
+@keyframes fb-slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================
+// SOLVER BOX
+// ============================================
+
+.fb-solver {
+  margin-top: 1.5rem;
+  padding: 1rem 2rem;
+  background: rgba($fb-blood-dark, 0.3);
+  border: 1px solid rgba($fb-blood, 0.4);
+  border-radius: 4px;
+  opacity: 0;
+  animation: fb-slideUp 0.5s ease-out 0.6s forwards;
+}
+
+.fb-solver-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.3rem;
+}
+
+.fb-solver-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-weight: 700;
+  color: $fb-cyan;
+  text-shadow: 0 0 15px rgba($fb-cyan, 0.6);
+}
+
+// ============================================
+// CLOSE BUTTON
+// ============================================
+
+.fb-close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  opacity: 0;
+  animation: fb-fadeIn 0.3s ease-out 0.8s forwards;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.6);
+    transition: background 0.2s ease;
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  &:hover::before,
+  &:hover::after {
+    background: $fb-blood;
+  }
+}
+
+// ============================================
+// DISMISS HINT
+// ============================================
+
+.fb-dismiss {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba($fb-cyan, 0.3);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  text-shadow: 0 0 10px rgba($fb-cyan, 0.5);
+  opacity: 0;
+  animation: fb-dismiss-in 0.5s ease-out 1s forwards;
+}
+
+@keyframes fb-dismiss-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+// ============================================
+// SCREEN FLASH EFFECT
+// ============================================
+
+.fb-flash {
+  position: absolute;
+  inset: 0;
+  background: $fb-blood;
+  pointer-events: none;
+  animation: fb-flashAnim 0.3s ease-out forwards;
+}
+
+@keyframes fb-flashAnim {
+  0% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+// ============================================
+// VIGNETTE
+// ============================================
+
+.fb-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba($fb-blood-dark, 0.4) 100%);
+  pointer-events: none;
+}

@@ -1,0 +1,37 @@
+name: "Relativité"
+author: "Lou"
+category: Crypto
+
+description_image: files/challenge.png
+
+description: |
+  Un message issu des travaux d’un célèbre physicien a été chiffré.
+  La clé n’est pas absolue.
+  Le temps et la position influencent le résultat.
+
+  Retrouvez le message original.
+
+  `Format du flag : NHK26{TEXTE_EN_MAJUSCULES_AVEC_UNDERSCORES}`
+
+value: 300
+type: dynamic
+state: hidden
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+tags:
+  - MOYEN
+  - Crypto
+
+flags:
+  - flag: "NHK26{TOUT_EST_RELATIF}"
+    type: static
+
+files:
+  - files/readme.txt
+  - files/relativite_note.txt
+
+max_attempts: 0

@@ -1,0 +1,56 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500&display=swap');
+
+.cyber-home {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6rem 2rem 2rem;
+}
+
+.cyber-logo {
+  max-width: clamp(200px, 35vw, 350px);
+  height: auto;
+  filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(155deg);
+  margin-bottom: 1.5rem;
+}
+
+.cyber-subtitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.2rem;
+  color: #8888a0;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+}
+
+.cyber-btn {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 1rem 2.5rem;
+  background: #00fff5;
+  color: #0a0a12 !important;
+  text-decoration: none !important;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  border: none;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.cyber-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 255, 245, 0.3);
+}
+</style>
+
+<div class="cyber-home">
+  <img src="/themes/cybernoir/static/img/unenuitpourhacker-logo.svg" alt="Une Nuit Pour Hacker" class="cyber-logo">
+  <p class="cyber-subtitle">Montrez vos competences en cybersecurite</p>
+  <a href="/challenges" class="cyber-btn">Challenges</a>
+</div>

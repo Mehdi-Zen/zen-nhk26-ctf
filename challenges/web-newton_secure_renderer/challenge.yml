@@ -1,0 +1,33 @@
+name: "Newton’s Secure Renderer"
+author: "Bruce"
+category: Web                  # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png
+
+description: |
+  Une application web permet d’évaluer dynamiquement des formules scientifiques saisies par les utilisateurs.
+
+  Afin d’éviter tout abus, certaines fonctions jugées dangereuses ont été bloquées à l’aide d’un filtre de sécurité.
+
+  Cependant… filtrer ne signifie pas forcément sécuriser.
+
+value: 300
+state : visible  
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - WEB
+
+flags:
+  - flag: "NHK26{newton_ssti}"
+    type: static
+
+type: container
+image: 192.168.213.11:5000/web-newton_secure_renderer:latest
+port: 5000
+protocol: web

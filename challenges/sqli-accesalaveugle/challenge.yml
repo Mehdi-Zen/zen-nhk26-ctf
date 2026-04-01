@@ -1,0 +1,28 @@
+name: "Accès à l'aveugle"
+author: "Kln"
+category: SQLi                   # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Tu ne la vois pas mais elle est là.
+
+value: 300                       # Voir document de Camille
+type: container
+image: registry.gitlab.com/sqli-accesalaveugle:latest
+port: 80
+protocol: web
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - SQLI
+
+flags:
+  - flag: "NHK26{70fedee675bc92524b7fe270a344a3eb}"
+    type: static

@@ -1,0 +1,39 @@
+name: "Les Archives Oubliées de Garrett Morgan"
+author: "Malth"
+category: SQLI                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.jpeg   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Vous vous trouvez dans une reconstitution virtuelle d’un atelier des années 1920, avec des
+  plans d’ingénierie, des croquis de feux tricolores, et des journaux d’époque éparpillés sur un
+  bureau en bois. Une vieille machine à écrire cliquette doucement, et une lumière rouge,
+  jaune, verte clignote dans un coin, rappelant l’invention de Morgan. L’interface web,
+  accessible via un "terminal d’archivage" (une page web stylisée rétro), permet de consulter
+  les brevets en entrant un identifiant. Mais des rumeurs parlent d’une note secrète, jamais
+  publiée, où Morgan aurait décrit une vision futuriste pour les "signaux intelligents". Trouvez-la
+  avant que les archives ne soient verrouillées !
+
+value: 300                       # Voir document de Camille
+type: container
+state : hidden                  # Permet de voir l'état dans le panel admin
+
+type: container
+
+image: registry.gitlab.com/nhk/sqli-garrett_morgan:latest
+port: 5000 # Port exposé dans votre Dockerfile
+protocol: web      
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - SQLI
+
+flags:
+  - flag: "NHK26{G@rr€tt_M0rg@n_Futur3_Tr@ff1c}"
+    type: static
+    

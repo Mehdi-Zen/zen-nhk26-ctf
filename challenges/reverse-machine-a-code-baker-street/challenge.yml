@@ -1,0 +1,28 @@
+name: "Machine à code de Baker Street"
+author: "Luckm4n"
+category: Reverse                   
+
+description_image: files/challenge.png
+
+description: |
+  Un ancien programme retrouvé dans les archives d’Alan **TURING** semble cacher un message secret. Le binaire accepte une entrée utilisateur puis affiche une réponse personnalisée. Cependant, quelque chose semble inhabituel dans sa gestion mémoire. Le message secret n’est pas affiché directement. Il est chiffré à l’aide d’une clé répétée, dont le nom est mis en évidence dans cet énoncé. 
+
+value: 100                       
+type: dynamic     
+state : visible  
+
+extra:
+  initial: 100
+  decay: 30                      # A REVOIR IMPORATANT
+  minimum: 50                   
+
+tags:
+  - FACILE
+  - REVERSE
+
+flags:
+  - flag: "NHK26{TURING_MACHINE}"
+    type: static
+
+files:
+  - files/Machine_à_code_de_Baker_Street.zip

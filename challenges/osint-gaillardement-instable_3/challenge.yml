@@ -1,0 +1,32 @@
+name: "gaillardement_instable_3"
+author: "Malth"
+category: OSINT                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Félicitation ! Vous avez trouvé dans quel hôtel résidait Mr Gaillard. Maintenant vous devez retrouver ses traces sur les réseaux sociaux. Un agent de la DGSE nous a indiqué que Mr Gaillard laissait des traces suspectent sur certains réseaux. C'est à vous de trouver ses traces afin de pouvoir intercepter Mr Gaillard.
+
+value: 1
+type: dynamic
+state : visible
+
+extra:
+  initial: 1                   
+  decay: 13                      
+  minimum: 1
+
+tags:
+  - TIROIR
+  - DIFFICILE
+  - OSINT
+
+flags:
+  - flag: "NHK26{5c6c3e5e0e2f9b2b0dfb9f1b5a5a6f6b7f6a7d8c4d7a4bdb7a9f2a1b0c8d5e3f}"
+    type: static
+
+requirements:
+  prerequisites:
+    - "gaillardement_instable_2"
+
+next: "gaillardement_instable_4"

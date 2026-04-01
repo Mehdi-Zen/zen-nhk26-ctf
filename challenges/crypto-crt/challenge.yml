@@ -1,0 +1,34 @@
+name: "CRT n’est pas toujours un moniteur …"
+author: "Kisane"
+category: Crypto                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Karl vous pose un énigme : "Mes parents m'ont nommé d'après quelle figure scientifique ?
+  
+  Aussi il vous envoyé le message suivant:
+  
+  `ZT0/
+  LCByYWNpbmUgLi4uLiBlbnRpZXJlCmJ5dGVzKChiaXRfbGVuZ3RoKCkrNykvLzgsICJiaWciKQ==`
+
+
+value: 100                       # Voir document de Camille
+type: dynamic
+state: visible
+
+extra:
+  initial: 100                   # POur gerer le dynamisme du scoring
+  decay: 30                      # facteur de decroissance
+  minimum: 50
+
+tags:
+  - FACILE
+  - CRYPTO
+
+flags:
+  - flag: "NHK26{XxBraun!}"
+    type: static
+
+files:
+  - files/output.txt

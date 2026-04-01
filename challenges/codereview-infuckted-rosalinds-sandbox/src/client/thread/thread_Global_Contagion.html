@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V01D.onion — Thread View</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon_V01D.svg">
+<style>
+  @view-transition {
+    navigation: auto;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root { 
+    --bg: #050505; --bg2: #0a0a0a; --bg3: #0f0f0f; 
+    --border: #1a1a1a; --border2: #222; 
+    --green: #00ff41; --green-dim: #00aa2a; --green-faint: #003310; 
+    --red: #ff2020; --red-dim: #801010; 
+    --amber: #ffb300; --amber-dim: #7a5500; 
+    --gray: #444; --gray2: #2a2a2a; 
+    --text: #b0b0b0; --text-dim: #555; --white: #d0d0d0; 
+  }
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Courier Prime', monospace; font-size: 14px; line-height: 1.6; min-height: 100vh; cursor: crosshair; }
+  body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px); pointer-events: none; z-index: 9999; }
+  @keyframes flicker { 0%, 100% { opacity: 1; } 92% { opacity: 1; } 93% { opacity: 0.8; } 94% { opacity: 1; } 96% { opacity: 0.9; } 97% { opacity: 1; } }
+  body { animation: flicker 8s infinite; }
+  #wrapper { max-width: 860px; margin: 0 auto; padding: 0 16px 80px; }
+  
+  header { border-bottom: 1px solid var(--border2); padding: 24px 0 16px; margin-bottom: 32px; }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .site-logo { font-family: 'VT323', monospace; font-size: 52px; color: var(--green); text-shadow: 0 0 20px rgba(0,255,65,0.4); letter-spacing: 4px; line-height: 1; }
+  .site-logo span { color: var(--red); }
+  .site-tagline { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 4px; letter-spacing: 2px; line-height: 1.5; }
+  .readonly-badge { border: 1px dotted var(--red-dim); background: rgba(255, 32, 32, 0.05); padding: 6px 12px; font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text-dim); text-align: right; line-height: 1.4; letter-spacing: 1px; flex-shrink: 0; }
+  .readonly-badge span { color: var(--red); }
+  .site-nav { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 20px; font-family: 'Share Tech Mono', monospace; font-size: 11px; }
+  .site-nav a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+  .site-nav a:hover { color: var(--green); }
+  .site-nav a.active { color: var(--amber); }
+
+  @media (max-width: 450px) { .site-logo { font-size: 36px; } }
+
+  .thread-header { border-left: 3px solid var(--green-dim); padding: 16px 20px; background: var(--bg2); margin-bottom: 2px; }
+  .thread-title { font-family: 'VT323', monospace; font-size: 26px; color: var(--white); letter-spacing: 1px; }
+  .thread-meta { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: 6px; display: flex; gap: 20px; flex-wrap: wrap; }
+  .thread-meta .tag { color: var(--amber); border: 1px solid var(--amber-dim); padding: 1px 6px; font-size: 9px; letter-spacing: 1px; }
+
+  .messages { border: 1px solid var(--border2); border-top: none; }
+  .msg { display: grid; grid-template-columns: 120px 1fr; border-bottom: 1px solid var(--border); min-height: 80px; }
+  .msg:last-child { border-bottom: none; }
+  .msg-sidebar { background: var(--bg3); border-right: 1px solid var(--border); padding: 14px 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .msg-avatar { font-family: 'VT323', monospace; font-size: 32px; line-height: 1; }
+  .msg-username { font-family: 'Share Tech Mono', monospace; font-size: 10px; text-align: center; letter-spacing: 1px; }
+  .msg-role { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--text-dim); text-align: center; }
+  .msg.scientist .msg-username { color: #4fc3f7; } .msg.scientist .msg-avatar { color: #4fc3f7; }
+  .msg.hacker .msg-username { color: var(--green); } .msg.hacker .msg-avatar { color: var(--green); }
+  .msg.system-msg .msg-username { color: var(--red); } .msg.system-msg .msg-avatar { color: var(--red); }
+  .msg-body { padding: 14px 18px; background: var(--bg); }
+  .msg-timestamp { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--text-dim); margin-bottom: 10px; display: flex; justify-content: space-between; }
+  .msg-text { color: var(--text); line-height: 1.75; font-size: 13.5px; }
+  .msg-text p { margin-bottom: 10px; }
+  .msg-text .highlight { color: var(--amber); } .msg-text .danger { color: var(--red); }
+  .msg-text a.inline-link { color: var(--amber); text-decoration: underline; text-underline-offset: 3px;}
+  .msg-text a.inline-link:hover { color: var(--white); }
+  .msg-text code { background: var(--bg3); padding: 2px 4px; font-family: 'Share Tech Mono', monospace; color: var(--green-dim); font-size: 12px;}
+
+  .quarantine-btn { display: inline-block; margin-top: 15px; padding: 10px 20px; background: rgba(255, 32, 32, 0.1); color: var(--red); border: 1px solid var(--red-dim); font-family: 'Share Tech Mono', monospace; font-size: 12px; text-decoration: none; letter-spacing: 1.5px; transition: all 0.2s; text-align: center; }
+  .quarantine-btn:hover { background: var(--red-dim); color: var(--white); box-shadow: 0 0 15px rgba(255, 32, 32, 0.5); }
+
+  footer { border-top: 1px solid var(--border2); padding: 20px 0; margin-top: 60px; font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--text-dim); letter-spacing: 1px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+<div id="wrapper">
+
+  <header>
+    <div class="header-top">
+      <div style="min-width: 0;">
+        <div class="site-logo">V<span>0</span>1D.onion</div>
+        <div class="site-tagline">// anonymous bulletin — no logs — no trust — no gods //</div>
+      </div>
+      <div class="readonly-badge">
+        USER: ANONYMOUS<br>
+        PERMS: <span>READ-ONLY</span>
+      </div>
+    </div>
+    
+    <nav class="site-nav">
+      <a href="/" class="active">[boards]</a>
+      <a href="/leaks">[leaks]</a>
+      <a href="/tools">[tools]</a>
+      <a href="/pgp">[pgp]</a>
+      <a href="/rules">[rules]</a>
+    </nav>
+  </header>
+
+  <div class="thread-header">
+    <div class="thread-title">// OUTBREAK: "Global Contagion" wiped from web + Source code</div>
+    <div class="thread-meta">
+      <span class="tag">MALWARE</span>
+      <span class="tag">FORENSICS</span>
+      <span class="tag">MYSTERY</span>
+      <span>posted by: <span style="color:var(--green)">0xPhr34k</span></span>
+      <span>replies: 8</span>
+    </div>
+  </div>
+
+  <div class="messages">
+
+    <div class="msg hacker">
+      <div class="msg-sidebar">
+        <div class="msg-avatar">⬡</div>
+        <div class="msg-username">0xPhr34k</div>
+        <div class="msg-role">elite / trusted</div>
+      </div>
+      <div class="msg-body">
+        <div class="msg-timestamp"><span>14-09-2026 &nbsp; 03:17:44 UTC</span><span class="msg-number">#0001</span></div>
+        <div class="msg-text">
+          <p>Sup folks. Anyone got intel on the wipe of <span class="highlight">Global Contagion Control</span>? It was a small open-source pandemic sim. Since last night, absolutely nothing. Gitlab repo deleted, Discord shut down, servers offline.</p>
+          <p>I managed to dump the full Git archive including the Python backend right before everything vanished. Uploaded it to the leaks section if anyone wants to take a peek.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg" style="">
+      <div class="msg-sidebar" style="background:var(--bg3)">
+        <div class="msg-avatar" style="color:#9c27b0;font-family:'VT323',monospace;font-size:32px;">◆</div>
+        <div class="msg-username" style="color:#9c27b0;font-family:'Share Tech Mono',monospace;font-size:10px;">n0de_burn</div>
+        <div class="msg-role">regular</div>
+      </div>
+      <div class="msg-body">
+        <div class="msg-timestamp"><span>14-09-2026 &nbsp; 06:22:10 UTC</span><span class="msg-number">#0002</span></div>
+        <div class="msg-text">
+          <p>I was on their Discord when it went down. Devs were panicking, talking about massive unexplained requests hitting their prod server. Thought they were getting DDoS'd or breached, so they pulled the plug in a panic.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg" style="">
+      <div class="msg-sidebar" style="background:var(--bg3)">
+        <div class="msg-avatar" style="color:#ff7043;font-family:'VT323',monospace;font-size:32px;">▲</div>
+        <div class="msg-username" style="color:#ff7043;font-family:'Share Tech Mono',monospace;font-size:10px;">byteflayer</div>
+        <div class="msg-role">lurker</div>
+      </div>
+      <div class="msg-body">
+        <div class="msg-timestamp"><span>14-09-2026 &nbsp; 08:45:11 UTC</span><span class="msg-number">#0003</span></div>
+        <div class="msg-text">
+          <p>Grabbed the zip from leaks. Honestly, it looks clean. Just a standard FastAPI backend with WebSockets and some client-side JS. Don't see what could've triggered a security alert on their end. You sure this is the complete code?</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg scientist">
+      <div class="msg-sidebar">
+        <div class="msg-avatar">◈</div>
+        <div class="msg-username">Dr_R_Eggo</div>
+        <div class="msg-role">verified / researcher</div>
+      </div>
+      <div class="msg-body">
+        <div class="msg-timestamp"><span>15-09-2026 &nbsp; 11:04:12 UTC</span><span class="msg-number">#0004</span></div>
+        <div class="msg-text">
+          <p>The code is complete, but it is far from "clean". Hello everyone. I am Rosalind Eggo, a Threat Intelligence researcher.</p>
+          <p>I was tracking a data exfiltration campaign targeting European pharmaceutical labs. Following the network traffic traces, the signatures led me straight to the servers of this indie game.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg hacker">
+      <div class="msg-sidebar">
+        <div class="msg-avatar">⬡</div>
+        <div class="msg-username">0xPhr34k</div>
+        <div class="msg-role">elite / trusted</div>
+      </div>
+      <div class="msg-body">
+        <div class="msg-timestamp"><span>15-09-2026 &nbsp; 14:10:05 UTC</span><span class="msg-number">#0005</span></div>
+        <div class="msg-text">
+          <p>A researcher on this board? Weird flex. But let's roll with it. You think an APT group compromised the game server to use it as a relay?</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg scientist">
+      <div class="msg-sidebar">
+        <div class="msg-avatar">◈</div>
+        <div class="msg-username">Dr_R_Eggo</div>
+        <div class="msg-role">verified / researcher</div>
+      </div>
+      <div class="msg-body">
+        <div class="msg-timestamp"><span>15-09-2026 &nbsp; 15:30:22 UTC</span><span class="msg-number">#0006</span></div>
+        <div class="msg-text">
+          <p>Worse. They didn't just compromise the server, they quietly altered the source code itself. The game *is* the malicious infrastructure. The attacker's traffic was routed directly through the game's streams, completely blended into normal player activity.</p>
+          <p>My static analysis hasn't yielded anything conclusive yet using standard tools. The malicious payload is extremely well integrated into the backend architecture.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg hacker">
+      <div class="msg-sidebar">
+        <div class="msg-avatar">⬡</div>
+        <div class="msg-username">0xPhr34k</div>
+        <div class="msg-role">elite / trusted</div>
+      </div>
+      <div class="msg-body">
+        <div class="msg-timestamp"><span>16-09-2026 &nbsp; 10:20:33 UTC</span><span class="msg-number">#0007</span></div>
+        <div class="msg-text">
+          <p>Interesting. To make things easier, I compiled the dumped archive and hosted it on an isolated disposable sandbox.</p>
+          <a href="/global_contagion" class="quarantine-btn">[ ACCESS LIVE GAME SANDBOX ]</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg scientist">
+      <div class="msg-sidebar">
+        <div class="msg-avatar">◈</div>
+        <div class="msg-username">Dr_R_Eggo</div>
+        <div class="msg-role">verified / researcher</div>
+      </div>
+      <div class="msg-body">
+        <div class="msg-timestamp"><span>16-09-2026 &nbsp; 11:05:44 UTC</span><span class="msg-number">#0008</span></div>
+        <div class="msg-text">
+          <p>Perfect, thanks. This will let me observe it in a dynamic environment.</p>
+          <p>However, the code is incredibly obtuse. If any of you are used to hunting down subtle anomalies or logical backdoors buried deep in Python, your insights on this source code would be greatly appreciated. I absolutely need to understand how they're interacting with this backend.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg" style="">
+      <div class="msg-sidebar" style="background:var(--bg3)">
+        <div class="msg-avatar" style="color:#ff7043;font-family:'VT323',monospace;font-size:32px;">▲</div>
+        <div class="msg-username" style="color:#ff7043;font-family:'Share Tech Mono',monospace;font-size:10px;">byteflayer</div>
+        <div class="msg-role">lurker</div>
+      </div>
+      <div class="msg-body">
+        <div class="msg-timestamp"><span>16-09-2026 &nbsp; 11:42:02 UTC</span><span class="msg-number">#0009</span></div>
+        <div class="msg-text">
+          <p>Challenge accepted. Reopening the archive to take a closer look. If there's something hidden in there, we'll find it.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="msg system-msg">
+      <div class="msg-sidebar">
+        <div class="msg-avatar">✖</div>
+        <div class="msg-username">SYS_ADMIN</div>
+        <div class="msg-role">root / infrastructure</div>
+      </div>
+      <div class="msg-body">
+        <div class="msg-timestamp"><span>17-09-2026 &nbsp; 02:44:19 UTC</span><span class="msg-number">#0010</span></div>
+        <div class="msg-text">
+          <p class="danger">URGENT: BLOCK-LEVEL CORRUPTION DETECTED</p>
+          <p>I don't know what <span class="highlight">0xPhr34k</span> dropped in that sandbox, but the V01D nodes are bleeding. This isn't a standard container escape. It’s like the process is "re-mapping" our local environment to match its own requirements.</p>
+          <p>We’ve lost granular control over the site's routing. I just pulled a live dump of the active process memory, and the forum's logic—everything from <code>/leaks</code> to our <code>/pgp</code> endpoints—has been physically merged into the game's core loop. The simulation is literally <span class="danger">eating the host</span> to sustain its own execution.</p>
+          <p>I'm attaching the current <code>main.py</code> recovered from the infected buffer. If you're going to audit this, do it fast. The source code is starting to look less like a game and more like a nervous system.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>V01D.onion — est. ████ — no logs kept — jurisdiction: none</span>
+    <span>tor only — js disabled recommended — pgp key: 0x████████</span>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+name: "Pokemon Nexus"
+author: "SNAK3"
+category: Reverse                # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+ 
+  Ada Lovelace, qui a créé le concept de programme, a travaillé sur un projet de création de jeu vidéo avec un concept où le jeu semble inachevé ou cache peut-être quelque chose. À vous de découvrir ce que c'est.
+
+  Le format du flag est NHK26{098f6bcd4621d373cade4e832627b4f6}
+  
+  Flag sensible à la casse.
+
+value: 300
+type: dynamic
+state: visible
+
+extra:
+  initial: 300                   # = value
+  decay: 13
+  minimum: 100                    # ~50% de initial
+
+flags:
+  - flag: "NHK26{f527bffbcf30e9b24a4a6e14e79f6f6c}"
+    type: static
+
+tags:
+  - MOYEN
+  - REVERSE
+
+
+files:
+  - files/Pokemon.zip
+
+
+max_attempts: 3

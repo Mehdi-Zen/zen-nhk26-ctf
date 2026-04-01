@@ -1,0 +1,52 @@
+
+# TEST: FirstBlood Challenge - Pour tester le deploiement
+
+
+name: "FirstBlood Test"
+author: "NHK26"
+category: Misc
+
+# Image de description
+description_image: files/firstblood.svg
+
+description: |
+  Ceci est un challenge de test pour valider le systeme FirstBlood.
+
+  Le flag est simple pour permettre de tester rapidement l'animation
+  et les bonus de points pour les premiers solvers.
+
+  **Indice:** Le flag est dans le format standard.
+
+# SCORING (Dynamic + FirstBlood)
+value: 50
+type: firstblood
+state: hidden
+
+extra:
+  initial: 50
+  decay: 10
+  minimum: 25
+
+# FIRST BLOOD BONUS
+first_blood_bonus:
+  - 30                           # 1st blood: +30 points
+  - 15                           # 2nd blood: +15 points
+  - 5                            # 3rd blood: +5 points
+
+# FLAGS
+flags:
+  - flag: "NHK26{f1rst_bl00d_t3st_w0rks!}"
+    type: static
+
+# TAGS (OBLIGATOIRE)
+# Premier tag = difficulte, deuxieme tag = FIRST BLOOD si applicable
+tags:
+  - INTRO
+  - MISC
+
+hints:
+  - content: "C'est un challenge de test, le flag contient 'test'"
+    cost: 0
+
+max_attempts: 0
+version: "1.0"

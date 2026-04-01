@@ -1,0 +1,36 @@
+name: "Leavitt’s Hidden Light"
+author: "Bruce"
+category: Misc                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png
+
+description: |
+  Un simple ciel étoilé.
+  Calme. Silencieux. Inoffensif.
+
+  Pourtant, certaines étoiles brillent un peu différemment…
+
+  Henrietta Leavitt a révélé que la lumière des étoiles pouvait cacher des secrets sur l’univers.
+  Peut-être que cette image aussi cache quelque chose.
+
+  À vous d’observer au-delà des apparences.
+
+value: 300
+type: dynamic
+state : visible  
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - MISC
+
+flags:
+  - flag: "NHK26{leavitt_hidden}"
+    type: static
+
+files:
+  - files/leavitt_stars.jpg

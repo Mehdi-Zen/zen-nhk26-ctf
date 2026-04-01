@@ -1,0 +1,37 @@
+name: "APK Pandora"
+author: "BloDiZz"
+category: Reverse                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.jpeg   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+
+  Vous devrez adopter une démarche rigoureuse et méthodique, à l’image d’un chercheur comme Dexter Kozen, spécialiste des langages formels et de la théorie des automates, domaines étroitement liés au fonctionnement interne des applications et des systèmes informatiques.
+
+  Une instance ainsi qu’un fichier vous ont été donné à vous de faire le nécessaire pour retrouver les informations attendues ! 
+
+
+
+value: 500                       
+type: container
+image: 192.168.213.11:5000/reverse-apk_pandora:latest
+port: 5000
+protocol: web
+state: hidden                 
+
+extra:
+  initial: 500                   
+  decay: 6                      
+  minimum: 300                   
+
+tags:
+  - DIFFICILE
+  - REVERSE
+  - FIRST BLOOD
+
+flags:
+  - flag: "NHK26{Le_reverse_android_est_trop_facile}"
+    type: static
+    
+files:
+  - files/appli.dat

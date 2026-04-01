@@ -1,0 +1,27 @@
+name: "MifareTea"
+author: "Kisane"
+category: Misc                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Nikola Tesla est en plein travail sur une nouvelle expérience pour le Tesla day dans son atelier. Après des heures à manipuler ses bobines, il a une soif terrible mais son badge Mifare pour le distributeur du labo ne contient pas assez de crédit...le thé coûte 3€
+
+value: 300                       # Voir document de Camille
+type: dynamic
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100
+
+tags:
+  - MOYEN
+  - MISC
+
+flags:
+  - flag: "NHK26{T2SL4_N3EDS_T8A}"
+    type: static
+
+files:
+  - files/dump-base.json

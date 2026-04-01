@@ -1,0 +1,40 @@
+name: "Formule chimique"
+author: "EnderMan"
+category: Reverse
+
+description_image: files/challenge.png
+
+description: |
+  Alice Ball (1892-1916) était une chimiste prodige.
+  À 23 ans, elle mit au point le premier traitement injectable contre la lèpre.
+  Elle mourut avant de pouvoir publier. Son superviseur s'appropria ses travaux.
+  Son nom fut effacé pendant des décennies.
+
+  Un terminal de laboratoire portant son dossier a été retrouvé sur une machine isolée.
+  L'accès est protégé par une vérification locale , et quelque chose empêche l'analyse directe.
+
+  Analyse le binaire Linux (x86_64), identifie comment la formule est validée,
+  puis fournis la bonne valeur pour déclencher l'affichage du dossier.
+
+value: 300
+type: dynamic
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+tags:
+  - MOYEN
+  - REVERSE
+
+flags:
+  - flag: "NHK26{Y0u_F0unD_F0rMu1@_GG}"
+    type: static
+
+files:
+  - files/challenge.png
+  - files/ball_dossier
+
+max_attempts: 0

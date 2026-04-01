@@ -1,0 +1,40 @@
+name: "Chronofracture"
+author: "ErEn"
+category: Reverse
+
+description_image: files/challenge.jpg
+
+description: |
+  Carl Friedrich Gauss, prince des mathématiques, savait voir l'ordre dans le chaos des nombres.
+
+  Une archive mystérieuse signée Chronofracture exige un mot de passe pour révéler son contenu. L'administrateur, tête en l'air, a laissé la solution cachée dans le binaire.
+
+  Sauras-tu percer le mystère et déjouer la protection ?
+
+# Se referer au document transmis par Camille pour les valeurs de points
+value: 100
+type: dynamic
+state: visible
+
+extra:
+  initial: 100
+  decay: 30
+  minimum: 50
+
+flags:
+  - flag: "NHK26{Ch40n0fr4ctur3_M4st3r_0f_T1m3}"
+    type: static
+
+tags:
+  - FACILE
+  - REVERSE
+
+files:
+  - files/cci-2026-rv
+  - files/cci-2026-rv.exe
+
+hints:
+  - content: "Gauss aurait su déchiffrer cela... ROT quelque chose ?"
+    cost: 5
+
+max_attempts: 0

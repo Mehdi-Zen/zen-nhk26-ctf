@@ -1,0 +1,31 @@
+name: "Les expériences électriques de l'Abbé NOllet"
+author: "EL NiMoS, Wumbou, Andy"
+category: SQLi
+description_image: files/challenge.png
+
+description: |
+  L'Académie des Sciences vient de numériser les carnets de l'Abbé Nollet. Un laboratoire en ligne permet désormais de consulter ses expériences, ses journaux d'observations et son artefact le plus précieux.
+  Mais derrière cette interface se cache une application qui fait trop confiance à ce qu'elle stocke.
+  Le Cabinet Personnel abrite un Sceau. Le Sceau garde une clé. La clé ouvre un terminal. Patience et méthode sont vos seuls alliés. Le flag ne se devine pas. /!\ L’instance peut mettre un certain temps à démarrer (environ 20 secondes).
+
+value: 1000
+type: container
+state: visible
+
+extra:
+  initial: 1000
+  decay: 3
+  minimum: 500
+
+image: registry.gitlab.com/web/moyen/sqli-les_experiences_electriques_de_l_abbe_nollet:latest 
+port: 8080
+protocol: web
+
+tags:
+  - INSANE
+  - SQLI
+flags:
+  - flag: "NHK26{CH4INE_HUMAINE_M0DE_CH4T4IGNE_1746}" 
+    type: static
+
+    

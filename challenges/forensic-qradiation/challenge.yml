@@ -1,0 +1,34 @@
+name: "Radiation Recovery"
+author: "Lou"
+category: Forensic
+
+description_image: files/challenge.png
+
+description: |
+  Un QR code a été endommagé par une exposition intense à des radiations.  
+  Il semble illisible avec n'importe quel scanner standard.  
+  Récupère les données cachées pour trouver le flag.
+
+  `Format du flag : NHK26{TEXTE_EN_MAJUSCULES_AVEC_UNDERSCORES}`
+
+value: 500                       
+type: dynamic
+state: visible
+
+extra:
+  initial: 500
+  decay: 6
+  minimum: 300
+
+tags:
+  - DIFFICILE
+  - Forensic
+
+flags:
+  - flag: "NHK26{QR4D1AT10N_R3C0V3RY_1896}"
+    type: static
+
+files:
+  - files/QRadiation.png
+
+max_attempts: 0

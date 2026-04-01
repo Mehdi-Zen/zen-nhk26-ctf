@@ -1,0 +1,39 @@
+name: "Débogage entomologique"
+author: "Andy"                  
+category: Code Review
+
+description_image: files/challenge.png
+
+description: |
+  Les insectes de **Jean-Henri Fabre** ont envahi le code ! 
+  Corriger les bugs pour afficher le flag.
+
+value: 100
+type: dynamic
+state: visible
+
+extra:
+  initial: 100
+  decay: 30
+  minimum: 50
+
+tags:
+  - FACILE
+  - CODE REVIEW
+
+flags:
+  - flag: "NHK26{Le savoir humain sera archives du monde avant que nous ayons le dernier mot d'un moucheron.}"
+    type: static
+
+files:
+  - files/bugs_jh_fabre.py
+
+hints:
+  - content: "Regarde la syntaxe d’un `print(...)` : il y a une erreur qui empêche même de lancer le script."
+    cost: 5
+  - content: "Une boucle ne se termine jamais : vérifie la condition d’arrêt / l’incrémentation."
+    cost: 15
+  - content: "Une fonction est appelée avec le mauvais nom (typo). Et attention : un faux flag est affiché pour piéger."
+    cost: 30
+
+max_attempts: 0

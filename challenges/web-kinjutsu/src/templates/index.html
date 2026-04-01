@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinjutsu — 禁術</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;600;800&family=Zen+Old+Mincho:wght@400;700;900&family=Fira+Code:wght@400;500&display=swap');
+
+        :root {
+            --ink: #0b0b12;
+            --vermillion: #c23038;
+            --vermillion-dim: rgba(194, 48, 56, 0.35);
+            --gold: #c4a44a;
+            --gold-dim: rgba(196, 164, 74, 0.25);
+            --mist: rgba(200, 200, 215, 0.06);
+            --text: #d0cfd8;
+            --text-dim: rgba(200, 200, 215, 0.4);
+            --paper: rgba(245, 235, 220, 0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--ink);
+            color: var(--text);
+            font-family: 'Shippori Mincho B1', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* === INK WASH BACKGROUND === */
+        .ink-wash {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 80%, rgba(194, 48, 56, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 20%, rgba(196, 164, 74, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse 100% 100% at 50% 50%, rgba(15, 15, 25, 1) 0%, rgba(11, 11, 18, 1) 100%);
+            z-index: 0;
+        }
+
+        /* === NOISE GRAIN === */
+        .ink-wash::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            opacity: 0.4;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+            background-size: 128px 128px;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        /* === FLOATING CHERRY BLOSSOM PETALS === */
+        .petals {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .petal {
+            position: absolute;
+            width: 8px;
+            height: 6px;
+            background: radial-gradient(ellipse, rgba(255, 180, 190, 0.5) 0%, rgba(255, 140, 160, 0.15) 100%);
+            border-radius: 50% 0 50% 0;
+            top: -20px;
+            animation: fall linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes fall {
+            0%   { opacity: 0; transform: translateX(0) rotate(0deg) scale(0.8); }
+            10%  { opacity: 0.7; }
+            90%  { opacity: 0.3; }
+            100% { opacity: 0; transform: translateX(80px) rotate(720deg) translateY(105vh) scale(0.4); }
+        }
+
+        .petal:nth-child(1)  { left: 5%;  animation-duration: 14s; animation-delay: 0s; width: 7px; height: 5px; }
+        .petal:nth-child(2)  { left: 15%; animation-duration: 18s; animation-delay: 2s; width: 9px; height: 7px; }
+        .petal:nth-child(3)  { left: 28%; animation-duration: 12s; animation-delay: 4s; width: 6px; height: 4px; }
+        .petal:nth-child(4)  { left: 40%; animation-duration: 20s; animation-delay: 1s; width: 10px; height: 7px; }
+        .petal:nth-child(5)  { left: 55%; animation-duration: 16s; animation-delay: 3s; width: 8px; height: 6px; }
+        .petal:nth-child(6)  { left: 65%; animation-duration: 14s; animation-delay: 6s; width: 7px; height: 5px; }
+        .petal:nth-child(7)  { left: 78%; animation-duration: 19s; animation-delay: 2.5s; width: 9px; height: 6px; }
+        .petal:nth-child(8)  { left: 88%; animation-duration: 15s; animation-delay: 5s; width: 6px; height: 5px; }
+        .petal:nth-child(9)  { left: 35%; animation-duration: 22s; animation-delay: 7s; width: 11px; height: 8px; }
+        .petal:nth-child(10) { left: 72%; animation-duration: 17s; animation-delay: 0.5s; width: 8px; height: 5px; }
+        .petal:nth-child(11) { left: 48%; animation-duration: 13s; animation-delay: 8s; width: 7px; height: 5px; }
+        .petal:nth-child(12) { left: 92%; animation-duration: 21s; animation-delay: 3.5s; width: 9px; height: 7px; }
+
+        /* === MIST LAYERS === */
+        .mist {
+            position: fixed;
+            bottom: 0;
+            left: -10%;
+            width: 120%;
+            height: 30vh;
+            background: linear-gradient(to top, rgba(11, 11, 18, 0.9) 0%, rgba(11, 11, 18, 0.3) 40%, transparent 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .mist::before {
+            content: '';
+            position: absolute;
+            bottom: 10%;
+            left: 0;
+            width: 200%;
+            height: 60%;
+            background:
+                radial-gradient(ellipse 30% 100% at 15% 50%, rgba(200, 200, 220, 0.04) 0%, transparent 70%),
+                radial-gradient(ellipse 25% 100% at 55% 50%, rgba(200, 200, 220, 0.03) 0%, transparent 70%),
+                radial-gradient(ellipse 35% 100% at 85% 50%, rgba(200, 200, 220, 0.04) 0%, transparent 70%);
+            animation: drift 30s ease-in-out infinite alternate;
+        }
+
+        @keyframes drift {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-15%); }
+        }
+
+        /* === MAIN LAYOUT === */
+        .scene {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.5rem;
+        }
+
+        /* === TORII GATE (CSS) === */
+        .torii {
+            position: relative;
+            width: 200px;
+            height: 160px;
+            margin-bottom: 2.5rem;
+            animation: torii-appear 1.5s ease-out both;
+        }
+
+        @keyframes torii-appear {
+            0%   { opacity: 0; transform: translateY(30px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .torii-top {
+            position: absolute;
+            top: 0;
+            left: -10px;
+            right: -10px;
+            height: 12px;
+            background: var(--vermillion);
+            border-radius: 2px 2px 0 0;
+            box-shadow: 0 0 30px rgba(194, 48, 56, 0.3);
+        }
+
+        .torii-top::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -5px;
+            right: -5px;
+            height: 8px;
+            background: var(--vermillion);
+            border-radius: 3px 3px 0 0;
+            opacity: 0.8;
+        }
+
+        .torii-beam {
+            position: absolute;
+            top: 24px;
+            left: 10px;
+            right: 10px;
+            height: 6px;
+            background: var(--vermillion);
+            opacity: 0.7;
+        }
+
+        .torii-pillar {
+            position: absolute;
+            top: 10px;
+            width: 10px;
+            height: 150px;
+            background: linear-gradient(180deg, var(--vermillion) 0%, rgba(140, 30, 35, 0.8) 100%);
+            border-radius: 2px;
+        }
+
+        .torii-pillar.left  { left: 20px; }
+        .torii-pillar.right { right: 20px; }
+
+        /* Kanji inside the gate */
+        .torii-kanji {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: rgba(194, 48, 56, 0.15);
+            text-shadow: 0 0 40px rgba(194, 48, 56, 0.1);
+            animation: kanji-glow 5s ease-in-out infinite alternate;
+            user-select: none;
+        }
+
+        @keyframes kanji-glow {
+            0%   { color: rgba(194, 48, 56, 0.1); text-shadow: 0 0 20px rgba(194, 48, 56, 0.05); }
+            100% { color: rgba(194, 48, 56, 0.2); text-shadow: 0 0 50px rgba(194, 48, 56, 0.15); }
+        }
+
+        /* === TITLE === */
+        .title-group {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            animation: fade-up 1s ease-out 0.3s both;
+        }
+
+        @keyframes fade-up {
+            0%   { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .title {
+            font-family: 'Zen Old Mincho', serif;
+            font-size: clamp(2.2rem, 6vw, 3.5rem);
+            font-weight: 900;
+            color: #eae8f0;
+            letter-spacing: 0.08em;
+            line-height: 1.2;
+            position: relative;
+        }
+
+        .title .no {
+            color: var(--vermillion);
+            text-shadow: 0 0 30px rgba(194, 48, 56, 0.3);
+        }
+
+        .subtitle {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            margin-top: 0.8rem;
+        }
+
+        /* === INK BRUSH DIVIDER === */
+        .ink-stroke {
+            width: 120px;
+            height: 3px;
+            margin: 0 auto 2.5rem;
+            background: linear-gradient(90deg, transparent, var(--vermillion-dim), var(--vermillion), var(--vermillion-dim), transparent);
+            border-radius: 2px;
+            position: relative;
+            animation: fade-up 1s ease-out 0.5s both;
+        }
+
+        .ink-stroke::before,
+        .ink-stroke::after {
+            content: '◆';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.4rem;
+            color: var(--vermillion-dim);
+        }
+
+        .ink-stroke::before { left: -12px; }
+        .ink-stroke::after  { right: -12px; }
+
+        /* === SCROLL CARD === */
+        .scroll {
+            max-width: 560px;
+            width: 100%;
+            background:
+                linear-gradient(135deg, var(--paper) 0%, transparent 50%),
+                linear-gradient(225deg, rgba(194, 48, 56, 0.02) 0%, transparent 50%),
+                rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(194, 48, 56, 0.12);
+            border-radius: 2px;
+            padding: 2.5rem 2rem;
+            position: relative;
+            animation: fade-up 1s ease-out 0.7s both;
+        }
+
+        /* Seal stamp */
+        .scroll::before {
+            content: '秘';
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: rgba(194, 48, 56, 0.12);
+            border: 2px solid rgba(194, 48, 56, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            transform: rotate(12deg);
+            line-height: 1;
+        }
+
+        /* Gold corner accent */
+        .scroll::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            border-left: 1px solid var(--gold-dim);
+            border-bottom: 1px solid var(--gold-dim);
+            border-radius: 0 0 0 2px;
+        }
+
+        .scroll-text {
+            font-size: 1.05rem;
+            line-height: 2;
+            color: rgba(210, 210, 220, 0.65);
+            text-align: center;
+            letter-spacing: 0.02em;
+        }
+
+        .scroll-text em {
+            font-style: normal;
+            color: var(--vermillion);
+            opacity: 0.7;
+        }
+
+        .scroll-quote {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(194, 48, 56, 0.08);
+            font-style: italic;
+            font-size: 0.85rem;
+            color: rgba(196, 164, 74, 0.4);
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        /* === HINT PATHS === */
+        .paths {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+            animation: fade-up 1s ease-out 0.9s both;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .path-link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.4rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(194, 48, 56, 0.12);
+            border-radius: 2px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+
+        .path-link::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(194, 48, 56, 0.06) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .path-link:hover::before { opacity: 1; }
+
+        .path-link:hover {
+            border-color: rgba(194, 48, 56, 0.35);
+            color: #eae8f0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(194, 48, 56, 0.1);
+        }
+
+        .path-link .kanji {
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 1.1rem;
+            color: var(--vermillion);
+            opacity: 0.5;
+            transition: opacity 0.4s;
+        }
+
+        .path-link:hover .kanji { opacity: 0.8; }
+
+        .path-label {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* === FOOTER SEAL === */
+        .seal-footer {
+            margin-top: 4rem;
+            text-align: center;
+            animation: fade-up 1s ease-out 1.1s both;
+        }
+
+        .seal-kanji {
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 0.8rem;
+            color: rgba(200, 200, 215, 0.12);
+            letter-spacing: 0.6em;
+        }
+
+        .seal-line {
+            width: 30px;
+            height: 1px;
+            background: rgba(194, 48, 56, 0.15);
+            margin: 0.8rem auto;
+        }
+
+        .seal-label {
+            font-size: 0.6rem;
+            color: rgba(200, 200, 215, 0.1);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 480px) {
+            .torii { width: 150px; height: 120px; }
+            .torii-kanji { font-size: 2rem; }
+            .scroll { padding: 1.8rem 1.2rem; }
+            .paths { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background layers -->
+    <div class="ink-wash"></div>
+
+    <!-- Falling cherry blossom petals -->
+    <div class="petals">
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+    </div>
+
+    <!-- Mist -->
+    <div class="mist"></div>
+
+    <!-- Main scene -->
+    <div class="scene">
+
+        <!-- Torii Gate -->
+        <div class="torii">
+            <div class="torii-top"></div>
+            <div class="torii-beam"></div>
+            <div class="torii-pillar left"></div>
+            <div class="torii-pillar right"></div>
+            <div class="torii-kanji">忍</div>
+        </div>
+
+        <!-- Title -->
+        <div class="title-group">
+            <h1 class="title">Kin<span class="no">jutsu</span></h1>
+            <p class="subtitle">NHK26 — Crypto Challenge</p>
+        </div>
+
+        <div class="ink-stroke"></div>
+
+        <!-- Scroll -->
+        <div class="scroll">
+            <p class="scroll-text">
+                Le village caché protège ses secrets<br>
+                derrière un <em>sceau sacré</em>.<br><br>
+                Seuls les shinobi capables de <em>forger<br>
+                leur propre jutsu</em> pourront pénétrer<br>
+                le sanctuaire du Hokage.
+            </p>
+            <p class="scroll-quote">
+                « Un ninja ne brise pas le sceau par la force —<br>
+                il en comprend la faiblesse. »
+            </p>
+        </div>
+
+        <!-- Jutsus link -->
+        <div class="paths" style="margin-top: 2.5rem; animation: fade-up 1s ease-out 0.9s both;">
+            <a href="/jutsus" class="path-link">
+                <span class="kanji">術</span>
+                <span class="path-label">Le Livre des Jutsus</span>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="seal-footer">
+            <div class="seal-kanji">忍 術 の 道</div>
+            <div class="seal-line"></div>
+            <div class="seal-label">The Way of the Ninja</div>
+        </div>
+
+    </div>
+
+</body>
+</html>

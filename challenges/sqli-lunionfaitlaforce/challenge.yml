@@ -1,0 +1,42 @@
+name: "L'union fait la force"
+author: "segfault"
+category: SQLi                 # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Un simple champ de connexion.
+  Un identifiant.
+  Un mot de passe.
+  Rien d’autre.
+  
+  Les développeurs ont filtré les entrées évidentes.
+  Ils pensent avoir bloqué les commentaires.
+  Ils ont testé les apostrophes.
+  Mais ils ont oublié une chose.
+  Certaines requêtes peuvent être… combinées.
+value: 100                       # Voir document de Camille
+
+type: container
+image: 192.168.213.11:5000/challenges/sqli-lunionfaitlaforce:latest
+port: 80
+protocol: web
+
+state: hidden
+
+extra:
+  initial: 100
+  decay: 30
+  minimum: 50
+
+tags:
+  - FACILE
+  - SQLI
+
+flags:
+  - flag: "NHK26{union_sqli_martini}"
+    type: static
+
+hints:
+  - content: "il semble y avoir une table flag"
+    cost: 5

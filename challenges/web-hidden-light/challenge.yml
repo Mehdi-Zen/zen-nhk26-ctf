@@ -1,0 +1,28 @@
+name: "Hidden Light"
+author: "segfault"
+category: Web                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Saurez vous allumer la lumière ?
+
+value: 50                       # Voir document de Camille
+type: container
+image: 192.168.213.11:5000/challenges/web-hidden-light:latest
+port: 80
+protocol: web
+state: visible
+
+extra:
+  initial: 50
+  decay: 40
+  minimum: 20
+
+tags:
+  - INTRO
+  - WEB
+
+flags:
+  - flag: "NHK26{JeneparlepasdeVoiture}"
+    type: static

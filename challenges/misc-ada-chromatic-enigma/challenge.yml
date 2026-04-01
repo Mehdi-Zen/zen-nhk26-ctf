@@ -1,0 +1,49 @@
+# TEMPLATE: Challenge sans Docker (Crypto, Forensic, OSINT, etc.)
+# Dossier: categorie-nom (ex: crypto-caesar)
+
+name: "Ada's Chromatic Enigma"
+author: "Mathias"
+category: Misc                 # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+  Londres, 1843. Ada Lovelace vient de publier ses Notes sur la Machine Analytique de Babbage. Dans la Note G figure le premier programme informatique de l'histoire : le calcul des nombres de Bernoulli.
+  Un robot EV3 attend sur une grille 7×7, immobile. Pour le faire avancer, il faut lui envoyer une séquence de mouvements , chiffrée avec un algorithme inspiré de la Note G, signée avec une clef secrète. Ces deux secrets dorment quelque part dans la base de données…*   
+  connectez-vous à l'adresse suivante **[Ada's Chromatic Enigma](https://192.168.213.6)**
+
+# Points: voir document de Camille
+value: 500
+type: dynamic
+state: visible
+
+extra:
+  initial: 500                   # = value
+  decay: 6
+  minimum: 300                    # ~50% de initial
+
+flags:
+  - flag: "NHK26{4d4_B3rn0uLL1_R0b0t}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - DIFFICILE
+  - MISC
+  - MASTERCLASS
+
+# Fichiers donnes aux participants
+# files:
+  # - files/message.txt
+
+# Optionnel - cout des indices: voir document de Camille
+hints:
+  - content: "Les archives ont une fonction de recherche. Ada aurait noté dans ses journaux que certains caractères sont filtrés… mais pas tous. Les espaces ne sont pas les seuls séparateurs reconnus par SQL."
+    cost: 80
+
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

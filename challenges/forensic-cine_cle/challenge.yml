@@ -1,0 +1,48 @@
+# TEMPLATE: Challenge sans Docker (Crypto, Forensic, OSINT, etc.)
+# Dossier: categorie-nom (ex: crypto-caesar)
+
+name: "Ciné-clé"
+author: "Valou"
+category: Forensic                 # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+
+  Une image étrange et un fichier archive verrouillé ont été retrouvés sur un vieux disque dur.
+
+  L’image initiale a été fragmentée, mais quelque chose semble être dissimulé à l'intérieur.
+
+  Edwin H. Land pourrait bien être lié à cela.
+
+  L'objectif de ce challenge est de reconstruire les trois parties du FLAG dissimulées à travers différents contenus.
+
+Le format attendu est : NHK26{partie1_partie2_partie3}.
+# Points: voir document de Camille
+value: 500
+type: dynamic
+state: visible
+
+extra:
+  initial: 500                   # = value
+  decay: 6
+  minimum: 300                    # ~50% de initial
+
+flags:
+  - flag: "NHK26{3Dw1N_41m3_L3_POL4Ro1D}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - DIFFICILE       
+  - FORENSIC  
+
+# Fichiers donnes aux participants
+#files:
+ # - files/message.tx
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

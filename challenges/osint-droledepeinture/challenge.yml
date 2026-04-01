@@ -1,0 +1,32 @@
+name: "Drôle de peinture"
+author: "Kisane"
+category: OSINT                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Le Dr Makoto Suzuki, scientifique connu pour ses travaux sur la longévité à Okinawa, envoie une photo prise pendant ses vacances.​
+  Mais celle-ci est accidentellement tombée dans un pot de peinture : seule une partie du décor reste visible.​
+
+  Avant que son téléphone ne s’éteigne, il prononce le mot "nord".
+  
+  Vous devez retrouver le numéro de téléphone du lieu exact afin de pouvoir "recontacter" le
+  docteur.
+
+  `Flag Format : NHK26{69_699-69-6969}`
+
+value: 500                       # Voir document de Camille
+type: dynamic
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300
+
+tags:
+  - DIFFICILE                        # OBLIGATOIRE en premier (voir tableau)
+  - OSINT
+
+flags:
+  - flag: "NHK26{81_980-56-2797}"
+    type: static

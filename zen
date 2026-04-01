@@ -1,0 +1,308 @@
+#!/bin/bash
+# =============================================================
+# zen - NHK26 CTF CLI
+# Usage: ./zen <command>
+# =============================================================
+
+set -e
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+banner() {
+  echo -e "\033[38;5;51m    ███████╗\033[38;5;199m███████╗\033[38;5;46m███╗   ██╗"
+  echo -e "\033[38;5;51m    ╚══███╔╝\033[38;5;199m██╔════╝\033[38;5;46m████╗  ██║"
+  echo -e "\033[38;5;51m      ███╔╝ \033[38;5;199m█████╗  \033[38;5;46m██╔██╗ ██║"
+  echo -e "\033[38;5;51m     ███╔╝  \033[38;5;199m██╔══╝  \033[38;5;46m██║╚██╗██║"
+  echo -e "\033[38;5;51m    ███████╗\033[38;5;199m███████╗\033[38;5;46m██║ ╚████║"
+  echo -e "\033[38;5;51m    ╚══════╝\033[38;5;199m╚══════╝\033[38;5;46m╚═╝  ╚═══╝"
+  echo -e "\033[38;5;245m       NHK26 Edition${NC}"
+  echo ""
+}
+
+banner
+
+ZCYAN='\033[38;5;51m'
+ZMAG='\033[38;5;199m'
+ZGREEN='\033[38;5;46m'
+
+log()  { echo -e "${ZCYAN}[*]${NC} $1"; }
+ok()   { echo -e "${ZGREEN}[+]${NC} $1"; }
+warn() { echo -e "${ZMAG}[!]${NC} $1"; }
+err()  { echo -e "${RED}[-]${NC} $1"; }
+
+CTFD_URL="${CTFD_URL:-http://localhost:8000}"
+REGISTRY="${REGISTRY:-localhost:5000}"
+
+# ---- Auto token ----
+get_token() {
+  if [ -n "${API_TOKEN:-}" ]; then return; fi
+
+  log "Recuperation du token API..."
+  COOKIE_JAR=$(mktemp)
+
+  curl -s -c "$COOKIE_JAR" -b "$COOKIE_JAR" "$CTFD_URL/login" > /dev/null
+  LOGIN_NONCE=$(curl -s -b "$COOKIE_JAR" "$CTFD_URL/login" | grep -oP 'name="nonce".*?value="\K[^"]+')
+
+  curl -s -c "$COOKIE_JAR" -b "$COOKIE_JAR" -X POST "$CTFD_URL/login" \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    -d "name=admin&password=admin&nonce=$LOGIN_NONCE&_submit=Submit" -L > /dev/null
+
+  CSRF_NONCE=$(curl -s -b "$COOKIE_JAR" "$CTFD_URL/settings" | grep -oP 'csrfNonce.*?"\K[^"]+')
+
+  API_TOKEN=$(curl -s -b "$COOKIE_JAR" -X POST "$CTFD_URL/api/v1/tokens" \
+    -H "Content-Type: application/json" \
+    -H "CSRF-Token: $CSRF_NONCE" \
+    -d '{"type":"user","description":"zen-cli"}' | python3 -c "import sys,json; print(json.load(sys.stdin).get('data',{}).get('value',''))" 2>/dev/null)
+
+  rm -f "$COOKIE_JAR"
+
+  if [ -z "$API_TOKEN" ]; then
+    warn "Token auto echoue."
+    read -p "Token API: " API_TOKEN
+  fi
+  ok "Token obtenu"
+}
+
+# ---- Commands ----
+
+cmd_up() {
+  log "Demarrage de l'infrastructure..."
+  if [ ! -f .env ]; then
+    log "Generation du .env..."
+    cat > .env << EOF
+SECRET_KEY=$(python3 -c "import secrets; print(secrets.token_hex(32))")
+DB_ROOT_PASSWORD=$(python3 -c "import secrets; print(secrets.token_hex(16))")
+DB_PASSWORD=$(python3 -c "import secrets; print(secrets.token_hex(16))")
+EOF
+    ok ".env genere"
+  fi
+  docker compose up -d
+  ok "Infrastructure lancee"
+
+  log "Attente de CTFd..."
+  for i in $(seq 1 60); do
+    if curl -s "$CTFD_URL" > /dev/null 2>&1; then
+      ok "CTFd pret sur $CTFD_URL"
+      return
+    fi
+    sleep 2
+  done
+  err "CTFd ne repond pas"
+  exit 1
+}
+
+cmd_down() {
+  log "Arret de l'infrastructure..."
+  docker compose down
+  ok "Arretee"
+}
+
+cmd_restart() {
+  docker compose restart
+  ok "Redemarre"
+}
+
+cmd_setup() {
+  log "Configuration initiale de CTFd..."
+  SETUP_CHECK=$(curl -s -o /dev/null -w "%{http_code}" "$CTFD_URL/setup")
+  if [ "$SETUP_CHECK" = "200" ]; then
+    read -e -p "  Nom du CTF [NHK26]: " CTF_NAME
+    CTF_NAME=${CTF_NAME:-NHK26}
+    read -p "  Mode (users/teams) [teams]: " CTF_MODE
+    CTF_MODE=${CTF_MODE:-teams}
+    read -p "  Admin username [admin]: " ADMIN_NAME
+    ADMIN_NAME=${ADMIN_NAME:-admin}
+    read -p "  Admin email [admin@nhk26.local]: " ADMIN_EMAIL
+    ADMIN_EMAIL=${ADMIN_EMAIL:-admin@nhk26.local}
+    read -s -p "  Admin password [admin]: " ADMIN_PASS
+    ADMIN_PASS=${ADMIN_PASS:-admin}
+    echo ""
+
+    COOKIE_JAR=$(mktemp)
+    curl -s -c "$COOKIE_JAR" "$CTFD_URL/setup" > /dev/null
+    NONCE=$(curl -s -b "$COOKIE_JAR" "$CTFD_URL/setup" | grep -oP 'name="nonce".*?value="\K[^"]+')
+    curl -s -b "$COOKIE_JAR" -X POST "$CTFD_URL/setup" \
+      -H "Content-Type: application/x-www-form-urlencoded" \
+      -d "ctf_name=$CTF_NAME&ctf_description=Capture+The+Flag&user_mode=$CTF_MODE&name=$ADMIN_NAME&email=$ADMIN_EMAIL&password=$ADMIN_PASS&nonce=$NONCE&ctf_theme=cybernoir&_submit=Submit" \
+      -L > /dev/null
+    rm -f "$COOKIE_JAR"
+    ok "CTFd configure ($ADMIN_NAME / ***)"
+  else
+    ok "CTFd deja configure"
+  fi
+}
+
+cmd_build() {
+  log "Build des images Docker... (Ctrl+C = skip, 2x Ctrl+C = stop)"
+  BUILT=0; FAILED=0
+  LAST_INT=0
+
+  trap 'NOW=$(date +%s); if [ $((NOW - LAST_INT)) -lt 2 ]; then echo ""; err "Build annule"; trap - INT; exit 1; fi; LAST_INT=$NOW; echo " SKIP"' INT
+
+  for dir in challenges/*/; do
+    [ -d "$dir" ] || continue
+    [[ "$(basename "$dir")" == _* ]] && continue
+    if [ -f "$dir/Dockerfile" ]; then
+      name=$(basename "$dir" | tr '[:upper:]' '[:lower:]')
+      echo -n "  $name... "
+      if docker build -t "$REGISTRY/$name:latest" "$dir" -q > /dev/null 2>&1 && \
+         docker push "$REGISTRY/$name:latest" > /dev/null 2>&1; then
+        echo "OK"; BUILT=$((BUILT+1))
+      else
+        echo "FAIL"; FAILED=$((FAILED+1))
+      fi
+    fi
+  done
+
+  trap - INT
+  ok "$BUILT images buildees ($FAILED echecs)"
+}
+
+cmd_deploy() {
+  get_token
+  log "Deploiement des challenges..."
+  CTFD_URL="$CTFD_URL" CTFD_TOKEN="$API_TOKEN" python3 scripts/deploy_challenges.py
+  ok "Challenges deployes"
+}
+
+cmd_cleanup() {
+  get_token
+  log "Suppression des challenges..."
+  CTFD_URL="$CTFD_URL" CTFD_TOKEN="$API_TOKEN" python3 scripts/cleanup_challenges.py
+  ok "Challenges supprimes"
+}
+
+cmd_pull() {
+  log "Pull des images pre-build depuis GitHub... (Ctrl+C = skip, 2x Ctrl+C = stop)"
+  GHCR_PREFIX="ghcr.io/mehdi-zen/nhk26"
+  log "Registry: $GHCR_PREFIX"
+  PULLED=0; FAILED=0; LAST_INT=0
+
+  trap 'NOW=$(date +%s); if [ $((NOW - LAST_INT)) -lt 2 ]; then echo ""; err "Pull annule"; trap - INT; exit 1; fi; LAST_INT=$NOW; echo " SKIP"' INT
+  for dir in challenges/*/; do
+    [ -d "$dir" ] || continue
+    [[ "$(basename "$dir")" == _* ]] && continue
+    if [ -f "$dir/Dockerfile" ]; then
+      name=$(basename "$dir" | tr '[:upper:]' '[:lower:]')
+      echo -n "  $name... "
+      if docker pull --platform linux/amd64 "$GHCR_PREFIX/$name:latest" > /dev/null 2>&1; then
+        echo "OK"; PULLED=$((PULLED+1))
+      else
+        echo "FAIL"; FAILED=$((FAILED+1))
+      fi
+    fi
+  done
+  trap - INT
+  ok "$PULLED images pullees ($FAILED echecs)"
+}
+
+cmd_validate() {
+  log "Validation des challenges..."
+  python3 scripts/validate_challenges.py
+}
+
+cmd_status() {
+  log "Status:"
+  docker compose ps
+}
+
+cmd_logs() {
+  docker compose logs ${2:-ctfd} --tail ${3:-50} -f
+}
+
+cmd_reset() {
+  warn "Reset complet ? Toutes les donnees seront supprimees."
+  read -p "Confirmer (oui/non): " CONFIRM
+  if [ "$CONFIRM" = "oui" ]; then
+    docker compose down -v
+    log "Saisir le mot de passe pour supprimer .data/..."
+    sudo rm -rf .data/
+    rm -f .env
+    ok "Reset complet"
+  fi
+}
+
+cmd_install() {
+  log "Installation complete..."
+  # Generate .env before anything
+  if [ ! -f .env ]; then
+    log "Generation du .env..."
+    cat > .env << EOF
+SECRET_KEY=$(python3 -c "import secrets; print(secrets.token_hex(32))")
+DB_ROOT_PASSWORD=$(python3 -c "import secrets; print(secrets.token_hex(16))")
+DB_PASSWORD=$(python3 -c "import secrets; print(secrets.token_hex(16))")
+EOF
+    ok ".env genere"
+  fi
+  # Build CTFd image first time
+  log "Build de l'image CTFd..."
+  docker compose build
+  cmd_up
+  cmd_setup
+  if [ "${1:-}" = "--no-build" ]; then
+    warn "Images skip (--no-build)"
+  elif [ "${1:-}" = "--local-build" ]; then
+    cmd_build
+  else
+    cmd_pull
+  fi
+  cmd_deploy
+  echo ""
+  echo "============================================"
+  echo "  NHK26 CTF est pret !"
+  echo "  URL:   $CTFD_URL"
+  echo "  Admin: admin / admin"
+  if [ "${1:-}" = "--no-build" ]; then
+    echo "  Les challenges container ne sont pas disponibles"
+    echo "  Lancez ./zen pull ou ./zen build"
+  fi
+  echo "============================================"
+}
+
+# ---- Help ----
+cmd_help() {
+  echo ""
+  echo -e "${CYAN}zen${NC} - NHK26 CTF CLI"
+  echo ""
+  echo "Usage: ./zen <command>"
+  echo ""
+  echo "  install               Premiere installation (up + setup + pull + deploy)"
+  echo "  install --no-build    Installation sans images Docker"
+  echo "  install --local-build Build les images en local au lieu de pull"
+  echo "  up          Demarrer l'infrastructure"
+  echo "  down        Arreter l'infrastructure"
+  echo "  restart     Redemarrer les services"
+  echo "  setup       Configurer CTFd (admin/admin)"
+  echo "  build       Build les images Docker des challenges (local)"
+  echo "  pull        Pull les images pre-build depuis GitHub (rapide)"
+  echo "  deploy      Deployer les challenges sur CTFd"
+  echo "  cleanup     Supprimer tous les challenges"
+  echo "  validate    Valider les challenge.yml"
+  echo "  status      Status des services"
+  echo "  logs [svc]  Voir les logs (defaut: ctfd)"
+  echo "  reset       Tout supprimer (donnees + env)"
+  echo ""
+}
+
+# ---- Main ----
+case "${1:-help}" in
+  install)  cmd_install "${2:-}" ;;
+  up)       cmd_up ;;
+  down)     cmd_down ;;
+  restart)  cmd_restart ;;
+  setup)    cmd_setup ;;
+  build)    cmd_build ;;
+  deploy)   cmd_deploy ;;
+  cleanup)  cmd_cleanup ;;
+  pull)     cmd_pull ;;
+  validate) cmd_validate ;;
+  status)   cmd_status ;;
+  logs)     cmd_logs "$@" ;;
+  reset)    cmd_reset ;;
+  help|-h|--help) cmd_help ;;
+  *) err "Commande inconnue: $1"; cmd_help; exit 1 ;;
+esac

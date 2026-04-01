@@ -1,0 +1,32 @@
+name: "Mais si je suis très net"
+author: "Twistyle"
+category: OSINT                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Une image imparfaite, floue, mais porteuse d’informations bien au-delà de ce que l’œil peut
+  percevoir.
+
+  Serez-vous trouvés le nom du livre dans lequel a été postée cette photo ?
+  `Format flag : NHK26{Nom_du_livre}`
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : hidden                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN                        # OBLIGATOIRE en premier (voir tableau)
+  - OSINT
+
+files:
+   - files/flou.jpg
+
+flags:
+  - flag: "NHK26{100_Photographies_qui_ont_changé_le_monde}"
+    type: static

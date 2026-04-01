@@ -1,0 +1,31 @@
+name: "Infuckted : Rosalind's Sandbox"
+author: "Bioubiou666"
+category: Code Review                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Sur le forum dark web V01D.onion, un hacker vient de publier l'archive d'un jeu de pandémie mis en quarantaine par ses créateurs. La Docteure Rosalind Eggo a initié l'analyse de ce phénomène particulier, mais la chaîne d'infection lui échappe.
+  
+  Reprenez ses recherches.
+
+
+value: 1000                       # Voir document de Camille
+type: container
+image: registry.gitlab.com/codereview-infuckted-rosalinds-sandbox:latest
+port: 8000 # Port exposé dans votre Dockerfile
+protocol: web                    # ou: tcp
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 1000                   # POur gerer le dynamisme du scoring
+  decay: 3                      # facteur de decroissance
+  minimum: 500                   # Minimum
+
+tags:
+  - INSANE                        # OBLIGATOIRE en premier (voir tableau)
+  - Code Review
+
+flags:
+  - flag: "NHK26{M3mOrY_T4p3_M4st3R_1337}"
+    type: static

@@ -1,0 +1,33 @@
+# codereview-rce.yml
+name: "CodeReview-RCE"
+author: "will"
+category: "Code Review"
+description_image: "files/challenge.jpeg"
+
+description: |
+  "Le portail du laboratoire Grace Hopper accepte des inscriptions visiteurs. En relisant le code python fourni, identifie la faille et exécute-la dans l’instance docker pour récupérer le flag. 
+  Format attendu : NHK26{...}."
+
+value: 500
+type: container
+state: hidden
+image: registry.gitlab.com/nhk/codereview-rce:latest
+
+port: 5000
+protocol: web
+
+extra:
+  initial: 500
+  decay: 6
+  minimum: 300
+
+tags:
+  - DIFFICILE
+  - CODE REVIEW
+
+flags:
+  - flag: "NHK26{gr4c3_h0pp3r_l0g_1nj3ct10n_2026}"
+    type: "static"
+
+files:
+  - files/app.py

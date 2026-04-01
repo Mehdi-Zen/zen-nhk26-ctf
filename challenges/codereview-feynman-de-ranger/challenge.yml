@@ -1,0 +1,36 @@
+name: "Ca fait Feynman de ranger"
+author: "Kisane"
+category: Code Review
+
+description_image: files/challenge.png
+
+description: |
+  Richard Feynman a laissé derrière lui un serveur de fichiers contenant les copies des classes. Pour le nouveau mot de passe du serveur il donne les instructions suivantes:
+  * Classe 1ère: top 10 des fichiers **textes** les plus lourd sur les dossiers correction pairs
+  * Classe 2nde: top 15 des fichiers **binaires** et **images** les plus lourd sur les dossiers correction impairs
+  * Classe terminal: top 10 des fichiers les plus lourds
+  * L'ordre alphabétique rentre aussi en compte
+  * En ayant les tops, les dernières caractères du nom de chaque fichier forment le mot de passe
+
+  *PS, pour que ça soit mieux : faites `stty raw -echo; nc hote port; stty sane`*
+
+value: 300
+type: container
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+image: registry.gitlab.com/music-music1/music-music/codereview-feynman-de-ranger:latest
+port: 4000
+protocol: tcp
+
+flags:
+  - flag: "NHK26{SEqd8ptO4e_WtkAFZtpScCWNqd_2GIgU8aZY6}"
+    type: static
+
+tags:
+  - MOYEN
+  - CODE REVIEW

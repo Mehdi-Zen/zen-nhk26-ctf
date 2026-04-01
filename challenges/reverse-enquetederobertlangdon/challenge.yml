@@ -1,0 +1,25 @@
+name: "Enquête de Robert Langdon"
+author: "Kisane"
+category: Reverse                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Un ancien terminal de sécurité semble protéger les accès à une base de données confidentielle. 
+  Le code source original a été perdu, et seule une version compilée en BASIC subsiste. Robert Langdon a besoin d’accéder à cette base de données pour son enquête.
+
+value: 300                       # Voir document de Camille
+type: dynamic                    
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100
+
+tags:
+  - MOYEN
+  - REVERSE
+
+flags:
+  - flag: "NHK26{d4C0dE=}"
+    type: static

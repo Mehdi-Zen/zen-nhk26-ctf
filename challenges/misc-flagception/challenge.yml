@@ -1,0 +1,39 @@
+# Challenge Flagception - Manipulation d'en-tete JPEG
+name: "Flagception"
+author: "ErEn"
+category: Misc
+
+description_image: files/challenge.jpg
+
+description: |
+  James Clerk Maxwell a unifié des forces invisibles. Ici aussi, quelque chose se cache dans ce qui semble ordinaire. Tout est une question de structure.
+
+
+# Se referer au document transmis par Camille pour les valeurs de points
+value: 300
+type: dynamic
+state: hidden
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+flags:
+  - flag: "NHK26{JP3G_h34d3r_m4n1pul4t10n}"
+    type: static
+
+tags:
+  - MOYEN
+  - MISC
+
+
+files:
+  - files/white_image.jpg
+
+# PREREQUIS - decommenter si necessaire
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

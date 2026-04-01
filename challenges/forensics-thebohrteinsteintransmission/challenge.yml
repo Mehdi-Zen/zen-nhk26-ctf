@@ -1,0 +1,23 @@
+# thebohreinsteintransmission.yml
+name: "The Bohr Einstein Transmission"
+author: "will"
+category: "Forensic"
+description_image: "files/challenge.png"
+description: |
+  « Vous disposez d’une capture réseau issue d’un institut d’histoire des sciences. »
+
+value: 500
+type: dynamic
+state: visible
+extra:
+  initial: 500
+  decay: 6
+  minimum: 300
+tags:
+  - DIFFICILE
+  - FORENSIC
+flags:
+  - flag: "NHK26{quantum_metadata_leak}"
+    type: "static"
+files:
+  - files/capture.pcap

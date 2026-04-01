@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crazy Casino</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+</head>
+<body>
+    <div class="casino-bg">
+        <div class="index-container">
+            <header class="grand-entrance">
+                <div class="casino-crest">♠ ♥ ♦ ♣</div>
+                <h1 class="main-title">Crazy Casino</h1>
+                <p class="subtitle">Fortune Favors the Bold</p>
+                <div class="decorative-line"></div>
+            </header>
+
+            <div class="auth-card">
+                <span class="card-corner tl"></span>
+                <span class="card-corner tr"></span>
+                <span class="card-corner bl"></span>
+                <span class="card-corner br"></span>
+
+                <div class="auth-tabs">
+                    <button class="tab active" data-tab="login">Sign In</button>
+                    <button class="tab" data-tab="register">Join</button>
+                </div>
+
+                <form id="login-form" class="auth-form active">
+                    <h2 class="form-title">Welcome Back</h2>
+                    <div class="input-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" placeholder="Enter your username" required autocomplete="username">
+                    </div>
+                    <div class="input-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn-gold">Enter the Casino</button>
+                    <div id="login-message" class="message"></div>
+                </form>
+
+                <form id="register-form" class="auth-form">
+                    <h2 class="form-title">Become a Member</h2>
+                    <div class="input-group">
+                        <label for="reg-username">Choose Username</label>
+                        <input type="text" id="reg-username" placeholder="Your desired username" required autocomplete="username">
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-password">Create Password</label>
+                        <input type="password" id="reg-password" placeholder="Create a secure password" required autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn-gold">Create Account</button>
+                    <div class="welcome-bonus">
+                        <span class="amount">1,000</span>
+                        <span class="label">Welcome Chips</span>
+                    </div>
+                    <div id="register-message" class="message"></div>
+                </form>
+            </div>
+
+            <footer class="page-footer">
+                <p>The stakes are high. The rewards are higher.</p>
+            </footer>
+        </div>
+    </div>
+
+    <div class="theme-config"></div>
+    <script src="/static/js/auth.js"></script>
+</body>
+</html>

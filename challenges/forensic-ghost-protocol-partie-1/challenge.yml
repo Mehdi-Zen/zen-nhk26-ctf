@@ -1,0 +1,38 @@
+name: "Ghost Protocol - Partie 1"
+author: "Wumbou"
+category: Forensic                   # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Une attaque a frappé LiquidityVault le 15 septembre 2025.  
+  Les équipes ont récupéré plusieurs artefacts bruts issus d’une collecte forensique multi-chaînes. Rien n’a été nettoyé !
+
+  Vous n’avez aucun accès à Internet : tout ce dont vous avez besoin est dans les fichiers fournis.
+  Soumettre le flag correspondant à l’adresse source du financement de l’opération.
+
+  `Format : NHK26{0x...}`
+
+value: 1                      # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 1
+  decay: 6
+  minimum: 1
+
+tags:
+  - TIROIR
+  - DIFFICILE
+  - FORENSIC
+files:
+  - files/ghost-protocol-pack.zip
+
+flags:
+  - flag: "NHK26{0xb5acb9c6b3dc2bcc90b3e75ae86212d1066396ea}"
+    type: static
+
+next: "Ghost Protocol - Partie 2"
+
+max_attempts: 3

@@ -1,0 +1,44 @@
+name: "Tcheka"
+author: "BloDiZz"
+category: Crypto                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+
+  Vous travaillez en tant que cryptanalyste dans une agence gouvernementale. Vous êtes confronté à un message chiffré à l’aide d’un algorithme de chiffrement issu des standards étatiques, dans la lignée des travaux de Joan Daemen, co-concepteur de l’algorithme AES.
+
+  Vos collaborateurs vous ont fourni quelques éléments :
+
+  Ciphertext :
+
+  `6520684b0d5359762915768f4cad6b11acc22ac61b06b5bf55324f112bc630cf`
+
+  La clé :
+
+  `01234567890123456789012345678901`
+  
+  Le mode opératoire utilisé est ECB.
+
+  Vos collaborateurs comptent sur vous pour connaître le contenu de ce message chiffré. A vous de jouer !
+
+value: 300                     
+type: dynamic                    # ou: container, firstblood
+state : visible                  
+
+extra:
+  initial: 300                   
+  decay: 13                     
+  minimum: 100                   
+
+tags:
+  - MOYEN
+  - CRYPTO
+
+flags:
+  - flag: "NHK26{MESSAGE_URGENT_KGB}"
+    type: static
+    
+hints:
+  - content: "Avez-vous pensé à un voyage en Russie ?"
+    cost: 25

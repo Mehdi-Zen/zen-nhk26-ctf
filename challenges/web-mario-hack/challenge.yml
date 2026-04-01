@@ -1,0 +1,42 @@
+name: "Super Rush"
+author: "ErEn"
+category: Web
+
+description_image: files/challenge.png
+
+description: |
+  Blaise Pascal pensait que le calcul pouvait tout predire. Ce jeu prouve le contraire...
+
+  Un platformer retro vous attend. Atteignez le drapeau pour obtenir le flag.
+  Mais attention, certains obstacles semblent... infranchissables.
+
+
+value: 300
+type: container
+state: hidden
+
+image: 192.168.213.11:5000/web-mario-hack:latest
+port: 3000
+protocol: web
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+tags:
+  - MOYEN
+  - WEB
+  - FIRST BLOOD
+
+flags:
+  - flag: "NHK26{C00k13_M0nst3r_Pl4tf0rm3r}"
+    type: static
+
+hints:
+  - content: "Le jeu verifie quelque chose dans votre navigateur avant de vous laisser passer..."
+    cost: 25
+  - content: "F12 est votre meilleur ami. Lisez le code source du jeu."
+    cost: 60
+
+max_attempts: 0

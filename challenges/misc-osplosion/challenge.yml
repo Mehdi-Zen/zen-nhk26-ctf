@@ -1,0 +1,40 @@
+name: "Osplosion"
+author: "EnderMan, Valou, BloDiZz, Malth"
+category: Misc
+
+description_image: files/challenge.jpg
+
+description: |
+  Vous avez réussi à subtiliser un ordinateur portable du professeur Robert Oppenheimer à l'université de Californie à Berkeley. Malheureusement, vous vous rendez compte qu'un OS très spécial est installé sur cet ordinateur. En effet, pour plus de vigilances, les équipes d'Oppenheimer utilisent un système d'exploitation qui s'autodétruit lors que nous faisons trop de commandes ou si l'on se trompe. Gare à vos doigts, tout pourrait exploser ! Cependant nous savons qu’un fichier interne à un mot de passe vide, cela pourrait vous servir dans vos recherches.
+  Pour ce challenge vous devrez réaliser une série d'action qui concentre différentes catégories, les talents les plus diversifiés seront les talents les plus aguerris ! Votre mission est la suivante, amorcez la bombe sans vous tromper pour ne pas griller votre couverture !
+  Nom d'utilisateur : **osplosion**
+
+value: 1000
+type: container
+state: visible
+protocol: tcp
+
+extra:
+  initial: 1000
+  decay: 3
+  minimum: 500
+
+image: registry.gitlab.com/nhk26/challenges/misc-osplosion:latest
+port: 5000
+
+files:
+  - files/challenge.jpg
+  - files/auth.log
+  - files/images.zip
+  - files/uranium_img_key.txt
+  - files/backup.zip
+
+tags:
+  - INSANE
+  - MISC
+
+flags:
+  - flag: "NHK26{0pp3nh31m3r_b3c4m3_d34th_d3str0y3r_0f_w0rlds}"
+    type: static
+
+max_attempts: 0

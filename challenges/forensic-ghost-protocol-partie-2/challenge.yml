@@ -1,0 +1,44 @@
+name: "Ghost Protocol - Partie 2"
+author: "Wumbou"
+category: Forensic                   # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Une fois la phase de financement identifiée, l’attaque ne s’est pas faite de main en main en clair.  
+  Un composant dans la chaine de transaction a servi de pivot pour orchestrer les actions suivantes : interactions, mouvements de fonds, et opérations multi-chaînes.
+
+  Vous n’avez aucun accès à Internet : tout ce dont vous avez besoin est dans les fichiers fournis.
+
+  Soumettre le flag correspondant à l’adresse du contrat malveillant impliqué dans l’opération. Attention : Veuillez etre sur avant de soumettre le flag, il se peut que ce n'a soit pas ce que vous pensez....
+  
+  `Format :NHK26{0x...}`
+
+
+value: 1                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 1
+  decay: 6
+  minimum: 1
+
+tags:
+  - TIROIR
+  - DIFFICILE
+  - FORENSICS
+files:
+  - files/ghost-protocol-pack.zip
+
+flags:
+  - flag: "NHK26{0x33236fcea7a92af70043b68b8c45807d902fd7bd}"
+    type: static
+
+requirements:
+  prerequisites:
+    - "Ghost Protocol - Partie 1"
+
+next: "Ghost Protocol - Partie 3"
+
+max_attempts: 3

@@ -1,0 +1,40 @@
+name: "Expédition Génétique"
+author: "Andy"
+category: SQLi
+
+description_image: files/challenge.png
+
+description: |
+  Vous travaillez dans le labo de Charpentier et Doudna sur une application de gestion de séquences génétiques.
+  Vous suspectez une faille SQL. Exploitez-la !
+
+value: 300
+type: container
+state: visible
+
+# Paramètres scoring dynamique (Moyen)
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+# Docker / déploiement
+image: registry.gitlab.com/nhk/sqli-expedition-genetique:latest
+port: 5000
+protocol: web
+
+tags:
+  - MOYEN
+  - SQLI
+
+flags:
+  - flag: "NHK26{CRISPR2026DNA}"
+    type: static
+
+hints:
+  - content: "Essaye des entrées inhabituelles : quotes, commentaires SQL (`--`), et observe les erreurs/réponses."
+    cost: 25
+  - content: "Piste : injection `UNION SELECT` pour lire d'autres colonnes/tables (pense à adapter le nombre de colonnes)."
+    cost: 60
+
+max_attempts: 0

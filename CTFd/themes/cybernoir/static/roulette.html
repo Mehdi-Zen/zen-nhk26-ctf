@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>NHK26 - Roulette des Lots</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #0a0a0f;
+    color: #e8ecf4;
+    font-family: 'Share Tech Mono', monospace;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 48px;
+    color: #00fff5;
+    text-shadow: 0 0 20px #00fff540;
+    margin-bottom: 50px;
+    letter-spacing: 3px;
+  }
+
+  .roulette-container {
+    position: relative;
+    width: 900px;
+    height: 140px;
+    overflow: hidden;
+    border: 2px solid #00fff5;
+    border-radius: 12px;
+    background: #0d0d15;
+    box-shadow: 0 0 60px #00fff520, inset 0 0 40px #00000080;
+  }
+
+  .roulette-track {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+  }
+
+  .roulette-item {
+    width: 180px;
+    min-width: 180px;
+    max-width: 180px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #d0d4e0;
+    border-right: 1px solid #1a1a2e;
+    padding: 0 10px;
+    text-align: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+  }
+
+  .roulette-item:nth-child(even) { background: #0f0f1a; }
+  .roulette-item:nth-child(odd) { background: #12121f; }
+  .roulette-item.winner-item {
+    background: #1a2a1a !important;
+    color: #ffd700 !important;
+    border: 2px solid #ffd700;
+  }
+
+  .pointer {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-top: 24px solid #ffd700;
+    filter: drop-shadow(0 0 10px #ffd700);
+    z-index: 10;
+  }
+  .pointer-bottom {
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-bottom: 24px solid #ffd700;
+    filter: drop-shadow(0 0 10px #ffd700);
+    z-index: 10;
+  }
+
+  /* Glow line at center */
+  .center-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 100%;
+    background: #ffd70060;
+    box-shadow: 0 0 15px #ffd70040;
+    z-index: 8;
+  }
+
+  .roulette-container::before,
+  .roulette-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 150px;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .roulette-container::before { left: 0; background: linear-gradient(90deg, #0d0d15, transparent); }
+  .roulette-container::after { right: 0; background: linear-gradient(-90deg, #0d0d15, transparent); }
+
+  .btn-spin {
+    margin-top: 40px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #0a0a0f;
+    background: linear-gradient(135deg, #00fff5, #00c8c0);
+    border: none;
+    padding: 20px 80px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 40px #00fff530;
+  }
+  .btn-spin:hover { background: linear-gradient(135deg, #00e0d8, #00b0a8); box-shadow: 0 0 60px #00fff550; transform: scale(1.05); }
+  .btn-spin:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+  .winner-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #0a0a0fee;
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .winner-overlay.show { display: flex; animation: fadeIn 0.5s; }
+  .winner-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 80px;
+    font-weight: 900;
+    color: #ffd700;
+    text-shadow: 0 0 50px #ffd70060, 0 0 100px #ffd70030;
+    animation: pulseWin 1s ease infinite;
+    margin-bottom: 10px;
+  }
+  .winner-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
+    color: #00fff5;
+    letter-spacing: 8px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px #00fff540;
+  }
+  .winner-close {
+    margin-top: 50px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+  }
+
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes pulseWin { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+
+  .confetti { position: fixed; z-index: 101; pointer-events: none; }
+
+  .info { margin-top: 15px; font-size: 13px; color: #555; letter-spacing: 1px; }
+
+  .history {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 13px;
+    color: #555;
+    text-align: right;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .history .won { color: #ffd700; margin-bottom: 6px; }
+
+  .remaining {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    font-size: 12px;
+    color: #444;
+  }
+</style>
+</head>
+<body>
+
+<h1>ROULETTE DES LOTS</h1>
+
+<div class="roulette-container">
+  <div class="pointer"></div>
+  <div class="pointer-bottom"></div>
+  <div class="center-line"></div>
+  <div class="roulette-track" id="track"></div>
+</div>
+
+<p class="info" id="userCount">Chargement...</p>
+<button class="btn-spin" id="spinBtn" onclick="spin()">LANCER</button>
+
+<div class="winner-overlay" id="winOverlay">
+  <div class="winner-label">GAGNANT</div>
+  <div class="winner-name" id="winName"></div>
+  <div class="winner-close" onclick="closeWinner()">[ Cliquer pour fermer ]</div>
+</div>
+
+<div class="history" id="history"></div>
+<div class="remaining" id="remaining"></div>
+
+<script>
+let users = [];
+let winners = [];
+const ITEM_W = 180;
+const track = document.getElementById('track');
+const spinBtn = document.getElementById('spinBtn');
+
+// Load users from CTFd API
+async function loadUsers() {
+  try {
+    // Fetch ALL users (paginated - CTFd max 50 per page)
+    let allUsers = [];
+    let page = 1;
+    while (true) {
+      let r = await fetch('/api/v1/users?per_page=50&page=' + page, { credentials: 'include' });
+      if (!r.ok) break;
+      let data = await r.json();
+      if (!data.data || data.data.length === 0) break;
+      allUsers = allUsers.concat(data.data);
+      page++;
+      if (!data.meta || !data.meta.pagination || page > data.meta.pagination.pages) break;
+    }
+    // Fetch teams for mapping
+    let teamMap = {};
+    try {
+      let tr = await fetch('/api/v1/teams?per_page=200', { credentials: 'include' });
+      if (tr.ok) {
+        let td = await tr.json();
+        td.data.forEach(t => { teamMap[t.id] = t.name; });
+      }
+    } catch(e) {}
+    users = allUsers.filter(u => !u.hidden && !u.banned && u.name !== 'admin' && u.name !== 'Twistyle').map(u => {
+      let teamName = u.team_id ? teamMap[u.team_id] : null;
+      return teamName ? u.name + ' (' + teamName + ')' : u.name;
+    });
+    if (users.length > 0) {
+      document.getElementById('userCount').textContent = users.length + ' participants charges';
+      updateRemaining();
+      buildTrack();
+      return;
+    }
+  } catch(e) { console.log(e); }
+
+  let input = prompt("Collez la liste des pseudos (separes par des virgules):", "");
+  if (input) {
+    users = input.split(",").map(u => u.trim()).filter(u => u.length > 0);
+    document.getElementById('userCount').textContent = users.length + ' participants';
+    updateRemaining();
+  }
+}
+
+function updateRemaining() {
+  let pool = users.filter(u => !winners.includes(u));
+  document.getElementById('remaining').textContent = 'Restants: ' + pool.length + ' / ' + users.length;
+}
+
+function buildTrack(winnerName) {
+  track.textContent = '';
+  let pool = users.filter(u => !winners.includes(u));
+  if (pool.length === 0) return [];
+
+  // Build 120 items for long scroll
+  let items = [];
+  for (let i = 0; i < 120; i++) {
+    items.push(pool[Math.floor(Math.random() * pool.length)]);
+  }
+  // Place winner at position 100 (near the end of scroll)
+  if (winnerName) items[100] = winnerName;
+
+  items.forEach(name => {
+    let div = document.createElement('div');
+    div.className = 'roulette-item';
+    div.textContent = name;
+    track.appendChild(div);
+  });
+  return items;
+}
+
+function spin() {
+  let pool = users.filter(u => !winners.includes(u));
+  if (pool.length === 0) { alert("Plus de participants !"); return; }
+
+  spinBtn.disabled = true;
+
+  // Pick random winner
+  let winIdx = Math.floor(Math.random() * pool.length);
+  let winnerName = pool[winIdx];
+  buildTrack(winnerName);
+
+  // Reset position
+  track.style.transition = 'none';
+  track.style.transform = 'translateX(0)';
+  track.offsetHeight;
+
+  // Target: item 100 centered exactly under pointer (no offset)
+  let containerW = 900;
+  let targetX = -(100 * ITEM_W) + (containerW / 2) - (ITEM_W / 2);
+
+  // CS:GO style easing - fast start, slow end
+  // Using custom cubic-bezier for that satisfying deceleration
+  track.style.transition = 'transform 6s cubic-bezier(0.12, 0.8, 0.2, 1)';
+
+  setTimeout(() => {
+    track.style.transform = 'translateX(' + targetX + 'px)';
+
+    // Tick sound simulation with visual flash
+    let tickCount = 0;
+    let tickInterval = setInterval(() => {
+      tickCount++;
+      // Flash the center line
+      let cl = document.querySelector('.center-line');
+      cl.style.background = '#ffd700';
+      cl.style.boxShadow = '0 0 25px #ffd700';
+      setTimeout(() => {
+        cl.style.background = '#ffd70060';
+        cl.style.boxShadow = '0 0 15px #ffd70040';
+      }, 50);
+      if (tickCount > 80) clearInterval(tickInterval);
+    }, 70);
+  }, 50);
+
+  // After spin completes
+  setTimeout(() => {
+    // Read the actual winner from the item at position 100
+    let items = track.querySelectorAll('.roulette-item');
+    let actualWinner = items[100] ? items[100].textContent : winnerName;
+    items[100].classList.add('winner-item');
+
+    winners.push(actualWinner);
+    showWinner(actualWinner);
+    spinBtn.disabled = false;
+    updateRemaining();
+
+    // Add to history
+    let d = document.createElement('div');
+    d.className = 'won';
+    d.textContent = '#' + winners.length + ' - ' + actualWinner;
+    document.getElementById('history').prepend(d);
+  }, 6500);
+}
+
+function showWinner(name) {
+  document.getElementById('winName').textContent = name;
+  document.getElementById('winOverlay').classList.add('show');
+  spawnConfetti();
+}
+
+function closeWinner() {
+  document.getElementById('winOverlay').classList.remove('show');
+  document.querySelectorAll('.confetti').forEach(c => c.remove());
+}
+
+function spawnConfetti() {
+  const colors = ['#00fff5','#ffd700','#e74c3c','#2ecc71','#9b59b6','#f39c12','#ff6b6b','#3498db'];
+  for (let i = 0; i < 80; i++) {
+    let c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.top = '-20px';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.borderRadius = Math.random()>0.5 ? '50%' : '2px';
+    let size = Math.random()*12+4;
+    c.style.width = size+'px';
+    c.style.height = (Math.random()>0.5 ? size : size*2.5)+'px';
+    document.body.appendChild(c);
+
+    let dur = Math.random()*2500+2500;
+    let xd = (Math.random()-0.5)*300;
+    let rot = Math.random()*1080;
+    c.animate([
+      {transform:'translate(0,0) rotate(0deg)',opacity:1},
+      {transform:'translate('+xd+'px,'+(window.innerHeight+50)+'px) rotate('+rot+'deg)',opacity:0.3}
+    ],{duration:dur,easing:'ease-out',fill:'forwards'});
+    setTimeout(()=>c.remove(), dur);
+  }
+}
+
+loadUsers();
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+name: "Grace’s Repo"
+author: "Bruce"
+category: Code Review                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png
+
+description: |
+  Un développeur très fier de son implémentation RSA vous assure que son code est “incassable”.
+  Clés publiques, clés privées, hash SHA-256… tout y est.
+
+  Enfin… presque.
+
+  Grace Hopper disait que comprendre le code est souvent plus efficace que de le compliquer.
+
+value: 100
+type: dynamic
+state : visible  
+
+extra:
+  initial: 100                   # POur gerer le dynamisme du scoring
+  decay: 30                      # facteur de decroissance
+  minimum: 50                   # Minimum
+
+tags:
+  - FACILE
+  - CODE REVIEW
+
+flags:
+  - flag: "NHK26{hopper_secret}"
+    type: static
+    
+files:
+  - files/app.py

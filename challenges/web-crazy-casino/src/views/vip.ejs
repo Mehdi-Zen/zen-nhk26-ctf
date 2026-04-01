@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Lounge | Crazy Casino</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◆</text></svg>">
+</head>
+<body>
+    <div class="casino-bg">
+        <div class="vip-container">
+            <header class="site-header">
+                <div class="header-brand">
+                    <span class="brand-logo">◆ VIP Lounge</span>
+                    <span class="brand-divider"></span>
+                    <span class="brand-tagline">Members Only</span>
+                </div>
+                <div class="header-user">
+                    <a href="/dashboard" class="btn-secondary">Return to Floor</a>
+                </div>
+            </header>
+
+            <main class="vip-main">
+                <section class="card vip-status-card">
+                    <div class="card-header">
+                        <span class="card-icon">♛</span>
+                        <h2 class="card-title">Access Status</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="status-content">
+                            <p style="color: var(--gray-warm);">Verifying credentials...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="vip-search" class="card search-section hidden">
+                    <div class="card-header">
+                        <span class="card-icon">⚜</span>
+                        <h2 class="card-title">Directory</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="search-form">
+                            <input type="text" id="search-username" placeholder="Query">
+                            <button id="search-btn" class="btn-gold">Search</button>
+                        </div>
+                        <div id="search-results" class="search-results"></div>
+                    </div>
+                </section>
+
+                <section id="vault-section" class="card vault-section hidden">
+                    <div class="card-header">
+                        <span class="card-icon">🔐</span>
+                        <h2 class="card-title">Services</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="vault-info">
+                            <p style="color: var(--gray-warm);">Premium member services</p>
+                        </div>
+                        <button id="vault-info-btn" class="btn-gold">Check Status</button>
+                        <div id="vault-info" class="vault-data"></div>
+
+                        <div id="vault-withdraw" class="withdraw-form hidden">
+                            <textarea id="withdraw-data" placeholder="Data"></textarea>
+                            <button id="withdraw-btn" class="btn-gold">Submit</button>
+                            <div id="withdraw-result" class="withdraw-result"></div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="site-footer">
+                <div class="footer-suits">♠ ♥ ♦ ♣</div>
+                <p>Distinction. Discretion. Excellence.</p>
+            </footer>
+        </div>
+    </div>
+
+    <div class="theme-config"></div>
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/vip.js"></script>
+</body>
+</html>

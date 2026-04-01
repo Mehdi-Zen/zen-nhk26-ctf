@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino Floor | Crazy Casino</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+</head>
+<body>
+    <div class="casino-bg">
+        <video autoplay muted loop playsinline class="casino-video-bg">
+            <source src="/static/bg.webm" type="video/webm">
+        </video>
+        <div class="dashboard-container">
+            <header class="site-header">
+                <div class="header-brand">
+                    <span class="brand-logo">♠ Crazy Casino</span>
+                    <span class="brand-divider"></span>
+                    <span class="brand-tagline">Main Floor</span>
+                </div>
+                <div class="header-user">
+                    <div class="user-balance">
+                        <span class="balance-icon">◆</span>
+                        <div>
+                            <span class="balance-amount" id="balance">0</span>
+                            <span class="balance-label">chips</span>
+                        </div>
+                    </div>
+                    <div class="user-profile">
+                        <span class="user-name" id="username">Player</span>
+                        <span class="vip-badge">Level <span id="vip-level">0</span></span>
+                    </div>
+                    <button id="logout-btn" class="btn-secondary">Exit</button>
+                </div>
+            </header>
+
+            <main class="dashboard-main">
+                <!-- Games Navigation -->
+                <nav class="games-nav">
+                    <a href="/dashboard" class="game-tab active">
+                        <span class="game-icon">🎰</span>
+                        <span class="game-name">Slots</span>
+                    </a>
+                    <a href="/blackjack" class="game-tab">
+                        <span class="game-icon">🃏</span>
+                        <span class="game-name">Blackjack</span>
+                    </a>
+                    <a href="/roulette" class="game-tab">
+                        <span class="game-icon">🎰</span>
+                        <span class="game-name">Roulette</span>
+                    </a>
+                    <a href="/dice" class="game-tab">
+                        <span class="game-icon">🎲</span>
+                        <span class="game-name">Dice</span>
+                    </a>
+                </nav>
+
+                <div class="dashboard-grid">
+                    <section class="card slot-machine-card">
+                        <div class="card-header">
+                            <span class="card-icon">🎰</span>
+                            <h2 class="card-title">Fortune Slots</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="slot-machine">
+                                <div class="slot-frame">
+                                    <div class="reels-container">
+                                        <div class="reel-window" id="reel1"><div class="reel-symbol">♠</div></div>
+                                        <div class="reel-window" id="reel2"><div class="reel-symbol">♠</div></div>
+                                        <div class="reel-window" id="reel3"><div class="reel-symbol">♠</div></div>
+                                    </div>
+                                </div>
+                                <div class="bet-controls">
+                                    <div class="bet-input-group">
+                                        <label>Bet</label>
+                                        <input type="number" id="bet-amount" value="100" min="1" max="10000">
+                                    </div>
+                                    <button id="spin-btn" class="btn-gold spin-btn">SPIN</button>
+                                </div>
+                                <div id="spin-result" class="spin-result">
+                                    <span class="loss">Place your bet and spin to win</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="card vip-access-card">
+                        <div class="card-header">
+                            <span class="card-icon">◆</span>
+                            <h2 class="card-title">VIP Lounge</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="vip-icon">♛</div>
+                            <p class="vip-description">Exclusive access for distinguished members</p>
+                            <span class="vip-requirement">Requires VIP Level 3</span>
+                            <a href="/vip" class="btn-gold">Enter Lounge</a>
+                        </div>
+                    </section>
+
+                    <section class="card leaderboard-card">
+                        <div class="card-header">
+                            <span class="card-icon">♔</span>
+                            <h2 class="card-title">Leaderboard</h2>
+                        </div>
+                        <div class="card-body">
+                            <div id="leaderboard" class="leaderboard-list">
+                                <p style="color: var(--gray-warm); text-align: center;">Loading rankings...</p>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </main>
+
+            <footer class="site-footer">
+                <div class="footer-suits">♠ ♥ ♦ ♣</div>
+                <p>Play with skill. Win with style.</p>
+            </footer>
+        </div>
+    </div>
+
+    <div class="theme-config"></div>
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

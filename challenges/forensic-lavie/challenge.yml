@@ -1,0 +1,28 @@
+name: "La vie"
+author: "segfault"
+category: Forensic                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Une séquence ADN inhabituelle a été isolée.
+  Simple hasard biologique… ou message dissimulé ?
+  Entre `sequence.fasta` et un mystérieux module `dna_decode.o`, quelque chose semble traduire le vivant en langage machine
+  Observez, comprenez, puis faites parler le code génétique.
+
+value: 500                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                   # Minimum
+
+tags:
+  - DIFFICILE
+  - FORENSIC
+
+flags:
+  - flag: "NHK26{VoiciLaVie}"
+    type: static

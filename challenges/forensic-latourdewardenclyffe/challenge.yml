@@ -1,0 +1,28 @@
+name: "La tour de Wardenclyffe"
+author: "M€dus@"
+category: Forensic                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Un unique artefact a été retrouvé dans les décombres de la tour de Wardenclyffe. Sa structure semble avoir souffert du temps, rendant toute analyse conventionnelle impossible. Nikola Tesla prétendait que ses inventions ne mourraient jamais, tant que l'on possédait la clé de la magnificence des nombres. Trouvez la formule perdue et rétablissez la résonance du monde.
+
+value: 500                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                   # Minimum
+
+tags:
+  - DIFFICILE                       # OBLIGATOIRE en premier (voir tableau)
+  - Forensic
+
+flags:
+  - flag: "NHK26{W4RD3NCLYFF3_240KHZ_OSCILLATOR}"
+    type: static
+    
+files:
+  - files/wardenclyffe.png

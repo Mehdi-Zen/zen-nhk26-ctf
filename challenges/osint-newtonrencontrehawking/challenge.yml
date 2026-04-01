@@ -1,0 +1,29 @@
+name: "Newton rencontre Hawking"
+author: "M€dus@"
+category: OSINT                   # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Une photographie brouillée saisit une silhouette familière traversant une cour pavée, voilée par un brouillard numérique impénétrable. Les ombres semblent murmurer une équation inachevée, gravée là où les titans de la pensée cosmique se rejoignent pour l'éternité.
+
+value: 500                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                   # Minimum
+
+tags:
+  - DIFFICILE                        # OBLIGATOIRE en premier (voir tableau)
+  - OSINT
+
+flags:
+  - flag: "NHK26{Hawking_1942_2018_S=(Akc^3)/(4Ghbar)_WA}"
+    type: static
+    
+files:
+  - files/blur.png
+  

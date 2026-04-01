@@ -1,0 +1,31 @@
+name: "On cessa de compter"
+author: "Leo"
+category: OSINT
+
+description_image: files/challenge.png
+
+description: |
+  À l'endroit où l'on cessa de compter pour commencer à reconnaître, quel fut le tout premier nom retenu ?
+
+  Ne pas oublier d'ajouter les accolades.
+
+value: 500
+type: dynamic
+state: visible
+
+extra:
+  initial: 500
+  decay: 6
+  minimum: 300
+
+tags:
+  - DIFFICILE
+  - OSINT
+
+flags:
+  - flag: "NHK26{PRIMATESPIONEERSGOMBE1974}"
+    type: static
+
+files:
+  - files/archive.zip
+  - files/expérience.xlsx

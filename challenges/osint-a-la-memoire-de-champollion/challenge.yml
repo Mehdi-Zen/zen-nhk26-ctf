@@ -1,0 +1,36 @@
+name: "A la mémoire de Champollion"
+author: "Bioubiou666"
+category: OSINT                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Beaucoup de personne aiment et partagent les recherches de Champollion. 
+
+  Un utilisateur suivait un podcast sur la construction d’un hommage à Champollion mais il n’a plus qu’une capture d’une vidéo qu’il avait vu précédemment. Retrouvez ce podcast et indiquez quelle personne a conseillé le choix de l'artiste en chef de cette œuvre au maire. 
+
+  A partir du lieu de l’image, retrouvez le site public d’un photographe qui a immortalisé ce lieu complet en 2012. Sur ce site apparaît une image sur la statistique de résolution de l’écran des utilisateurs en 2015, trouvez la résolution de cette image. 
+
+  `Format du Flag : NHK26{John_Doe-00x00}`
+
+  (sans accent ou cédille s’il y en a)
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN                        # OBLIGATOIRE en premier (voir tableau)
+  - OSINT
+
+flags:
+  - flag: "NHK26{Francois_Barre-650x497}"
+    type: static
+    
+files:
+  - files/Capture.png

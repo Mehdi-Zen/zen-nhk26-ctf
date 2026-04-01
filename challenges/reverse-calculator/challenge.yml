@@ -1,0 +1,38 @@
+name: "Einstein’s Relativity Calculator"
+author: "Twistyle"
+category: Reverse                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  On vous remet un programme en C qui reste énigmatique. Décrit comme un calculateur de
+  relativité, il se vante d’évaluer l’énergie d’un objet en fonction d’une valeur fournie par
+  l’utilisateur, en se basant sur une constante interne censée correspondre à la vitesse de la
+  lumière.
+  
+  Toutefois, il y a quelque chose qui ne va pas.
+
+  Le paramètre employé ne correspond à aucune valeur physique identifiable : il est déformé,
+  fragmenté et intentionnellement obscurci. Sous ce vernis de calcul scientifique se dissimule un
+  mystère bien plus captivant : une communication codée dissimulée au sein du binaire.
+
+  Pensez à faire : `chmod +x relativity`
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - REVERSE
+
+files:
+   - files/relativity.c
+
+flags:
+  - flag: "NHK26{Albert_le_genie}"
+    type: static

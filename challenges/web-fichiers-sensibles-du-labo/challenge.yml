@@ -1,0 +1,30 @@
+name: "Fichiers sensibles du labo"
+author: "Leo"
+category: Web
+
+description_image: files/challenge.png
+
+description: |
+  Le portail interne du laboratoire semble bien protégé.Mais parfois, ce ne sont pas les protections qui comptent…  
+  Seulement la manière dont on y accède.
+
+value: 300                       # Voir document de Camille
+
+type: container
+
+image: 192.168.213.11:5000/web-fichiers-sensibles-du-labo:latest
+port: 5000 # Port exposé dans votre Dockerfile 
+protocol: web                    # ou: tcp
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - WEB
+
+flags:
+  - flag: "NHK26{VWFLrFbtWk3L}"
+    type: static

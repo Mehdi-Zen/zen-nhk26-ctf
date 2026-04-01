@@ -1,0 +1,54 @@
+# TEMPLATE: Challenge Docker (Web, Pwn, etc.)
+# Dossier: categorie-nom (ex: web-sqli)
+
+name: "Cat-commande"
+author: "Valou"
+category: Misc                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+  M. Schrödinger a récemment retrouvé un ancien ordinateur lui appartenant. Il se souvient que celui-ci contient le mot de passe permettant d’ouvrir une boîte restée fermée depuis de nombreuses années. Cependant, les fichiers présents sur cet ordinateur sont nombreux et remplis de données sans importance.
+
+  Saurez-vous retrouver le mot de passe caché afin de permettre l’ouverture de cette mystérieuse boîte ?
+
+
+
+# Points: voir document de Camille
+value: 100
+type: container
+state: visible
+
+extra:
+  initial: 100                   # = value
+  decay: 30
+  minimum: 50                    # ~50% de initial
+
+# Docker
+image: registry.gitlab.com/CTF-2026/ctf-g7-cyber/misc-cat-commande:latest
+port: 4444
+protocol: tcp                    # web | tcp
+
+flags:
+  - flag: "NHK26{CH47_D3_5CHr0D1N63r_3QU4710N}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - FACILE
+  - MISC
+
+# Optionnel - cout des indices: voir document de Camille
+hints:
+  - content: "La commande cat permet d’afficher le contenu d’un fichier. Cependant, lorsqu’un grand nombre de fichiers est présent, il existe une commande plus adaptée permettant de rechercher un motif précis dans des fichiers."
+    cost: 5
+
+# files:
+#   - files/wordlist.txt
+
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

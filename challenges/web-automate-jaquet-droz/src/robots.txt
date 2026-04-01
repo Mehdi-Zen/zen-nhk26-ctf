@@ -1,0 +1,10 @@
+# L'automate de Jaquet-Droz peut lire cette page !
+# Et vous, pouvez-vous la lire aussi ?
+
+User-agent: *
+Disallow: /admin/
+Disallow: /private/
+Disallow: /secret/
+
+# Félicitations ! Vous avez trouvé le secret de l'automate lecteur.
+# Le flag est : NHK26{L3S_4UTOMAT3S_LIS3NT_4USSI_L3S_S3CR3TS}

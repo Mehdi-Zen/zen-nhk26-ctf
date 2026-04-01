@@ -1,0 +1,26 @@
+name: "Frequency Fix"
+author: "Kln"
+category: Reverse                  # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Un émetteur radio utilisant la technologie de saut de fréquence d'Hedy Lamarr présente des dysfonctionnements. L'émetteur saute constamment entre différentes fréquences, empêchant la transmission du message secret.
+  Vous devez donc analyser le binaire, comprendre le mécanisme de génération des fréquences, et stabiliser l'émetteur pour révéler le flag.
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - REVERSE
+
+flags:
+  - flag: "NHK26{hedy_frequency_67_stabilized}"
+    type: static

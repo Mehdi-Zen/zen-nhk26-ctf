@@ -1,0 +1,40 @@
+name: "Lovelace Fragmented Truth"
+author: "Bruce"
+category: Forensic                   # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png
+
+description: |
+  Une capture réseau issue d’un poste suspect montre un trafic HTTP apparemment banal entre deux hôtes.
+
+  Pourtant, en y regardant de plus près, certains échanges semblent transporter des données inhabituelles.
+
+  - Analyser le trafic,
+
+  - Identifier les éléments pertinents,
+
+  - Reconstituer ce qui a réellement été transmis,
+
+  - Retrouver le message final.
+
+  Le fichier fourni contient tout ce dont vous avez besoin.
+
+value: 500
+type: dynamic
+state : visible  
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                   # Minimum
+
+tags:
+  - DIFFICILE
+  - FORENSIC
+
+flags:
+  - flag: "NHK26{fragmented_forensic_mastery}"
+    type: static
+    
+files:
+  - files/incident.pcap

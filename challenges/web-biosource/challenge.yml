@@ -1,0 +1,33 @@
+name: "BioSource"
+author: "Twistyle"
+category: Web                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Rachel Carson, biologiste et auteure engagée, a marqué l’histoire par ses écrits sur la
+  protection de l’environnement.
+  Dans ce challenge CTF, vous allez analyser une page web inspirée de sa biographie afin d’y
+  retrouver une information dissimulée
+
+value: 50                       # Voir document de Camille
+type: container                    # ou: container, firstblood
+
+
+image: 192.168.213.11:5000/web-biosource:latest
+port: 80
+protocol: web
+
+extra:
+  initial: 50                   # POur gerer le dynamisme du scoring
+  decay: 40                      # facteur de decroissance
+  minimum: 20                   # Minimum
+
+tags:
+  - INTRO
+  - WEB
+
+
+flags:
+  - flag: "NHK26{Charlie}"
+    type: static

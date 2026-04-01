@@ -1,0 +1,55 @@
+name: "Elysee Parking Gate"
+author: "samy"
+category: Misc
+
+description_image: files/challenge.png
+
+description: |
+  Un terminal de controle d'acces du parking de l'Elysee est a votre disposition au sein de l'espace des challenges physiques.
+  Recuperez un badge d'acces Standard, et munissez-vous de tout votre savoir-faire pour entrer sur le parking reserve aux VIP !
+
+  Deux types de badges existent : **STANDARD** et **VIP**.
+  Le flag est imprime sur le ticket d'entree, uniquement pour les acces **VIP**.
+
+  Un badge STANDARD vous est fourni. Il est lisible et reinscriptible.
+  Le terminal fonctionne en **mode debug** suite a une erreur de maintenance — des informations internes apparaissent a l'ecran et sur les tickets imprimes.
+
+  Votre objectif : **forger un badge VIP valide** et declencher l'impression du flag.
+
+  Voici quelques informations extraites de la datasheet que le technicien de maintenance a laisse trainer :
+
+  ```
+  Mifare Classic 1k - Elysee Access Control
+  Sector 1 / Bloc 4 - Big Endian
+  | Offset | Taille | Champ      |
+  |--------|--------|------------|
+  | 0x00   | 1 byte | version    |
+  | 0x01   | 1 byte | role       |
+  | 0x02   | 2 bytes| card_id    |
+  | 0x04   | 4 bytes| counter    |
+  | 0x08   | 4 bytes| created_ts |
+  | 0x0C   | 4 bytes| signature  |
+  ```
+
+  Vous pouvez utiliser l'application Android **Mifare Classic Tool** pour lire le badge, un **Flipper Zero** fait aussi l'affaire.
+
+value: 300
+type: dynamic
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+tags:
+  - MOYEN
+  - MISC
+  - MASTERCLASS
+
+flags:
+  - flag: "NHK26{h4ck3d_th3_d3bug_m0d3}"
+    type: static
+
+
+max_attempts: 0

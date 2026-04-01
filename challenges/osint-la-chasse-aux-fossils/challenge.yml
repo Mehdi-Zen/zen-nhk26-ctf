@@ -1,0 +1,40 @@
+name: "La Chasse aux fossils"
+author: "Andy"
+category: OSINT
+
+description_image: files/challenge.png
+
+description: |
+  Laure Grandbesançon, journaliste scientifique, préparait une émission sur une figure majeure de la paléontologie.
+
+  Le projet a été abandonné et ses notes ont disparu. Seuls quelques fragments subsistent dans un document pdf.
+
+  Votre mission : reconstituer les éléments manquants et retrouver l’information recherchée.
+
+  `Format du Flag : NHK26{Prenom_Composé_Nom_DECOUVERTE_Annee}`
+
+value: 500
+type: dynamic
+state: visible
+
+extra:
+  initial: 500
+  decay: 6
+  minimum: 300
+
+tags:
+  - DIFFICILE
+  - OSINT
+
+flags:
+  - flag: "NHK26{Mary_Ann_Mantell_IGUANODON_ANGLICUS_1822}"
+    type: static
+
+files:
+  - files/notes.pdf
+
+hints:
+  - content: "Commence par identifier le musée ou le lieu visible sur les images, puis cherche quelle scientifique y est associée."
+    cost: 80
+
+max_attempts: 0

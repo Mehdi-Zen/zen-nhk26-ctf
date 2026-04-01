@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+venv*/
+.venv*/
+*.egg-info/
+*.egg
+
+# Data
+.data/
+*.db
+*.log
+*.log.*
+
+# Secrets
+.env
+.ctfd_secret_key
+CTFd/config.ini
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+.*.swp
+
+# Uploads
+CTFd/static/uploads
+CTFd/uploads
+
+# JS
+node_modules/
+
+# Builds
+builds/
+dist/
+
+# Misc
+*.zip
+flask_profiler.sql
+_archive/
+_archive/

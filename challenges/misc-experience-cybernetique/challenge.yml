@@ -1,0 +1,52 @@
+name: "Experimence Cybernétique"
+author: "Andy"
+category: Misc
+
+description_image: files/challenge.png
+
+description: |
+  Dans les années 1940, Norbert Wiener fonde la cybernétique, science des systèmes de contrôle.
+
+  Un système de ventilation automatisé est connecté à un réseau de test.
+
+  Connectez-vous à l’automate via un câble RJ45.
+
+  ⚠️ **Appuyez sur le bouton pour initialiser l’expérience, puis à nouveau une fois terminé.**
+
+  L’automate communique via un protocole industriel standard.
+
+  Votre objectif : analyser le système et accéder à une information cachée dans sa mémoire.
+
+  Automate accessible en vous connectant sur l'automate :
+
+  **`192.168.213.12`**
+
+  `Format du flag : NHK26{Phrase_initiale.initiale}`
+
+  
+
+
+
+value: 300
+type: dynamic
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+flags:
+  - flag: "NHK26{Nous_sommes_les_esclaves_de_nos_moyens_techniques_N.W}"
+    type: static
+
+tags:
+  - MOYEN
+  - MISC
+
+hints:
+  - content: Le protocole industriel utilisé fonctionne généralement sur le **port 502**.
+    cost: 25
+
+  - content: Explorez les **holding registers** et les **coils** exposés par l’automate.
+    cost: 60

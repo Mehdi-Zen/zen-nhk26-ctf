@@ -1,0 +1,30 @@
+name: "code NHK26{"
+author: "Anne"
+category: Crypto                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Quel est ce scientifique célèbre pour ses cryptanalyses ?
+
+  `{NH6KK{K6H{KN}HKH26NH2KN6NKK2H2H26222NH{}HKH2H}6KN6{6{`
+
+  `key = K8C3FQB2OWT6SED4VUP17}GNHIX{Z5LAJMYR+NHK`
+
+value: 300                       # Voir document de Camille
+type: dynamic
+state: visible
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100
+
+tags:
+  - MOYEN
+  - CRYPTO
+  - MASTERCLASS
+
+flags:
+  - flag: "NHK26{JESUISGEORGESPAINVIN}"
+    type: static

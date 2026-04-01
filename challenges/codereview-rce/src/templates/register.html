@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratoire Grace Hopper - Inscription</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+            font-style: italic;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            text-align: left;
+        }
+        .info-box strong {
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 Laboratoire Grace Hopper</h1>
+        <div class="subtitle">Pionnière de l'informatique • 1906-1992</div>
+        
+        <div class="info-box">
+            <strong>ℹ️ Information :</strong><br>
+            Ce formulaire enregistre les visiteurs dans le système de logging du laboratoire.<br>
+            Votre visite sera documentée pour des raisons administratives.
+        </div>
+        
+        <div class="form-group">
+            <label for="username">Nom d'utilisateur *</label>
+            <input type="text" id="username" placeholder="Votre nom ou pseudonyme">
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" placeholder="votre.email@domaine.com">
+        </div>
+        
+        <button onclick="submitForm()">📝 Enregistrer ma visite</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function submitForm() {
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            if (!username || !email) {
+                showResult("⚠️ Veuillez remplir tous les champs requis", false);
+                return;
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.className = '';
+            resultDiv.textContent = '🔄 Enregistrement en cours...';
+            
+            try {
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('email', email);
+                
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    showResult(`✅ ${result.message}`, true);
+                    // Réinitialiser le formulaire
+                    document.getElementById('username').value = '';
+                    document.getElementById('email').value = '';
+                } else {
+                    showResult(`❌ ${result.error || 'Erreur inconnue'}`, false);
+                }
+            } catch (error) {
+                showResult(`❌ Erreur réseau: ${error.message}`, false);
+            }
+        }
+        
+        function showResult(message, success) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = success ? 'success' : 'error';
+            resultDiv.textContent = message;
+        }
+    </script>
+</body>
+</html>

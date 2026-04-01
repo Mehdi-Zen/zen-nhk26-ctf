@@ -1,0 +1,24 @@
+# eternalbluebox.yml
+name: "ServerMessageBlock"
+author: "will"
+category: "Misc"
+description_image: "files/challenge.jpeg"
+description: |
+  « Le poste d’un ancien chercheur quantique, Enrico Fermi, est disponible sur le réseau.»
+  Format attendu : NHK26{...}. 
+value: 300
+type: container
+state: hidden
+image: registry.gitlab.com/.../misc-servermessageblock:latest
+port: 1445
+protocol: tcp
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+tags:
+  - MOYEN
+  - MISC
+flags:
+  - flag: "NHK26{eternalblue_was_only_the_beginning}"
+    type: "static"

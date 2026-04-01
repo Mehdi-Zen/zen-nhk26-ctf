@@ -1,0 +1,44 @@
+name: "Discord Leak"
+author: "EnderMan"
+category: Forensic
+
+description_image: files/challenge.png
+
+description: |
+  George Koval. Chimiste. Prix Lénine. Et espion soviétique infiltré au cœur du Projet Manhattan pendant des années sans jamais être démasqué de son vivant.
+
+  Il n'a pas eu besoin de hacker quoi que ce soit, il était **de l'intérieur**.
+
+  En 2024, l'histoire se répète dans les couloirs de **SecureCorp**. L'équipe de sécurité a reçu une alerte : un employé aurait utilisé Discord pour exfiltrer des documents confidentiels vers un contact extérieur.
+
+  Le poste a été saisi. Les données sont là, mais certains messages ont été supprimés et un fichier est corrompu.
+
+  À vous de reconstituer les preuves avant que la piste ne disparaisse.
+
+  *"The best spy is the one you never suspect."*
+
+value: 500
+type: firstblood
+state: hidden
+
+extra:
+  initial: 500
+  decay: 6
+  minimum: 300
+
+first_blood_bonus:
+  - 250
+
+tags:
+  - DIFFICILE
+  - FORENSIC
+  - FIRST BLOOD
+
+flags:
+  - flag: "NHK26{1ns1d3r_l34k_d3t3ct3d_by_s3cur1ty}"
+    type: static
+
+files:
+  - files/discord_leak.zip
+
+max_attempts: 0

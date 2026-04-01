@@ -1,0 +1,34 @@
+name: "Back to the Pwn-ture"
+author: "Leo"
+category: Reverse
+
+description_image: files/challenge.png
+
+description: |
+  Le Docteur Emmett Brown à  besoin de vos connaissance pour voyager dans le temps.
+
+value: 300
+
+type: container
+
+state: visible
+
+image: registry.gitlab.com/nhk/reverse-backtothepwnture:latest
+port: 1234
+protocol: tcp
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+tags:
+  - MOYEN
+  - REVERSE
+
+flags:
+  - flag: "NHK26{EgkJ4rlb/vL=QlTC}"
+    type: static
+
+files:
+  - files/convecteur

@@ -1,0 +1,53 @@
+# TEMPLATE: Challenge sans Docker (Crypto, Forensic, OSINT, etc.)
+# Dossier: categorie-nom (ex: crypto-caesar)
+
+name: "Grille de Gauss"
+author: "Valou"
+category: Crypto                 # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+
+  En 1821, Carl Friedrich Gauss, l’un des plus grands mathématiciens de l’histoire, travaillait secrètement sur des méthodes de chiffrement pour protéger ses travaux afin d’aider les échanges sensibles liés à ses recherches en astronomie et en cryptologie.
+
+  Aujourd’hui, deux lettres manuscrites ont été retrouvées dans les archives d’un vieux manoir près de Göttingen. 
+
+  La première lettre contient ce qui semble être des instructions ou une clé pour déchiffrer la seconde, mais elle-même est chiffrée. Sur l’enveloppe, il est marqué qu’un carré permettra de trouver la clé.
+
+value: 300
+type: dynamic
+state: visible
+
+extra:
+  initial: 300                   # = value
+  decay: 13
+  minimum: 100                    # ~50% de initial
+
+flags:
+  - flag: "NHK26{7H30r3M3_D3_64U55}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - MOYEN
+  - CRYPTO
+
+# Fichiers donnes aux participants
+#files:
+ # - files/message.txt
+
+# Optionnel - cout des indices: voir document de Camille
+hints:
+   - content: "Regardez bien l’enveloppe, elle parle d’un carré."
+     cost: 25     
+     
+   - content: "Connaissez-vous un algorithme de chiffrement symétrique ?"
+     cost: 60 
+
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

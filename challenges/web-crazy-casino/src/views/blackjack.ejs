@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack | Crazy Casino</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/blackjack.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🃏</text></svg>">
+</head>
+<body>
+    <div class="casino-bg">
+        <div class="blackjack-container">
+            <header class="site-header">
+                <div class="header-brand">
+                    <span class="brand-logo">🃏 Blackjack</span>
+                    <span class="brand-divider"></span>
+                    <span class="brand-tagline">21 or Bust</span>
+                </div>
+                <div class="header-user">
+                    <div class="user-balance">
+                        <span class="balance-icon">◆</span>
+                        <span class="balance-amount" id="balance">0</span>
+                        <span class="balance-label">chips</span>
+                    </div>
+                    <a href="/dashboard" class="btn-secondary">Back to Floor</a>
+                </div>
+            </header>
+
+            <main class="blackjack-main">
+                <div class="game-table">
+                    <!-- Dealer Section -->
+                    <div class="dealer-section">
+                        <div class="section-label">Dealer</div>
+                        <div class="hand" id="dealer-hand"></div>
+                        <div class="hand-value" id="dealer-value"></div>
+                    </div>
+
+                    <!-- Game Status -->
+                    <div class="game-status" id="game-status"></div>
+
+                    <!-- Player Section -->
+                    <div class="player-section">
+                        <div class="hand" id="player-hand"></div>
+                        <div class="hand-value" id="player-value"></div>
+                        <div class="section-label">Your Hand</div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="controls-section">
+                    <!-- Betting Panel (shown when no game) -->
+                    <div class="betting-panel" id="betting-panel">
+                        <div class="bet-input-group">
+                            <label>Bet Amount</label>
+                            <input type="number" id="bet-amount" value="100" min="10" max="10000" step="10">
+                        </div>
+                        <button class="btn-gold btn-deal" id="btn-deal">Deal Cards</button>
+                    </div>
+
+                    <!-- Action Panel (shown during game) -->
+                    <div class="action-panel hidden" id="action-panel">
+                        <button class="btn-action btn-hit" id="btn-hit">Hit</button>
+                        <button class="btn-action btn-stand" id="btn-stand">Stand</button>
+                        <button class="btn-action btn-double" id="btn-double">Double</button>
+                    </div>
+
+                    <!-- Result Panel (shown after game) -->
+                    <div class="result-panel hidden" id="result-panel">
+                        <div class="result-message" id="result-message"></div>
+                        <div class="result-winnings" id="result-winnings"></div>
+                        <button class="btn-gold btn-new-game" id="btn-new-game">New Game</button>
+                    </div>
+                </div>
+
+                <!-- Game Rules -->
+                <div class="rules-section">
+                    <h3>House Rules</h3>
+                    <ul>
+                        <li>Blackjack pays 3:2</li>
+                        <li>Dealer stands on 17</li>
+                        <li>Double down on first two cards</li>
+                        <li>No insurance or surrender</li>
+                    </ul>
+                </div>
+            </main>
+
+            <footer class="site-footer">
+                <div class="footer-suits">♠ ♥ ♦ ♣</div>
+                <p>Play responsibly. The house always wins.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/blackjack.js"></script>
+</body>
+</html>

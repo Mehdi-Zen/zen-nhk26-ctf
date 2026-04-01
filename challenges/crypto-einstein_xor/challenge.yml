@@ -1,0 +1,33 @@
+name: "Einstein’s XOR"
+author: "Bruce"
+category: Crypto                   # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png
+
+description: |
+  Plusieurs messages chiffrés ont été interceptés lors d’une communication suspecte.
+
+  À première vue, les données semblent totalement aléatoires.
+  Cependant, une analyse attentive pourrait révéler une faiblesse dans la manière dont le chiffrement a été utilisé.
+
+value: 500
+type: dynamic
+state : hidden  
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                  # Minimum
+
+tags:
+  - DIFFICILE
+  - CRYPTO
+
+flags:
+  - flag: "NHK26{einstein_xor}"
+    type: static
+    
+files:
+  - files/einstein_1.bin
+  - files/einstein_2.bin
+  - files/einstein_3.bin

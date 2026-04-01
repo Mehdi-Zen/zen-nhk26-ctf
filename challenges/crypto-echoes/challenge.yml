@@ -1,0 +1,31 @@
+# hastadattack.yml
+name: "Echoes"
+author: "will"
+category: "Crypto"
+
+description_image: "files/challenge.jpeg"
+
+description: |
+  Johan Håstad a envoyé le même message chiffré à 3 personnes différentes. 
+  
+  Récupère le texte en clair contenant le flag.
+
+value: 300
+type: dynamic
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+tags:
+  - MOYEN
+  - CRYPTO
+
+flags:
+  - flag: "NHK26{H4st4d_4tt4ck_1s_C00l!}"
+    type: "static"
+
+files:
+  - files/file.txt

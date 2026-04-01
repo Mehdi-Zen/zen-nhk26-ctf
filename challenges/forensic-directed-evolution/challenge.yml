@@ -1,0 +1,46 @@
+name: "Directed Evolution"
+author: "Andy"
+category: Forensic
+
+description_image: files/challenge.png
+
+description: |
+  Un laboratoire de bio-ingénierie travaille sur l’amélioration d’enzymes
+  par évolution dirigée, méthode développée notamment par Frances Arnold
+  Une exportation accidentelle a laissé fuiter plusieurs fichiers JSON contenant :
+  - mutations enzymatiques,
+  - scores de performance,
+  - paramètres expérimentaux,
+  - fragments biologiques encodés.
+
+  Fichier fourni :
+  `evolution_genetique.zip`
+
+
+value: 300
+type: dynamic
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+tags:
+  - MOYEN
+  - FORENSIC
+
+flags:
+  - flag: "NHK26{Arnold_Evolution_2018}"
+    type: static
+
+files:
+  - files/evolution_genetique.zip
+
+hints:
+  - content: "Filtre les expériences par performance avant d’essayer de décoder."
+    cost: 25
+  - content: "Plusieurs couches de décodage sont nécessaires."
+    cost: 60
+
+max_attempts: 0

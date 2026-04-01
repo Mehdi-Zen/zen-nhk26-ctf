@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Super Rush</title>
+  <style>
+    *{margin:0;padding:0}
+    body{background:#0a0a1a;overflow:hidden;display:flex;justify-content:center;align-items:center;height:100vh}
+    canvas{image-rendering:pixelated}
+  </style>
+</head>
+<body>
+<script src="phaser.min.js"></script>
+<script>
+const T=32, GRAV=950, SPD=260, JMP=-480;
+let pName='Hacker', totalFruits=0;
+
+class BootScene extends Phaser.Scene {
+  constructor(){super('Boot')}
+  preload(){
+    let w=this.cameras.main.width,h=this.cameras.main.height;
+    let bar=this.add.graphics();
+    this.load.on('progress',v=>{bar.clear();bar.fillStyle(0x00ff41);bar.fillRect(w/4,h/2-8,(w/2)*v,16)});
+    this.add.text(w/2,h/2-30,'Chargement...',{fontSize:'14px',fontFamily:'monospace',color:'#aaa'}).setOrigin(0.5);
+
+    // Player
+    this.load.spritesheet('p_idle','assets/player_idle.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('p_run','assets/player_run.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('p_jump','assets/player_jump.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('p_fall','assets/player_fall.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('p_hit','assets/player_hit.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('p_appear','assets/appearing.png',{frameWidth:96,frameHeight:96});
+    this.load.spritesheet('p_disappear','assets/disappearing.png',{frameWidth:96,frameHeight:96});
+
+    // Enemies
+    this.load.spritesheet('md_run','assets/maskdude_run.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('pm_run','assets/pinkman_run.png',{frameWidth:32,frameHeight:32});
+
+    // Items
+    this.load.spritesheet('apple','assets/apple.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('cherry','assets/cherries.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('straw','assets/strawberry.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('melon','assets/melon.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('banana','assets/bananas.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('collected','assets/collected.png',{frameWidth:32,frameHeight:32});
+    this.load.spritesheet('flag_a','assets/flag.png',{frameWidth:64,frameHeight:64});
+    this.load.spritesheet('check_a','assets/checkpoint.png',{frameWidth:64,frameHeight:64});
+    this.load.spritesheet('start_a','assets/start.png',{frameWidth:64,frameHeight:64});
+
+    // Traps
+    this.load.spritesheet('saw','assets/saw.png',{frameWidth:38,frameHeight:38});
+    this.load.spritesheet('fire','assets/fire.png',{frameWidth:16,frameHeight:32});
+    this.load.spritesheet('rockhead','assets/rockhead.png',{frameWidth:42,frameHeight:42});
+    this.load.spritesheet('spikehead','assets/spikehead.png',{frameWidth:54,frameHeight:52});
+    this.load.spritesheet('tramp_j','assets/tramp_jump.png',{frameWidth:28,frameHeight:28});
+    this.load.spritesheet('arrow','assets/arrow.png',{frameWidth:18,frameHeight:18});
+    this.load.spritesheet('fallplat','assets/fallplat_on.png',{frameWidth:32,frameHeight:10});
+    this.load.image('fallplat_off','assets/fallplat_off.png');
+    this.load.spritesheet('fan','assets/fan.png',{frameWidth:24,frameHeight:8});
+    this.load.spritesheet('confetti','assets/confetti.png',{frameWidth:16,frameHeight:16});
+    this.load.image('spikes','assets/spikes.png');
+    this.load.image('tramp_i','assets/tramp_idle.png');
+    this.load.image('spikedball','assets/spikedball.png');
+    this.load.image('chain','assets/chain.png');
+    this.load.image('block','assets/block_idle.png');
+
+    // Terrain tiles (9-slice green + large green + singles)
+    const tt=['g_tl','g_tc','g_tr','g_ml','g_mc','g_mr','g_bl','g_bc','g_br',
+              'lg_tl','lg_tc','lg_tr','lg_ml','lg_mc','lg_mr','lg_bl','lg_bc','lg_br',
+              'g_solo','g_left','g_right','g_lcap','g_rcap'];
+    tt.forEach(n=>this.load.image(n,'assets/t_'+n+'.png'));
+
+    // Background & items
+    this.load.image('bg','assets/bg_brown.png');
+    this.load.image('box1','assets/box1.png');
+    this.load.image('box2','assets/box2.png');
+    this.load.image('box3','assets/box3.png');
+    this.load.image('dust_p','assets/dust_particle.png');
+  }
+
+  create(){
+    // Animations
+    this.anims.create({key:'idle',frames:this.anims.generateFrameNumbers('p_idle',{start:0,end:10}),frameRate:18,repeat:-1});
+    this.anims.create({key:'run',frames:this.anims.generateFrameNumbers('p_run',{start:0,end:11}),frameRate:20,repeat:-1});
+    this.anims.create({key:'jump',frames:[{key:'p_jump',frame:0}],frameRate:1});
+    this.anims.create({key:'fall',frames:[{key:'p_fall',frame:0}],frameRate:1});
+    this.anims.create({key:'hit',frames:this.anims.generateFrameNumbers('p_hit',{start:0,end:6}),frameRate:14});
+    this.anims.create({key:'appear',frames:this.anims.generateFrameNumbers('p_appear',{start:0,end:6}),frameRate:14});
+    this.anims.create({key:'disappear',frames:this.anims.generateFrameNumbers('p_disappear',{start:0,end:6}),frameRate:14});
+    this.anims.create({key:'e_mask',frames:this.anims.generateFrameNumbers('md_run',{start:0,end:11}),frameRate:16,repeat:-1});
+    this.anims.create({key:'e_pink',frames:this.anims.generateFrameNumbers('pm_run',{start:0,end:11}),frameRate:16,repeat:-1});
+    this.anims.create({key:'fa',frames:this.anims.generateFrameNumbers('apple',{start:0,end:16}),frameRate:16,repeat:-1});
+    this.anims.create({key:'fc',frames:this.anims.generateFrameNumbers('cherry',{start:0,end:16}),frameRate:16,repeat:-1});
+    this.anims.create({key:'fs',frames:this.anims.generateFrameNumbers('straw',{start:0,end:16}),frameRate:16,repeat:-1});
+    this.anims.create({key:'fm',frames:this.anims.generateFrameNumbers('melon',{start:0,end:16}),frameRate:16,repeat:-1});
+    this.anims.create({key:'fb',frames:this.anims.generateFrameNumbers('banana',{start:0,end:16}),frameRate:16,repeat:-1});
+    this.anims.create({key:'coll',frames:this.anims.generateFrameNumbers('collected',{start:0,end:5}),frameRate:14});
+    this.anims.create({key:'af',frames:this.anims.generateFrameNumbers('flag_a',{start:0,end:7}),frameRate:10,repeat:-1});
+    this.anims.create({key:'ac',frames:this.anims.generateFrameNumbers('check_a',{start:0,end:25}),frameRate:14,repeat:-1});
+    this.anims.create({key:'as',frames:this.anims.generateFrameNumbers('start_a',{start:0,end:16}),frameRate:14,repeat:-1});
+    this.anims.create({key:'asaw',frames:this.anims.generateFrameNumbers('saw',{start:0,end:7}),frameRate:12,repeat:-1});
+    this.anims.create({key:'afire',frames:this.anims.generateFrameNumbers('fire',{start:0,end:2}),frameRate:8,repeat:-1});
+    this.anims.create({key:'arock',frames:this.anims.generateFrameNumbers('rockhead',{start:0,end:3}),frameRate:6,repeat:-1});
+    this.anims.create({key:'aspike',frames:this.anims.generateFrameNumbers('spikehead',{start:0,end:3}),frameRate:6,repeat:-1});
+    this.anims.create({key:'atramp',frames:this.anims.generateFrameNumbers('tramp_j',{start:0,end:7}),frameRate:16});
+    this.anims.create({key:'aarrow',frames:this.anims.generateFrameNumbers('arrow',{start:0,end:9}),frameRate:12,repeat:-1});
+    this.anims.create({key:'afan',frames:this.anims.generateFrameNumbers('fan',{start:0,end:3}),frameRate:10,repeat:-1});
+    this.anims.create({key:'aconfetti',frames:this.anims.generateFrameNumbers('confetti',{start:0,end:5}),frameRate:12});
+    this.anims.create({key:'afallplat',frames:this.anims.generateFrameNumbers('fallplat',{start:0,end:3}),frameRate:8,repeat:-1});
+
+    // Wall texture
+    let g=this.make.graphics({add:false});
+    g.fillStyle(0xe74c3c);g.fillRect(0,0,32,32);
+    g.fillStyle(0xc0392b);g.fillRect(2,2,28,28);
+    g.lineStyle(2,0xff6666);g.strokeRect(6,6,20,20);
+    g.fillStyle(0xff6b6b);g.fillRect(10,14,12,4);
+    g.generateTexture('wall',32,32);g.destroy();
+
+    this.scene.start('Menu');
+  }
+}
+
+class MenuScene extends Phaser.Scene {
+  constructor(){super('Menu')}
+  create(){
+    this.add.tileSprite(640,300,1280,600,'bg');
+
+    // Dark overlay for readability
+    let overlay=this.add.graphics();
+    overlay.fillStyle(0x000000,0.55);
+    overlay.fillRect(0,0,1280,600);
+
+    // Ground
+    for(let x=0;x<1280;x+=32){this.add.image(x+16,552,'g_tc');this.add.image(x+16,584,'g_mc');this.add.image(x+16,616,'g_mc')}
+
+    let p=this.add.sprite(160,480,'p_idle',0).setScale(3);p.play('idle');
+    this.tweens.add({targets:p,y:470,duration:800,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+
+    // Fruits
+    const fk=['apple','cherry','straw','melon','banana'],fa=['fa','fc','fs','fm','fb'];
+    for(let i=0;i<5;i++){let f=this.add.sprite(900+i*60,480,fk[i],0).setScale(1.2);f.play(fa[i]);this.tweens.add({targets:f,y:470,duration:500+i*80,yoyo:true,repeat:-1})}
+
+    // Flag
+    let fl=this.add.sprite(1180,470,'flag_a',0).setScale(0.8);fl.play('af');
+
+    // Title
+    this.add.text(643,63,'SUPER RUSH',{fontSize:'52px',fontFamily:'monospace',color:'#000'}).setOrigin(0.5);
+    this.add.text(640,60,'SUPER RUSH',{fontSize:'52px',fontFamily:'monospace',color:'#ffd700',stroke:'#8B6914',strokeThickness:4}).setOrigin(0.5);
+
+    let sub=this.add.text(640,130,'Atteignez le drapeau pour obtenir le flag !',{fontSize:'15px',fontFamily:'monospace',color:'#ffffff'}).setOrigin(0.5);
+    this.tweens.add({targets:sub,alpha:0.5,duration:1200,yoyo:true,repeat:-1});
+
+    this.add.text(640,165,'Fleches / ZQSD + Espace',{fontSize:'12px',fontFamily:'monospace',color:'#cccccc'}).setOrigin(0.5);
+
+    // Input
+    this.add.text(640,240,'Entrez votre pseudo :',{fontSize:'16px',fontFamily:'monospace',color:'#ffffff'}).setOrigin(0.5);
+    this.nt=this.add.text(640,280,'> _',{fontSize:'26px',fontFamily:'monospace',color:'#00ff41'}).setOrigin(0.5);
+    this.nm='';
+    this.input.keyboard.on('keydown',e=>{
+      if(e.key==='Enter'&&this.nm.length>0){pName=this.nm;this.scene.start('Game')}
+      else if(e.key==='Backspace')this.nm=this.nm.slice(0,-1);
+      else if(e.key.length===1&&this.nm.length<14)this.nm+=e.key;
+      this.nt.setText('> '+this.nm+'_');
+    });
+    this.add.text(640,300,'',{fontSize:'8px',fontFamily:'monospace',color:'#ffff00'}).setOrigin(0.5);
+  }
+}
+
+class GameScene extends Phaser.Scene {
+  constructor(){super('Game')}
+  create(){
+    this.dead=false;this.won=false;this.score=0;this.fruits=0;this.dustT=0;
+
+    // Map: G=ground, D=deep, B=brick, Q=box, 1-5=fruits, E=enemy
+    // S=saw, .=spikes, !=fire, T=trampoline, ^=rockhead, W=spiked ball
+    // K=wall(impossible), F=flag, P=player, f=falling platform
+    // ZONE 1: Easy start | ZONE 2: Platforming | ZONE 3: Hard traps | ZONE 4: Red wall | ZONE 5: Falling platforms → Flag
+    const map=[
+      '                                                                                                                                                                                                                                   ',
+      '                                                                                                                                                                                                                                   ',
+      '              1 2 3                                                                                                                                                                                                                     ',
+      '              QBBBQ                                                                                                                                                                                                                     ',
+      '                                                                                  1 2 3                                                                                                                                             ',
+      '              BBBBBB                                                              QBBQ                                                                                                                                            ',
+      '                                                                                                                     1 2 3                                                                                                          ',
+      '                           1 2 3                 1 2 3            T                           1 2 3    1 2 3                                                                                                                       ',
+      '    1                   f  BBBBB                 BBBBB                           BBBBB                BBBBB      1 2 3             ^^^^^^^                                           f   ^                                 K F K    ',
+      '                                          ^                 BBB            E  BBB      E                E       WW           BBB             BBB          BBB                     f                                        GGGGG   ',
+      'P      SSS   SSS        E           SS   E                                                              ...       .   S       E            E          E              f  f   f   f           f   f   f   f  f  f  f  f  f   DDDDD   ',
+      'GGGGGGGGGGGGGGGG  GGGGGGGGGGGG  GGGGGGGGGG  GGGGGGGGGGG  GGGGGGGGG       GGGGGGGGGGGGGGG  GGGGGGGGGGGGGGGGGGGGG  GGGGGGGGGGG  GGGGGGGGGGGGGG  GGGGGGGGG  GGGGGGGGG                                                         DDDDD   ',
+      'DDDDDDDDDDDDDDDD  DDDDDDDDDDDD  DDDDDDDDDD  DDDDDDDDDDD  DDDDDDDDD       DDDDDDDDDDDDDDD  DDDDDDDDDDDDDDDDDDDDD  DDDDDDDDDDD  DDDDDDDDDDDDDD  DDDDDDDDD  DDDDDDDDD                                                         DDDDD   ',
+      'DDDDDDDDDDDDDDDD  DDDDDDDDDDDD  DDDDDDDDDD  DDDDDDDDDDD  DDDDDDDDD       DDDDDDDDDDDDDDD  DDDDDDDDDDDDDDDDDDDDD  DDDDDDDDDDD  DDDDDDDDDDDDDD  DDDDDDDDD  DDDDDDDDD                                                         DDDDD   ',
+    ];
+
+    const W=map[0].length*T, H=map.length*T, OFF=600-H;
+    this.physics.world.setBounds(0,0,W,900);
+    this.cameras.main.setBounds(0,0,W,600);
+
+    // Background
+    this.bgTile=this.add.tileSprite(W/2,300,W,600,'bg').setScrollFactor(0);
+
+    // Groups
+    this.plats=this.physics.add.staticGroup();
+    this.items=this.physics.add.group();
+    this.enemies=this.physics.add.group();
+    this.hazards=this.physics.add.group();
+    this.walls=this.physics.add.staticGroup();
+    let flagPos=null,startPos={x:80,y:300};
+
+    const fkeys=['apple','cherry','straw','melon','banana'];
+    const fanims=['fa','fc','fs','fm','fb'];
+    let fi=0;
+
+    for(let r=0;r<map.length;r++){
+      for(let c=0;c<map[r].length;c++){
+        const ch=map[r][c], x=c*T+16, y=r*T+OFF+16;
+        switch(ch){
+          case 'G': this.plats.create(x,y,'g_tc'); break;
+          case 'D': this.plats.create(x,y,'g_mc'); break;
+          case 'B': this.plats.create(x,y,'g_tl'); break;
+          case 'Q': {
+            let q=this.plats.create(x,y,'box1');
+            q.isQuestion=true;
+            q.hasItem=true;
+            q.origY=y;
+            this.tweens.add({targets:q,y:y-3,duration:600,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+            break;
+          }
+          case 'C': {
+            let cp=this.add.sprite(x,y-16,'check_a',0).setScale(0.6);cp.play('ac');
+            break;
+          }
+          case 'T': {
+            let tr=this.plats.create(x,y,'tramp_i');
+            tr.isTrampoline=true;
+            break;
+          }
+          case 'f': {
+            let fp=this.plats.create(x,y,'fallplat',0);
+            fp.play('afallplat');
+            fp.isFalling=true;
+            fp.shaking=false;
+            fp.setScale(1,3);
+            fp.refreshBody();
+            break;
+          }
+          case '!':{
+            let fi=this.hazards.create(x,y,'fire',0);
+            fi.play('afire');fi.body.setAllowGravity(false);
+            break;
+          }
+          case '^':{
+            let rh=this.hazards.create(x,y,'rockhead',0);
+            rh.play('arock');rh.body.setAllowGravity(false);
+            this.tweens.add({targets:rh,y:y-80,duration:2000,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+            break;
+          }
+          case 'W':{
+            let sb=this.hazards.create(x,y,'spikedball');
+            sb.body.setAllowGravity(false);sb.body.setCircle(14);
+            this.tweens.add({targets:sb,y:y-60,duration:1500,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+            break;
+          }
+          case '1':case '2':case '3':case '4':case '5':{
+            let idx=fi%fkeys.length; fi++;
+            let fr=this.items.create(x,y,fkeys[idx],0);
+            fr.body.setAllowGravity(false);
+            fr.play(fanims[idx]);
+            break;
+          }
+          case 'E':{
+            let eType=Math.random()>0.5?'md_run':'pm_run';
+            let eAnim=eType==='md_run'?'e_mask':'e_pink';
+            let en=this.enemies.create(x,y-4,eType,0);
+            en.play(eAnim);
+            en.setBounce(0);
+            let dir=Math.random()>0.5?1:-1;
+            en.setVelocityX(65*dir);
+            en.dir=dir; en.sx=x;
+            break;
+          }
+          case 'S':{
+            let sw=this.hazards.create(x,y,'saw',0);
+            sw.play('asaw');
+            sw.body.setAllowGravity(false);
+            sw.body.setCircle(16);
+            break;
+          }
+          case '.':{
+            let sp=this.hazards.create(x,y+2,'spikes');
+            sp.body.setAllowGravity(false);
+            sp.setScale(2.5);
+            break;
+          }
+          case 'K':
+            for(let wy=-2;wy<13;wy++) this.walls.create(x,y-wy*T,'wall');
+            break;
+          case 'F': flagPos={x,y:y-20}; break;
+          case 'P': startPos={x,y:y-16}; break;
+        }
+      }
+    }
+
+    totalFruits=this.items.getChildren().length;
+
+    // Player
+    this.player=this.physics.add.sprite(startPos.x,startPos.y,'p_idle',0);
+    this.player.setCollideWorldBounds(false);
+    this.player.setBounce(0.05);
+    this.player.setSize(18,24);
+    this.player.setOffset(7,8);
+
+    // Appear effect
+    let ap=this.add.sprite(startPos.x,startPos.y,'p_appear',0).setScale(0.5);
+    ap.play('appear');ap.on('animationcomplete',()=>ap.destroy());
+
+    // Start flag - on the ground, 1 tile below player spawn
+    let sf=this.add.sprite(startPos.x+50, startPos.y+32, 'start_a',0).setScale(1.2).setOrigin(0.5,1);sf.play('as');
+
+    // Camera
+    this.cameras.main.startFollow(this.player,true,0.08,0.08);
+
+    // Collisions
+    this.physics.add.collider(this.player,this.plats,(player,plat)=>{
+      if(plat.isTrampoline && player.body.blocked.down){
+        player.setVelocityY(-680);
+        plat.setVisible(false);
+        let ta=this.add.sprite(plat.x,plat.y,'tramp_j',0);
+        ta.play('atramp');
+        ta.on('animationcomplete',()=>{ta.destroy();plat.setVisible(true)});
+      }
+      if(plat.isFalling && !plat.shaking && player.body.blocked.down){
+        plat.shaking=true;
+        let ox=plat.x, oy=plat.y;
+        // Shake for 0.4s then fall
+        this.tweens.add({targets:plat,x:ox+3,duration:30,yoyo:true,repeat:8,onComplete:()=>{
+          plat.body.enable=false;
+          // Falling image
+          let fallImg=this.add.sprite(plat.x,plat.y,'fallplat_off').setScale(1,3).setAlpha(0.8);
+          this.tweens.add({targets:fallImg,y:fallImg.y+500,alpha:0,rotation:0.5,duration:1000,onComplete:()=>fallImg.destroy()});
+          plat.destroy();
+        }});
+      }
+      // Question block hit from below
+      if(plat.isQuestion && plat.hasItem && player.body.blocked.up && player.y > plat.y){
+        plat.hasItem=false;
+        // Bump animation
+        this.tweens.killTweensOf(plat);
+        this.tweens.add({targets:plat,y:plat.origY-12,duration:80,yoyo:true,onComplete:()=>{
+          plat.setTexture('box2'); // used/empty box
+        }});
+        // Spawn random reward
+        let rewards=['apple','cherry','straw','melon','banana'];
+        let anims=['fa','fc','fs','fm','fb'];
+        let ri=Math.floor(Math.random()*rewards.length);
+        let reward=this.items.create(plat.x,plat.y-32,rewards[ri],0);
+        reward.body.setAllowGravity(false);
+        reward.play(anims[ri]);
+        // Bounce up then collectible
+        this.tweens.add({targets:reward,y:reward.y-40,duration:300,ease:'Sine.easeOut',onComplete:()=>{
+          this.tweens.add({targets:reward,y:reward.y+10,duration:200,yoyo:true,repeat:-1});
+        }});
+        // +50 text
+        let txt=this.add.text(plat.x,plat.y-20,'+50',{fontSize:'12px',fontFamily:'monospace',color:'#ffd700'}).setOrigin(0.5);
+        this.tweens.add({targets:txt,y:txt.y-30,alpha:0,duration:500,onComplete:()=>txt.destroy()});
+        this.score+=50;
+        this.sTxt.setText(String(this.score).padStart(6,'0'));
+      }
+    });
+    this.physics.add.collider(this.enemies,this.plats);
+
+    // Wall - VULNERABILITY
+    if(!document.cookie.includes('level_complete=true')){
+      this.physics.add.collider(this.player,this.walls);
+    } else {
+      let nc=this.add.text(640,42,'[ NOCLIP ]',{fontSize:'11px',fontFamily:'monospace',color:'#00ff41',backgroundColor:'#00000090',padding:{x:8,y:3}}).setOrigin(0.5).setScrollFactor(0).setDepth(100);
+      this.tweens.add({targets:nc,alpha:0.3,duration:700,yoyo:true,repeat:-1});
+    }
+
+    // Items
+    this.physics.add.overlap(this.player,this.items,(p,item)=>{
+      let cx=item.x,cy=item.y; item.destroy();
+      this.fruits++;this.score+=10;
+      this.sTxt.setText(String(this.score).padStart(6,'0'));
+      this.fTxt.setText('x'+this.fruits);
+      let c=this.add.sprite(cx,cy,'collected',0);c.play('coll');c.on('animationcomplete',()=>c.destroy());
+      // Save score in cookie for server check
+      document.cookie='score='+this.score+';path=/';
+    });
+
+    // Enemies
+    this.physics.add.overlap(this.player,this.enemies,(p,en)=>{
+      if(p.body.velocity.y>0&&p.y<en.y-8){
+        en.destroy();p.setVelocityY(-280);
+        this.score+=100;this.sTxt.setText(String(this.score).padStart(6,'0'));
+        document.cookie='score='+this.score+';path=/';
+        let t=this.add.text(en.x,en.y-10,'+100',{fontSize:'11px',fontFamily:'monospace',color:'#ffd700'}).setOrigin(0.5);
+        this.tweens.add({targets:t,y:en.y-35,alpha:0,duration:500,onComplete:()=>t.destroy()});
+      } else this.die();
+    });
+
+    // Hazards
+    this.physics.add.overlap(this.player,this.hazards,()=>this.die());
+
+    // Flag
+    if(flagPos){
+      this.flagSpr=this.add.sprite(flagPos.x,flagPos.y,'flag_a',0).setScale(1);
+      this.flagSpr.play('af');
+      this.fZone=this.add.zone(flagPos.x,flagPos.y+10,50,60);
+      this.physics.world.enable(this.fZone);
+      this.fZone.body.setAllowGravity(false);
+      this.physics.add.overlap(this.player,this.fZone,()=>this.win());
+    }
+
+    // Controls
+    this.cur=this.input.keyboard.createCursorKeys();
+    this.k=this.input.keyboard.addKeys({z:'Z',q:'Q',s:'S',d:'D',space:'SPACE'});
+
+    // HUD
+    this.add.text(16,10,'SCORE',{fontSize:'8px',fontFamily:'monospace',color:'#fff'}).setScrollFactor(0).setDepth(100);
+    this.sTxt=this.add.text(16,20,'000000',{fontSize:'14px',fontFamily:'monospace',color:'#ffd700'}).setScrollFactor(0).setDepth(100);
+    let ci=this.add.sprite(130,26,'apple',0).setScrollFactor(0).setDepth(100).setScale(0.5);ci.play('fa');
+    this.fTxt=this.add.text(145,20,'x0',{fontSize:'12px',fontFamily:'monospace',color:'#ffd700'}).setScrollFactor(0).setDepth(100);
+    this.add.text(280,10,'WORLD 1-1',{fontSize:'8px',fontFamily:'monospace',color:'#fff'}).setScrollFactor(0).setDepth(100);
+    this.add.text(420,10,pName.toUpperCase(),{fontSize:'8px',fontFamily:'monospace',color:'#fff'}).setScrollFactor(0).setDepth(100);
+    this.lastDir=1;
+  }
+
+  update(t,dt){
+    if(this.dead||this.won)return;
+    const gnd=this.player.body.blocked.down;
+    let mov=false;
+
+    if(this.cur.left.isDown||this.k.q.isDown){this.player.setVelocityX(-SPD);this.player.setFlipX(true);this.lastDir=-1;mov=true}
+    else if(this.cur.right.isDown||this.k.d.isDown){this.player.setVelocityX(SPD);this.player.setFlipX(false);this.lastDir=1;mov=true}
+    else this.player.setVelocityX(0);
+
+    if((this.cur.up.isDown||this.k.z.isDown||this.k.space.isDown)&&gnd)this.player.setVelocityY(JMP);
+
+    // Anim
+    if(!gnd)this.player.play(this.player.body.velocity.y<0?'jump':'fall',true);
+    else if(mov){
+      this.player.play('run',true);
+      this.dustT+=dt;
+      if(this.dustT>100){this.dustT=0;let d=this.add.image(this.player.x-this.lastDir*6,this.player.y+12,'dust_p').setAlpha(0.6).setScale(0.7);this.tweens.add({targets:d,x:d.x-this.lastDir*10,y:d.y-5,alpha:0,scale:0,duration:200,onComplete:()=>d.destroy()})}
+    } else this.player.play('idle',true);
+
+    // Enemies patrol - check for edges
+    this.enemies.getChildren().slice().forEach(en=>{
+      if(!en.active)return;
+      if(en.y>650){en.destroy();return}
+      // Reverse on wall hit
+      if(en.body.blocked.left||en.body.blocked.right){en.dir*=-1;en.setVelocityX(65*en.dir)}
+      // Check for ground ahead - cast a ray down in front of enemy
+      let checkX = en.x + (en.dir * 20);
+      let checkY = en.y + 20;
+      let hasGround = false;
+      this.plats.getChildren().forEach(p=>{
+        if(Math.abs(p.x-checkX)<18 && Math.abs(p.y-checkY)<24) hasGround=true;
+      });
+      if(!hasGround && en.body.blocked.down){
+        en.dir*=-1;
+        en.setVelocityX(65*en.dir);
+      }
+      en.setFlipX(en.body.velocity.x<0);
+    });
+
+    if(this.player.y>650)this.die();
+
+    // Score threshold animation
+    if(this.score>=1000 && !this.scoreReached){
+      this.scoreReached=true;
+      this.cameras.main.flash(500,0,255,65);
+      let bg=this.add.rectangle(640,300,500,120,0x000000,0.85).setScrollFactor(0).setDepth(200);
+      let t1=this.add.text(640,280,'SCORE NECESSAIRE',{fontSize:'22px',fontFamily:'Orbitron',color:'#00ff41',stroke:'#000',strokeThickness:3}).setOrigin(0.5).setScrollFactor(0).setDepth(201);
+      let t2=this.add.text(640,310,'COLLECTED !',{fontSize:'28px',fontFamily:'Orbitron',color:'#ffd700',stroke:'#000',strokeThickness:3}).setOrigin(0.5).setScrollFactor(0).setDepth(201);
+      this.time.delayedCall(3000,()=>{
+        this.tweens.add({targets:[bg,t1,t2],alpha:0,duration:500,onComplete:()=>{bg.destroy();t1.destroy();t2.destroy()}});
+      });
+    }
+
+    // Parallax
+    if(this.bgTile)this.bgTile.tilePositionX=this.cameras.main.scrollX*0.1;
+  }
+
+  die(){
+    if(this.dead)return;this.dead=true;
+    this.player.play('hit');this.player.setVelocityX(0);this.player.setVelocityY(-300);
+    this.player.body.checkCollision.none=true;
+    this.time.delayedCall(1500,()=>this.scene.start('Over',{score:this.score,fruits:this.fruits}));
+  }
+
+  win(){
+    if(this.won)return;this.won=true;
+    this.player.setVelocity(0,0);
+    document.cookie='score='+this.score+';path=/';
+    let dp=this.add.sprite(this.player.x,this.player.y,'p_disappear',0).setScale(0.5);
+    dp.play('disappear');this.player.setVisible(false);
+    for(let i=0;i<25;i++)this.time.delayedCall(i*80,()=>{
+      let fw=this.add.circle(this.flagSpr.x+Phaser.Math.Between(-70,70),this.flagSpr.y+Phaser.Math.Between(-50,30),Phaser.Math.Between(3,6),Phaser.Math.Between(0,0xffffff));
+      this.tweens.add({targets:fw,alpha:0,scale:3,duration:400,onComplete:()=>fw.destroy()});
+    });
+    this.time.delayedCall(2200,()=>this.scene.start('Win',{score:this.score,fruits:this.fruits}));
+  }
+}
+
+class OverScene extends Phaser.Scene {
+  constructor(){super('Over')}
+  create(d){
+    this.cameras.main.setBackgroundColor('#1a0505');
+    this.add.text(640,130,'GAME OVER',{fontSize:'50px',fontFamily:'monospace',color:'#e74c3c',stroke:'#000',strokeThickness:4}).setOrigin(0.5);
+    this.add.text(640,200,'Score: '+(d.score||0),{fontSize:'18px',fontFamily:'monospace',color:'#ffd700'}).setOrigin(0.5);
+    this.add.text(640,230,'Fruits: '+(d.fruits||0)+' / '+totalFruits,{fontSize:'13px',fontFamily:'monospace',color:'#f1c40f'}).setOrigin(0.5);
+    this.add.text(640,290,'Ces murs rouges sont infranchissables...',{fontSize:'11px',fontFamily:'monospace',color:'#666'}).setOrigin(0.5);
+    let b=this.add.text(640,400,'[ RECOMMENCER ]',{fontSize:'18px',fontFamily:'monospace',color:'#27ae60',backgroundColor:'#0a1a0a',padding:{x:14,y:7}}).setOrigin(0.5).setInteractive({useHandCursor:true});
+    b.on('pointerover',()=>b.setColor('#2ecc71'));b.on('pointerout',()=>b.setColor('#27ae60'));
+    b.on('pointerdown',()=>this.scene.start('Game'));
+    this.input.keyboard.on('keydown-ENTER',()=>this.scene.start('Game'));
+    this.input.keyboard.on('keydown-SPACE',()=>this.scene.start('Game'));
+  }
+}
+
+class WinScene extends Phaser.Scene {
+  constructor(){super('Win')}
+  create(d){
+    this.cameras.main.setBackgroundColor('#050a14');
+    fetch('/api/victory').then(r=>r.json()).then(res=>{
+      if(res.success){
+        this.add.text(640,90,'VICTOIRE !',{fontSize:'44px',fontFamily:'monospace',color:'#f1c40f',stroke:'#000',strokeThickness:4}).setOrigin(0.5);
+        this.add.text(640,155,res.message,{fontSize:'13px',fontFamily:'monospace',color:'#27ae60'}).setOrigin(0.5);
+        this.add.text(640,200,'FLAG:',{fontSize:'11px',fontFamily:'monospace',color:'#888'}).setOrigin(0.5);
+        this.add.text(640,230,res.flag,{fontSize:'18px',fontFamily:'monospace',color:'#00ff41',backgroundColor:'#0a0a0a',padding:{x:10,y:5}}).setOrigin(0.5);
+        this.add.text(640,280,'Score: '+(d.score||0)+' | Fruits: '+(d.fruits||0),{fontSize:'13px',fontFamily:'monospace',color:'#ffd700'}).setOrigin(0.5);
+        this.time.addEvent({delay:250,repeat:40,callback:()=>{
+          let cx=Phaser.Math.Between(200,1080),cy=Phaser.Math.Between(50,350);
+          for(let i=0;i<6;i++){let p=this.add.circle(cx,cy,3,Phaser.Math.Between(0,0xffffff));this.tweens.add({targets:p,x:cx+Phaser.Math.Between(-50,50),y:cy+Phaser.Math.Between(-50,50),alpha:0,scale:0,duration:500,onComplete:()=>p.destroy()})}
+        }});
+      } else {
+        this.add.text(640,170,'PRESQUE...',{fontSize:'38px',fontFamily:'monospace',color:'#e74c3c'}).setOrigin(0.5);
+        this.add.text(640,240,res.message,{fontSize:'13px',fontFamily:'monospace',color:'#888'}).setOrigin(0.5);
+        this.add.text(640,275,'Le serveur ne vous reconnait pas.',{fontSize:'11px',fontFamily:'monospace',color:'#555'}).setOrigin(0.5);
+      }
+    }).catch(()=>this.add.text(640,200,'Erreur serveur',{fontSize:'18px',fontFamily:'monospace',color:'#e74c3c'}).setOrigin(0.5));
+    let b=this.add.text(640,400,'[ REJOUER ]',{fontSize:'16px',fontFamily:'monospace',color:'#3498db',backgroundColor:'#050a1a',padding:{x:14,y:7}}).setOrigin(0.5).setInteractive({useHandCursor:true});
+    b.on('pointerover',()=>b.setColor('#5dade2'));b.on('pointerout',()=>b.setColor('#3498db'));b.on('pointerdown',()=>this.scene.start('Game'));
+  }
+}
+
+new Phaser.Game({
+  type:Phaser.AUTO,width:1280,height:600,pixelArt:true,backgroundColor:'#3a2a1a',
+  physics:{default:'arcade',arcade:{gravity:{y:GRAV},debug:false}},
+  scene:[BootScene,MenuScene,GameScene,OverScene,WinScene],
+  scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH}
+});
+</script>
+</body>
+</html>

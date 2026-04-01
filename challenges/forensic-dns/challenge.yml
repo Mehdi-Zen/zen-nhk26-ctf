@@ -1,0 +1,34 @@
+name: "Sky of Packets"
+author: "Twistyle"
+category: Forensic                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  L’observatoire Galileo surveille le ciel… mais cette fois, la menace ne venait pas des étoiles.
+
+  Une analyse de routine du trafic réseau a révélé une activité inhabituelle, subtilement dissimulée au cœur d’échanges parfaitement légitimes. Rien de flagrant, rien d’évident, seulement une intuition : quelque chose a quitté le réseau sans autorisation.
+
+  Votre mission est simple en apparence : comprendre ce qui a été exfiltré.
+  Mais ici, chaque paquet compte, et la vérité se cache dans les détails que l’on ne regarde jamais.
+
+  Bonne chasse.
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - FORENSIC
+
+files:
+   - files/galileo_capture.pcap
+
+flags:
+  - flag: "NHK26{galileo_was_listening_to_the_dns}"
+    type: static

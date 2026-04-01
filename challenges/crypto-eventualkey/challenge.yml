@@ -1,0 +1,33 @@
+name: "Eventual Key"
+author: "Twistyle"
+category: Crypto                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Une version numérique du Philosophiæ Naturalis Principia Mathematica de Isaac Newton a
+  été retrouvée sur un serveur ancien.
+  Plusieurs extraits ont été chiffrés pour éviter toute modification…
+  Malheureusement, le développeur a utilisé AES en mode CTR avec le même compteur pour
+  tous les extraits.
+
+value: 500                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : hidden                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                   # Minimum
+
+tags:
+  - DIFFICILE
+  - CRYPTO
+
+files:
+   - files/principia_english.enc
+   - files/principia_latin.enc
+
+flags:
+  - flag: "NHK26{CTR_MODE_NONCE_REUSE_BREAKS_SECURITY}"
+    type: static

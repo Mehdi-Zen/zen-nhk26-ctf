@@ -1,0 +1,53 @@
+# TEMPLATE: Challenge First Blood (bonus pour les premiers)
+# Dossier: categorie-nom (ex: pwn-exploit)
+
+name: "Nom du Challenge"
+author: "TonPseudo"
+category: Misc                   # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+  Description du challenge.
+  Supporte le **markdown**.
+
+# Points: voir document de Camille
+value: 500
+type: firstblood
+state: visible
+
+extra:
+  initial: 500                   # = value
+  decay: 25
+  minimum: 250                   # ~50% de initial
+
+# Bonus pour les premiers solvers
+first_blood_bonus:
+  - 100                          # 1er
+  - 50                           # 2eme
+  - 25                           # 3eme
+
+flags:
+  - flag: "NHK26{your_flag_here}"
+    type: static
+
+# Premier tag = difficulte, deuxieme = FIRST BLOOD (OBLIGATOIRE)
+tags:
+  - DIFFICILE
+  - FIRST BLOOD
+
+# Optionnel
+files:
+  - files/challenge.zip
+
+# Cout des indices: voir document de Camille
+hints:
+  - content: "Premier indice"
+    cost: 0
+
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

@@ -1,0 +1,70 @@
+{% extends "admin/challenges/create.html" %}
+
+{% block header %}
+<div class="alert alert-secondary" role="alert">
+	First Blood challenges combine dynamic scoring with bonus points for the first N solvers.<br>
+	The challenge value decreases as more people solve it, plus bonus awards for early solvers.<br>
+	<a href="https://github.com/krzys-h/CTFd_first_blood">https://github.com/krzys-h/CTFd_first_blood</a>
+</div>
+{% endblock %}
+
+
+{% block value %}
+<div class="form-group">
+	<label for="value">Initial Value<br>
+		<small class="form-text text-muted">
+			This is how many points the challenge is worth initially.
+		</small>
+	</label>
+	<input type="number" class="form-control" name="initial" placeholder="Enter initial value" required>
+</div>
+
+<div class="form-group">
+	<label for="value">Decay Function<br>
+		<small class="form-text text-muted">
+			<span>How the dynamic value will be calculated based on the Decay value</span>
+			<ul>
+				<li>Linear: Calculated as <code>Initial - (Decay * SolveCount)</code></li>
+				<li>Logarithmic: Calculated as <code>(((Minimum - Initial) / (Decay^2)) * (SolveCount^2)) + Initial</code></li>
+			</ul>
+		</small>
+	</label>
+	<select name="function" class="custom-select">
+		<option value="logarithmic">Logarithmic</option>
+		<option value="linear">Linear</option>
+	</select>
+</div>
+
+<div class="form-group">
+	<label for="value">Decay<br>
+		<small class="form-text text-muted">
+			<span>The decay value is used differently depending on the above Decay Function</span>
+			<ul>
+				<li>Linear: The amount of points deducted per solve. Equal deduction per solve.</li>
+				<li>Logarithmic: The amount of solves before the challenge reaches its minimum value.</li>
+			</ul>
+		</small>
+	</label>
+	<input type="number" class="form-control" name="decay" min="1" placeholder="Enter Decay value" required>
+</div>
+
+<div class="form-group">
+	<label for="value">Minimum Value<br>
+		<small class="form-text text-muted">
+			This is the lowest that the challenge can be worth
+		</small>
+	</label>
+	<input type="number" class="form-control" name="minimum" placeholder="Enter minimum value" required>
+</div>
+
+<hr>
+<h5>First Blood Bonuses</h5>
+<p class="text-muted">Bonus points awarded to early solvers (added as Awards, on top of challenge points)</p>
+
+<div class="bonus-points">
+</div>
+{% endblock %}
+
+{% block type %}
+<input type="hidden" value="firstblood" name="type" id="chaltype">
+{% endblock %}

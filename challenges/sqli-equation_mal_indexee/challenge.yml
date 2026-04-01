@@ -1,0 +1,35 @@
+name: L’équation mal indexée
+author: Luckm4n
+category: SQLi
+
+description_image: files/challenge.png
+
+description: |
+  Une application web historique gère des comptes et exécute des requêtes vers une base de données. Le dépôt public contient les parties du code qui construisent ces requêtes.
+  Explorez la logique d’authentification et d’autorisation pour identifier comment une requête mal construite peut être détournée afin d’accéder aux meilleurs scientifiques.
+
+value: 300        
+
+type: container
+
+image: registry.gitlab.com/nhk/sqli-equation_mal_indexee:latest # à MODIFIER
+port: 5000
+protocol: web
+state : visible
+
+extra:
+  initial: 300                   
+  decay: 13       # à MODIFIER
+  minimum: 100                   
+
+tags:
+  - MOYEN
+  - SQLI
+
+flags:
+  - flag: "NHK26{N0SQL_1NJ3CT_2_F1ND0N3_8C9A}"
+    type: static
+
+hints:
+  - content: "r********_admin"
+    cost: 25

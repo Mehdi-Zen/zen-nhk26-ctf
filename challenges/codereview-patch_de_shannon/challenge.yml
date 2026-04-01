@@ -1,0 +1,47 @@
+# TEMPLATE: Challenge sans Docker (Crypto, Forensic, OSINT, etc.)
+# Dossier: categorie-nom (ex: crypto-caesar)
+
+name: "Patch de Shannon"
+author: "Valou"
+category: Code Review                 # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+
+  En naviguant sur le web, vous tombez sur un code partagé sur un forum technique par un utilisateur du nom de Claude_Shannon. 
+
+  D’après son auteur, ce programme est censé afficher un message, mais actuellement le résultat généré n'est pas ce qui est prévu.
+  
+  Votre but est le suivant : modifier le code afin de trouver le flag.
+
+value: 300
+type: dynamic
+state: hidden
+
+extra:
+  initial: 300                   # = value
+  decay: 13
+  minimum: 100                    # ~50% de initial
+
+flags:
+  - flag: "NHK26{r314710N_D3_5H4NN0N}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - MOYEN
+  - CODE REVIEW 
+
+# Fichiers donnes aux participants
+#files:
+ # - files/message.txt
+
+# Optionnel - cout des indices: voir document de Camille
+
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

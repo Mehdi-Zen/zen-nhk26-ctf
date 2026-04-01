@@ -1,0 +1,31 @@
+name: "What's up Watson"
+author: "Kisane"
+category: Forensic                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Un stagiaire peu scrupuleux a construit une image Docker contenant des données sensibles d'une enquête de Watson avec la clé adn. Pour masquer ses traces, il a caché les deux parties...
+
+value: 500                       # Voir document de Camille
+type: dynamic
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300
+
+tags:
+  - DIFFICILE
+  - FORENSIC
+
+flags:
+  - flag: "NHK26{gg_j@m3s_w@tson_adn}"
+    type: static
+
+files:
+  - files/watson_final_forensics.tar
+
+hints:
+  - content: "la clé est adn"
+    cost: 80

@@ -1,0 +1,2974 @@
+// ============================================
+// CYBERNOIR - A Cyberpunk Noir Theme for CTFd
+// Dark, moody, neon-infused aesthetics
+// ============================================
+
+// Import Bootstrap FIRST with customizations (required before any other rules)
+@use "bootstrap/scss/bootstrap" as * with (
+  $primary: #00fff5,
+  $secondary: #1a1a28,
+  $success: #00ff41,
+  $danger: #f50057,
+  $warning: #ff6b00,
+  $info: #00a8ff,
+  $dark: #0a0a0f,
+  $light: #e0e0ff,
+  $body-bg: #050508,
+  $body-color: #e0e0ff,
+  $link-color: #00fff5,
+  $card-bg: #12121a,
+  $card-border-color: #2a2a3a,
+  $modal-content-bg: #12121a,
+  $modal-content-border-color: #00fff5,
+  $input-bg: #080810,
+  $input-border-color: #2a2a3a,
+  $input-color: #e0e0ff,
+  $input-focus-border-color: #00fff5,
+  $btn-border-radius: 0,
+  $card-border-radius: 0,
+  $input-border-radius: 0,
+  $modal-content-border-radius: 0,
+  $navbar-dark-color: #e0e0ff,
+  $navbar-dark-hover-color: #00fff5,
+  $navbar-dark-active-color: #00fff5,
+  $table-color: #e0e0ff,
+  $table-bg: transparent
+);
+
+// Import fonts (after @use)
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+// Import Font Awesome
+$fa-font-path: "../webfonts";
+@import "~/@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~/@fortawesome/fontawesome-free/scss/solid.scss";
+@import "~/@fortawesome/fontawesome-free/scss/brands.scss";
+
+// ============================================
+// COLOR PALETTE VARIABLES
+// ============================================
+$cyber-black: #050508;
+$cyber-dark: #0a0a0f;
+$cyber-darker: #080810;
+$cyber-surface: #12121a;
+$cyber-surface-light: #1a1a28;
+$cyber-border: #2a2a3a;
+
+$neon-cyan: #00fff5;
+$neon-magenta: #ff00ff;
+$neon-pink: #f50057;
+$neon-purple: #b366ff;
+$neon-green: #00ff41;
+$neon-orange: #ff6b00;
+$neon-blue: #00a8ff;
+$neon-yellow: #fff700;
+
+$text-primary: #e0e0ff;
+$text-secondary: #b0b0cc;
+$text-muted: #8a8aaa;
+
+// ============================================
+// KEYFRAME ANIMATIONS
+// ============================================
+
+@keyframes glitch {
+  0% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(-2px, 2px);
+  }
+  20% {
+    clip-path: inset(92% 0 1% 0);
+    transform: translate(2px, -2px);
+  }
+  40% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(-2px, 2px);
+  }
+  60% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(2px, -2px);
+  }
+  80% {
+    clip-path: inset(54% 0 7% 0);
+    transform: translate(-2px, 2px);
+  }
+  100% {
+    clip-path: inset(58% 0 43% 0);
+    transform: translate(2px, -2px);
+  }
+}
+
+@keyframes glitch-skew {
+  0% { transform: skew(0deg); }
+  10% { transform: skew(-2deg); }
+  20% { transform: skew(2deg); }
+  30% { transform: skew(0deg); }
+  40% { transform: skew(-1deg); }
+  50% { transform: skew(1deg); }
+  60% { transform: skew(0deg); }
+  70% { transform: skew(-2deg); }
+  80% { transform: skew(2deg); }
+  90% { transform: skew(1deg); }
+  100% { transform: skew(0deg); }
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes border-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 5px $neon-cyan,
+      inset 0 0 5px rgba($neon-cyan, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 15px $neon-cyan,
+      0 0 30px rgba($neon-cyan, 0.5),
+      inset 0 0 10px rgba($neon-cyan, 0.2);
+  }
+}
+
+// ============================================
+// BASE STYLES
+// ============================================
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  background: $cyber-black;
+  color: $text-primary;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+
+  // CRT scan lines effect
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  // Subtle noise texture
+  &::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 9998;
+  }
+}
+
+// Main content - sticky footer support
+main[role="main"] {
+  flex: 1;
+}
+
+// ============================================
+// TYPOGRAPHY
+// ============================================
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: $text-primary;
+}
+
+h1 {
+  font-size: 2.5rem;
+  position: relative;
+  display: inline-block;
+
+  &:hover {
+    animation: glitch-skew 0.5s infinite linear alternate-reverse;
+
+    &::before,
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    &::before {
+      color: $neon-cyan;
+      animation: glitch 0.3s infinite linear alternate-reverse;
+      z-index: -1;
+    }
+
+    &::after {
+      color: $neon-magenta;
+      animation: glitch 0.3s infinite linear alternate-reverse;
+      animation-delay: 0.15s;
+      z-index: -2;
+    }
+  }
+}
+
+code, pre, .mono {
+  font-family: 'Share Tech Mono', 'Consolas', monospace;
+}
+
+a {
+  text-decoration: none !important;
+  color: $neon-cyan;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: $neon-magenta;
+    text-shadow: 0 0 10px $neon-magenta;
+  }
+}
+
+// ============================================
+// NAVBAR
+// ============================================
+
+.navbar {
+  background: linear-gradient(180deg, rgba($cyber-dark, 0.98) 0%, rgba($cyber-black, 0.95) 100%) !important;
+  border-bottom: 1px solid $neon-cyan;
+  box-shadow: 0 0 20px rgba($neon-cyan, 0.3);
+  backdrop-filter: blur(10px);
+  padding: 1rem 0;
+  min-height: 70px;
+
+  // Élargir le container de la navbar
+  > .container {
+    max-width: 1600px;
+  }
+
+  .navbar-collapse {
+    @media (min-width: 768px) {
+      justify-content: space-between !important;
+
+      .navbar-nav:first-of-type {
+        margin-right: auto;
+      }
+
+      .navbar-nav:last-of-type {
+        margin-left: auto;
+        gap: 0.25rem;
+      }
+    }
+  }
+
+  // Réduire légèrement la taille des items sur écrans moyens
+  @media (min-width: 768px) and (max-width: 1200px) {
+    .nav-link {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+      font-size: 0.85rem !important;
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent,
+      $neon-cyan 20%,
+      $neon-magenta 50%,
+      $neon-cyan 80%,
+      transparent
+    );
+    animation: neon-pulse 2s infinite;
+  }
+
+  .navbar-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: $neon-cyan !important;
+    text-shadow:
+      0 0 10px $neon-cyan,
+      0 0 20px rgba($neon-cyan, 0.5);
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: $neon-magenta !important;
+      text-shadow:
+        0 0 10px $neon-magenta,
+        0 0 20px rgba($neon-magenta, 0.5),
+        0 0 40px rgba($neon-magenta, 0.3);
+    }
+
+    .ctf_logo {
+      filter: drop-shadow(0 0 10px $neon-cyan);
+      transition: filter 0.3s ease;
+
+      &:hover {
+        filter: drop-shadow(0 0 20px $neon-magenta);
+      }
+    }
+  }
+
+  .nav-link {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: $text-secondary !important;
+    padding: 0.5rem 1rem !important;
+    position: relative;
+    transition: all 0.3s ease;
+    display: flex !important;
+    align-items: center;
+    white-space: nowrap;
+
+    // Ensure all text and icons are visible and inline
+    span, i {
+      color: inherit !important;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: $neon-cyan;
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+      box-shadow: 0 0 10px $neon-cyan;
+    }
+
+    &:hover {
+      color: $neon-cyan !important;
+      text-shadow: 0 0 10px $neon-cyan;
+
+      span, i {
+        color: $neon-cyan !important;
+      }
+
+      &::before {
+        width: 80%;
+      }
+    }
+
+    &.active {
+      color: $neon-cyan !important;
+
+      &::before {
+        width: 100%;
+      }
+    }
+
+    i {
+      margin-right: 0.3rem;
+      color: $text-secondary;
+    }
+  }
+
+  // Ensure buttons in navbar are visible
+  button.nav-link {
+    background: transparent !important;
+    border: none !important;
+    color: $text-secondary !important;
+
+    &:hover {
+      color: $neon-cyan !important;
+    }
+  }
+
+  .navbar-toggler {
+    border: 1px solid $neon-cyan;
+    padding: 0.5rem;
+
+    &:focus {
+      box-shadow: 0 0 15px $neon-cyan;
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%2300fff5' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+  }
+
+  .dropdown-menu {
+    background: $cyber-surface;
+    border: 1px solid $neon-cyan;
+    box-shadow:
+      0 0 20px rgba($neon-cyan, 0.3),
+      inset 0 0 20px rgba($neon-cyan, 0.05);
+
+    .dropdown-item {
+      color: $text-primary;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba($neon-cyan, 0.1);
+        color: $neon-cyan;
+      }
+
+      &.bg-primary {
+        background: $neon-cyan !important;
+        color: $cyber-black !important;
+      }
+    }
+  }
+}
+
+// ============================================
+// JUMBOTRON / HERO
+// ============================================
+
+.jumbotron {
+  background: linear-gradient(
+    135deg,
+    $cyber-dark 0%,
+    rgba($neon-cyan, 0.05) 50%,
+    $cyber-darker 100%
+  );
+  border-bottom: 1px solid rgba($neon-cyan, 0.3);
+  padding: 5rem 0 4rem;
+  margin-top: 56px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      linear-gradient(rgba($neon-cyan, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba($neon-cyan, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 200%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba($neon-cyan, 0.1) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: $text-primary;
+    text-shadow:
+      0 0 10px rgba($neon-cyan, 0.5),
+      0 0 30px rgba($neon-cyan, 0.3);
+    position: relative;
+    z-index: 1;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      height: 2px;
+      width: 100px;
+      background: linear-gradient(90deg, transparent, $neon-cyan);
+      top: 50%;
+    }
+
+    &::before {
+      right: calc(100% + 30px);
+    }
+
+    &::after {
+      left: calc(100% + 30px);
+      background: linear-gradient(90deg, $neon-cyan, transparent);
+    }
+  }
+}
+
+// ============================================
+// CHALLENGES
+// ============================================
+
+// Loading Animation
+.cyber-loader {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+
+  .loader-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid transparent;
+    border-radius: 50%;
+
+    &:nth-child(1) {
+      border-top-color: $neon-cyan;
+      animation: spin 1.5s linear infinite;
+    }
+    &:nth-child(2) {
+      border-right-color: $neon-magenta;
+      animation: spin 2s linear infinite reverse;
+    }
+    &:nth-child(3) {
+      border-bottom-color: $neon-green;
+      animation: spin 2.5s linear infinite;
+    }
+  }
+
+  .loader-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: $neon-cyan;
+    font-size: 1.5rem;
+    animation: pulse 1s ease-in-out infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.loading-text {
+  font-family: 'Share Tech Mono', monospace;
+  color: $neon-cyan;
+  letter-spacing: 3px;
+  font-size: 0.9rem;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0.5; }
+}
+
+// Category Section
+.category-section {
+  margin-bottom: 3rem;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba($neon-magenta, 0.3);
+
+  .category-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($neon-magenta, 0.1);
+    border: 1px solid $neon-magenta;
+    color: $neon-magenta;
+    font-size: 1rem;
+  }
+
+  h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: $text-primary;
+    margin: 0;
+    flex: 1;
+  }
+
+  .category-count {
+    font-family: 'Share Tech Mono', monospace;
+    color: $neon-magenta;
+    font-size: 0.85rem;
+  }
+}
+
+// Challenge Grid
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+// Challenge Card
+.challenge-card {
+  position: relative;
+  background: $cyber-surface;
+  border: 1px solid $cyber-border;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  overflow: hidden;
+
+  .card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    background: radial-gradient(ellipse at center, rgba($neon-cyan, 0.15) 0%, transparent 70%);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .card-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $neon-cyan, $neon-magenta);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .card-content {
+    position: relative;
+    z-index: 1;
+    padding: 1.25rem;
+  }
+
+  .card-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    min-height: 24px;
+  }
+
+  .solve-indicator {
+    color: $neon-green;
+    font-size: 1rem;
+    text-shadow: 0 0 10px $neon-green;
+  }
+
+  .challenge-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-left: auto;
+    justify-content: flex-end;
+    max-width: 70%;
+  }
+
+  .difficulty-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 0.15rem 0.4rem;
+    border: 1px solid;
+    white-space: nowrap;
+
+    &.tag-intro {
+      color: $neon-blue;
+      border-color: rgba($neon-blue, 0.5);
+      background: rgba($neon-blue, 0.1);
+    }
+    &.tag-easy {
+      color: $neon-green;
+      border-color: rgba($neon-green, 0.5);
+      background: rgba($neon-green, 0.1);
+    }
+    &.tag-medium {
+      color: $neon-orange;
+      border-color: rgba($neon-orange, 0.5);
+      background: rgba($neon-orange, 0.1);
+    }
+    &.tag-hard {
+      color: $neon-pink;
+      border-color: rgba($neon-pink, 0.5);
+      background: rgba($neon-pink, 0.1);
+    }
+    &.tag-insane {
+      color: $neon-magenta;
+      border-color: rgba($neon-magenta, 0.5);
+      background: rgba($neon-magenta, 0.1);
+    }
+    &.tag-firstblood {
+      color: #ff2222;
+      border-color: rgba(#ff2222, 0.7);
+      background: rgba(#ff2222, 0.15);
+      animation: firstblood-pulse 2s ease-in-out infinite;
+    }
+    &.tag-tiroir {
+      color: #ffaa00;
+      border-color: rgba(#ffaa00, 0.7);
+      background: rgba(#ffaa00, 0.15);
+      animation: tiroir-pulse 3s ease-in-out infinite;
+    }
+  }
+
+  @keyframes firstblood-pulse {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(#ff2222, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 12px rgba(#ff2222, 0.6);
+    }
+  }
+
+  .challenge-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: $text-primary;
+    margin: 0 0 1rem 0;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+  }
+
+  .card-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .challenge-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.1rem;
+    color: $neon-cyan;
+
+    i {
+      font-size: 0.85rem;
+      margin-right: 0.3rem;
+      opacity: 0.7;
+    }
+  }
+
+  .challenge-arrow {
+    color: $text-muted;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+  }
+
+  &:hover {
+    border-color: $neon-cyan;
+    transform: translateY(-3px);
+
+    .card-glow { opacity: 1; }
+    .card-border { transform: scaleX(1); }
+    .challenge-name { color: $neon-cyan; }
+    .challenge-arrow {
+      color: $neon-cyan;
+      transform: translateX(3px);
+    }
+  }
+
+  &.solved {
+    border-color: rgba($neon-green, 0.5);
+    background: linear-gradient(135deg, $cyber-surface 0%, rgba($neon-green, 0.05) 100%);
+
+    .card-border {
+      background: $neon-green;
+      transform: scaleX(1);
+    }
+
+    .challenge-name { color: $neon-green; }
+    .challenge-value { color: $neon-green; }
+
+    &:hover {
+      border-color: $neon-green;
+      .card-glow {
+        background: radial-gradient(ellipse at center, rgba($neon-green, 0.15) 0%, transparent 70%);
+      }
+    }
+  }
+
+  // First Blood card style - red glow effect
+  &.firstblood-card {
+    border-color: rgba(#ff2222, 0.6);
+    background: linear-gradient(135deg, $cyber-surface 0%, rgba(#ff2222, 0.08) 100%);
+    animation: firstblood-card-pulse 2s ease-in-out infinite;
+
+    .card-border {
+      background: linear-gradient(90deg, #ff2222, #ff6644);
+      transform: scaleX(1);
+    }
+
+    .card-glow {
+      opacity: 0.5;
+      background: radial-gradient(ellipse at center, rgba(#ff2222, 0.2) 0%, transparent 70%);
+    }
+
+    &:hover {
+      border-color: #ff2222;
+      box-shadow: 0 0 20px rgba(#ff2222, 0.4);
+
+      .card-glow {
+        opacity: 1;
+        background: radial-gradient(ellipse at center, rgba(#ff2222, 0.25) 0%, transparent 70%);
+      }
+    }
+
+    // If solved AND firstblood, keep green check but red glow
+    &.solved {
+      border-color: rgba(#ff2222, 0.5);
+      background: linear-gradient(135deg, $cyber-surface 0%, rgba(#ff2222, 0.05) 100%);
+
+      .card-border {
+        background: linear-gradient(90deg, $neon-green, #ff2222);
+      }
+    }
+  }
+
+  @keyframes firstblood-card-pulse {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(#ff2222, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(#ff2222, 0.4);
+    }
+  }
+
+  // Tiroir (multi-part) card style - amber glow
+  &.tiroir-card {
+    border-color: rgba(#ffaa00, 0.4);
+    background: linear-gradient(135deg, $cyber-surface 0%, rgba(#ffaa00, 0.06) 100%);
+
+    .card-border {
+      background: linear-gradient(90deg, #ffaa00, #ff8800);
+      transform: scaleX(1);
+    }
+
+    .card-glow {
+      opacity: 0.4;
+      background: radial-gradient(ellipse at center, rgba(#ffaa00, 0.15) 0%, transparent 70%);
+    }
+
+    &:hover {
+      border-color: #ffaa00;
+      .card-glow {
+        opacity: 0.8;
+        background: radial-gradient(ellipse at center, rgba(#ffaa00, 0.2) 0%, transparent 70%);
+      }
+    }
+
+    &.solved {
+      border-color: rgba(#ffaa00, 0.3);
+      .card-border {
+        background: linear-gradient(90deg, $neon-green, #ffaa00);
+      }
+    }
+  }
+
+  @keyframes tiroir-pulse {
+    0%, 100% {
+      box-shadow: 0 0 3px rgba(#ffaa00, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 8px rgba(#ffaa00, 0.4);
+    }
+  }
+}
+
+// ============================================
+// MODALS
+// ============================================
+
+.modal {
+  .modal-dialog {
+    max-width: 650px;
+  }
+
+  .cyber-modal {
+    background: $cyber-surface;
+    border: 1px solid rgba($neon-cyan, 0.5);
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+
+    .modal-glow {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at center, rgba($neon-cyan, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .modal-scanlines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+      );
+      pointer-events: none;
+      opacity: 0.3;
+    }
+  }
+
+  .modal-body {
+    position: relative;
+    z-index: 1;
+    padding: 2rem;
+  }
+
+  .cyber-close,
+  .btn-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent !important;
+    background-image: none !important;
+    border: 1px solid $cyber-border;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+    opacity: 1;
+
+    // Custom X icon using pseudo-elements
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 16px;
+      height: 2px;
+      background: $text-muted;
+      transition: background 0.2s ease;
+    }
+
+    &::before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    &:hover {
+      border-color: $neon-pink;
+      box-shadow: 0 0 15px rgba($neon-pink, 0.3);
+
+      &::before,
+      &::after {
+        background: $neon-pink;
+      }
+    }
+
+    &:focus {
+      box-shadow: 0 0 10px rgba($neon-cyan, 0.3);
+      outline: none;
+    }
+  }
+
+  // Challenge Header
+  .challenge-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid $cyber-border;
+  }
+
+  .challenge-category-badge {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: $neon-magenta;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba($neon-magenta, 0.5);
+    background: rgba($neon-magenta, 0.1);
+    margin-bottom: 1rem;
+  }
+
+  .challenge-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    color: $neon-cyan;
+    text-shadow: 0 0 20px rgba($neon-cyan, 0.3);
+    margin: 0 0 1rem 0;
+  }
+
+  .challenge-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+
+    .challenge-points {
+      color: $neon-cyan;
+      i { margin-right: 0.3rem; }
+    }
+
+    .challenge-solves-count {
+      color: $text-muted;
+      i { margin-right: 0.3rem; }
+    }
+  }
+
+  .challenge-tags-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+
+    .tag-pill {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      color: $text-secondary;
+      padding: 0.25rem 0.6rem;
+      background: rgba($cyber-border, 0.5);
+      border: 1px solid $cyber-border;
+    }
+  }
+
+  // Tabs - Bootstrap nav-tabs with cybernoir styling
+  .cyber-tabs {
+    border-bottom: 1px solid $cyber-border !important;
+    margin-bottom: 1.5rem;
+
+    .nav-item {
+      margin-bottom: -1px;
+    }
+
+    .nav-link {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: $text-muted;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 0;
+
+      &:hover {
+        color: $text-primary;
+        border-color: transparent;
+      }
+
+      &.active {
+        color: $neon-cyan;
+        background: transparent;
+        border-color: transparent;
+        border-bottom-color: $neon-cyan;
+      }
+    }
+  }
+
+  // Fallback for nav-tabs without cyber-tabs class
+  .nav-tabs {
+    border-bottom-color: $cyber-border;
+
+    .nav-link {
+      color: $text-muted;
+      border-radius: 0;
+
+      &:hover {
+        color: $text-primary;
+        border-color: transparent;
+      }
+
+      &.active {
+        color: $neon-cyan;
+        background: transparent;
+        border-color: transparent transparent $neon-cyan transparent;
+      }
+    }
+  }
+
+  // Challenge Description
+  .challenge-description {
+    color: $text-secondary;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+
+    p { margin-bottom: 1rem; }
+    code {
+      background: $cyber-darker;
+      padding: 0.2rem 0.5rem;
+      color: $neon-cyan;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    pre {
+      background: $cyber-darker;
+      padding: 1rem;
+      border: 1px solid $cyber-border;
+      overflow-x: auto;
+    }
+    a {
+      color: $neon-cyan;
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  // Info Blocks
+  .info-block {
+    margin-bottom: 1.5rem;
+    background: rgba($cyber-darker, 0.5);
+    border: 1px solid $cyber-border;
+  }
+
+  .info-header {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: $neon-cyan;
+    padding: 0.6rem 1rem;
+    background: rgba($neon-cyan, 0.05);
+    border-bottom: 1px solid $cyber-border;
+
+    i { margin-right: 0.5rem; }
+  }
+
+  .info-content {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .connection-code {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.95rem;
+    color: $neon-green;
+    flex: 1;
+  }
+
+  .connection-link {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    color: $neon-cyan;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+
+  .copy-btn {
+    background: transparent;
+    border: 1px solid $cyber-border;
+    color: $text-muted;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $neon-cyan;
+      color: $neon-cyan;
+    }
+  }
+
+  // Files
+  .files-grid {
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .file-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: $neon-cyan;
+    background: transparent;
+    border: 1px solid rgba($neon-cyan, 0.3);
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    max-width: 200px;
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &:hover {
+      background: rgba($neon-cyan, 0.1);
+      border-color: $neon-cyan;
+      color: $neon-cyan;
+    }
+  }
+
+  // Hints
+  .hints-list {
+    padding: 1rem;
+  }
+
+  .hint-item {
+    margin-bottom: 0.5rem;
+
+    &:last-child { margin-bottom: 0; }
+  }
+
+  .hint-details {
+    border: 1px solid $cyber-border;
+
+    summary {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      color: $text-secondary;
+      transition: all 0.2s ease;
+
+      i { margin-right: 0.5rem; }
+
+      &:hover {
+        background: rgba($cyber-border, 0.3);
+      }
+    }
+
+    &.unlocked summary {
+      color: $neon-green;
+      i { color: $neon-green; }
+    }
+
+    &.locked summary {
+      color: $neon-orange;
+      i { color: $neon-orange; }
+    }
+
+    .hint-cost {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .hint-content {
+      padding: 1rem;
+      border-top: 1px solid $cyber-border;
+      background: rgba($cyber-darker, 0.5);
+      color: $text-secondary;
+      line-height: 1.6;
+    }
+  }
+
+  // Attempts
+  .attempts-info {
+    text-align: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.85rem;
+    color: $text-muted;
+    margin-bottom: 1.5rem;
+
+    i { margin-right: 0.5rem; color: $neon-orange; }
+  }
+
+  // Submit Section
+  .submit-section {
+    margin-top: 1.5rem;
+  }
+
+  .submit-input-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+
+    @media (min-width: 576px) {
+      flex-wrap: nowrap;
+    }
+  }
+
+  .input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    border: 1px solid $cyber-border;
+    background: $cyber-darker;
+    min-width: 200px;
+
+    &:focus-within {
+      border-color: $neon-cyan;
+      box-shadow: 0 0 15px rgba($neon-cyan, 0.2);
+    }
+  }
+
+  .input-prefix {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: $neon-cyan;
+    padding: 0 0.75rem;
+    display: flex;
+    align-items: center;
+    background: rgba($neon-cyan, 0.05);
+    border-right: 1px solid $cyber-border;
+  }
+
+  .challenge-input {
+    flex: 1;
+    background: transparent !important;
+    border: none !important;
+    color: $text-primary !important;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.95rem;
+    padding: 0.75rem 1rem !important;
+    box-shadow: none !important;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+  }
+
+  .submit-btn {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: $cyber-dark;
+    background: $neon-cyan;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    i { margin-right: 0.5rem; }
+
+    &:hover {
+      background: lighten($neon-cyan, 10%);
+      box-shadow: 0 0 20px rgba($neon-cyan, 0.5);
+    }
+  }
+
+  // Response Alerts
+  .notification-row {
+    margin-top: 1.5rem;
+  }
+
+  .response-alert {
+    padding: 1rem 1.25rem;
+    text-align: center;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+
+    .alert-icon {
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+    }
+
+    &.alert-correct {
+      background: rgba($neon-green, 0.1);
+      border: 1px solid $neon-green;
+      color: $neon-green;
+    }
+
+    &.alert-already {
+      background: rgba($neon-blue, 0.1);
+      border: 1px solid $neon-blue;
+      color: $neon-blue;
+    }
+
+    &.alert-incorrect {
+      background: rgba($neon-pink, 0.1);
+      border: 1px solid $neon-pink;
+      color: $neon-pink;
+    }
+
+    &.alert-paused {
+      background: rgba($neon-orange, 0.1);
+      border: 1px solid $neon-orange;
+      color: $neon-orange;
+    }
+  }
+
+  .success-actions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .next-btn {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: $neon-cyan;
+    background: transparent;
+    border: 1px solid $neon-cyan;
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    i { margin-right: 0.5rem; }
+
+    &:hover {
+      background: rgba($neon-cyan, 0.1);
+    }
+  }
+
+  // Share Section
+  .share-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .share-btn {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    color: $text-secondary;
+    background: transparent;
+    border: 1px solid $cyber-border;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $text-secondary;
+    }
+  }
+
+  .share-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .share-icon-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $text-muted;
+    background: transparent;
+    border: 1px solid $cyber-border;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: $neon-cyan;
+      border-color: $neon-cyan;
+    }
+  }
+
+  // Rating Section
+  .rating-section {
+    text-align: center;
+  }
+
+  .rating-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    color: $text-muted;
+    margin-bottom: 0.75rem;
+  }
+
+  .rating-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .rate-btn {
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border: 1px solid $cyber-border;
+    color: $text-muted;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.rate-up:hover, &.rate-up.active {
+      border-color: $neon-green;
+      color: $neon-green;
+      background: rgba($neon-green, 0.1);
+    }
+
+    &.rate-down:hover, &.rate-down.active {
+      border-color: $neon-pink;
+      color: $neon-pink;
+      background: rgba($neon-pink, 0.1);
+    }
+  }
+
+  .rating-review {
+    width: 100%;
+    background: $cyber-darker;
+    border: 1px solid $cyber-border;
+    color: $text-primary;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.75rem;
+    resize: vertical;
+    margin-bottom: 1rem;
+
+    &:focus {
+      outline: none;
+      border-color: $neon-cyan;
+    }
+  }
+
+  .rating-submit {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    color: $text-primary;
+    background: transparent;
+    border: 1px solid $neon-cyan;
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background: rgba($neon-cyan, 0.1);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .rating-thanks {
+    margin-top: 0.75rem;
+    color: $neon-green;
+    font-size: 0.9rem;
+  }
+
+  // Tables
+  .cyber-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid $cyber-border;
+    }
+
+    th {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: $neon-cyan;
+      background: rgba($neon-cyan, 0.05);
+    }
+
+    td {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      color: $text-secondary;
+    }
+
+    code {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      color: $text-muted;
+    }
+
+    .reveal-btn {
+      background: transparent;
+      border: none;
+      color: $text-muted;
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+      margin-left: 0.5rem;
+
+      &:hover { color: $neon-cyan; }
+    }
+
+    .type-badge {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      background: rgba($cyber-border, 0.5);
+    }
+
+    .solver-link {
+      color: $neon-cyan;
+      text-decoration: none;
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  // Solution Content
+  .solution-content {
+    padding: 1rem 0;
+    color: $text-secondary;
+    line-height: 1.8;
+
+    pre {
+      background: $cyber-darker;
+      padding: 1rem;
+      border: 1px solid $cyber-border;
+      overflow-x: auto;
+    }
+  }
+
+  // Challenge Header (core theme structure)
+  .challenge-name {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    color: $neon-cyan;
+    text-shadow: 0 0 20px rgba($neon-cyan, 0.3);
+  }
+
+  .challenge-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.2rem;
+    color: $neon-magenta;
+  }
+
+  .challenge-category {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: rgba($neon-magenta, 0.2) !important;
+    border: 1px solid rgba($neon-magenta, 0.5);
+    color: $neon-magenta !important;
+  }
+
+  .challenge-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    background: rgba($neon-cyan, 0.2) !important;
+    color: $neon-cyan !important;
+  }
+
+  // Author attribution - distinctive styling
+  .challenge-attribution {
+    display: block;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: $neon-purple !important;
+    margin: 0.5rem 0 1rem 0;
+
+    &::before {
+      content: "by ";
+      color: $text-muted;
+      font-weight: 400;
+    }
+  }
+
+  .challenge-desc {
+    color: $text-primary;
+    line-height: 1.9;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    padding: 1rem 0;
+    border-top: 1px solid rgba($cyber-border, 0.5);
+    margin-top: 0.5rem;
+
+    p {
+      margin-bottom: 1rem;
+      &:last-child { margin-bottom: 0; }
+    }
+
+    strong, b {
+      color: $neon-cyan;
+      font-weight: 600;
+    }
+
+    em, i {
+      color: $text-secondary;
+      font-style: italic;
+    }
+
+    code {
+      background: rgba($cyber-darker, 0.8);
+      padding: 0.2rem 0.5rem;
+      color: $neon-cyan;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.9em;
+      border: 1px solid rgba($neon-cyan, 0.2);
+    }
+
+    pre {
+      background: $cyber-darker;
+      padding: 1rem;
+      border: 1px solid $cyber-border;
+      border-left: 3px solid $neon-cyan;
+      overflow-x: auto;
+      margin: 1rem 0;
+
+      code {
+        background: transparent;
+        border: none;
+        padding: 0;
+      }
+    }
+
+    a {
+      color: $neon-cyan;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba($neon-cyan, 0.5);
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: $neon-magenta;
+        border-bottom-color: $neon-magenta;
+      }
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+
+      li {
+        margin-bottom: 0.5rem;
+        &::marker {
+          color: $neon-cyan;
+        }
+      }
+    }
+
+    blockquote {
+      border-left: 3px solid $neon-purple;
+      padding-left: 1rem;
+      margin: 1rem 0;
+      color: $text-secondary;
+      font-style: italic;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Orbitron', sans-serif;
+      color: $neon-cyan;
+      margin: 1.5rem 0 0.75rem 0;
+      font-weight: 600;
+    }
+  }
+
+  // Form controls
+  .form-control {
+    background: $cyber-darker !important;
+    border: 1px solid $cyber-border !important;
+    color: $text-primary !important;
+    font-family: 'Share Tech Mono', monospace;
+    border-radius: 0 !important;
+
+    &:focus {
+      border-color: $neon-cyan !important;
+      box-shadow: 0 0 10px rgba($neon-cyan, 0.2) !important;
+    }
+
+    &::placeholder {
+      color: $text-muted;
+    }
+  }
+
+  // Submit button
+  .challenge-submit {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: transparent !important;
+    border: 1px solid $neon-cyan !important;
+    color: $neon-cyan !important;
+    border-radius: 0 !important;
+
+    &:hover {
+      background: rgba($neon-cyan, 0.1) !important;
+      box-shadow: 0 0 15px rgba($neon-cyan, 0.3);
+    }
+  }
+
+  // File buttons
+  .btn-file {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    background: transparent !important;
+    border: 1px solid rgba($neon-cyan, 0.5) !important;
+    color: $neon-cyan !important;
+    border-radius: 0 !important;
+
+    &:hover {
+      background: rgba($neon-cyan, 0.1) !important;
+      border-color: $neon-cyan !important;
+    }
+  }
+
+  // Alerts with cybernoir styling
+  .alert {
+    border-radius: 0;
+    font-family: 'Rajdhani', sans-serif;
+
+    &.alert-success {
+      background: rgba($neon-green, 0.1);
+      border: 1px solid $neon-green;
+      color: $neon-green;
+    }
+
+    &.alert-info {
+      background: rgba($neon-blue, 0.1);
+      border: 1px solid $neon-blue;
+      color: $neon-blue;
+    }
+
+    &.alert-danger {
+      background: rgba($neon-pink, 0.1);
+      border: 1px solid $neon-pink;
+      color: $neon-pink;
+    }
+
+    &.alert-warning {
+      background: rgba($neon-orange, 0.1);
+      border: 1px solid $neon-orange;
+      color: $neon-orange;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    .btn {
+      border-radius: 0;
+    }
+  }
+
+  // Details/Summary for hints
+  .cyber-details {
+    border: 1px solid $cyber-border;
+    margin-bottom: 0.5rem;
+
+    summary {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      color: $text-secondary;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba($cyber-border, 0.3);
+      }
+    }
+
+    &[open] summary {
+      border-bottom: 1px solid $cyber-border;
+    }
+
+    > div {
+      padding: 1rem;
+      background: rgba($cyber-darker, 0.5);
+      color: $text-secondary;
+      line-height: 1.6;
+    }
+  }
+
+  // Connection info block
+  .connection-info-block {
+    background: rgba($cyber-darker, 0.5);
+    border: 1px solid $cyber-border;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+
+    code {
+      font-family: 'Share Tech Mono', monospace;
+      color: $neon-green;
+    }
+
+    a {
+      color: $neon-cyan;
+    }
+  }
+
+  // Tables - Bootstrap overrides
+  .table {
+    color: $text-secondary;
+
+    > thead {
+      background: rgba($neon-cyan, 0.05);
+
+      th {
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: $neon-cyan;
+        border-bottom-color: $cyber-border;
+      }
+    }
+
+    > tbody {
+      td {
+        border-bottom-color: $cyber-border;
+        font-family: 'Rajdhani', sans-serif;
+      }
+
+      a {
+        color: $neon-cyan;
+        &:hover { text-decoration: underline; }
+      }
+    }
+
+    &.table-striped > tbody > tr:nth-of-type(odd) {
+      background: rgba($cyber-darker, 0.3);
+      --bs-table-accent-bg: transparent;
+    }
+  }
+}
+
+// ============================================
+// FORMS
+// ============================================
+
+.form-control, .form-select {
+  background: $cyber-darker !important;
+  border: 1px solid $cyber-border;
+  color: $text-primary !important;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  padding: 0.8rem 1rem !important;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    background: $cyber-dark !important;
+    border-color: $neon-cyan;
+    box-shadow:
+      0 0 15px rgba($neon-cyan, 0.3),
+      inset 0 0 15px rgba($neon-cyan, 0.05);
+    color: $text-primary;
+  }
+
+  &:disabled {
+    background: rgba($cyber-darker, 0.5) !important;
+    color: $text-muted !important;
+  }
+}
+
+.form-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: $text-secondary;
+  font-size: 0.85rem;
+}
+
+// ============================================
+// BUTTONS
+// ============================================
+
+.btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 0.7rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, $neon-cyan, darken($neon-cyan, 20%));
+  color: $cyber-black !important;
+  box-shadow: 0 0 15px rgba($neon-cyan, 0.4);
+
+  &:hover {
+    background: linear-gradient(135deg, lighten($neon-cyan, 10%), $neon-cyan);
+    box-shadow: 0 0 25px rgba($neon-cyan, 0.6);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid $text-secondary !important;
+  color: $text-secondary !important;
+
+  &:hover {
+    background: rgba($text-secondary, 0.1);
+    border-color: $text-primary !important;
+    color: $text-primary !important;
+  }
+}
+
+.btn-success {
+  background: linear-gradient(135deg, $neon-green, darken($neon-green, 20%));
+  color: $cyber-black !important;
+  box-shadow: 0 0 15px rgba($neon-green, 0.4);
+
+  &:hover {
+    box-shadow: 0 0 25px rgba($neon-green, 0.6);
+  }
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, $neon-pink, darken($neon-pink, 20%));
+  color: $text-primary !important;
+  box-shadow: 0 0 15px rgba($neon-pink, 0.4);
+
+  &:hover {
+    box-shadow: 0 0 25px rgba($neon-pink, 0.6);
+  }
+}
+
+.btn-outline-primary {
+  background: transparent;
+  border: 2px solid $neon-cyan !important;
+  color: $neon-cyan !important;
+
+  &:hover {
+    background: rgba($neon-cyan, 0.1);
+    box-shadow: 0 0 20px rgba($neon-cyan, 0.4);
+  }
+}
+
+.btn-outline-warning {
+  background: transparent;
+  border: 2px solid $neon-orange !important;
+  color: $neon-orange !important;
+
+  &:hover {
+    background: rgba($neon-orange, 0.1);
+    box-shadow: 0 0 20px rgba($neon-orange, 0.4);
+  }
+}
+
+.btn-outline-danger {
+  background: transparent;
+  border: 2px solid $neon-pink !important;
+  color: $neon-pink !important;
+
+  &:hover {
+    background: rgba($neon-pink, 0.1);
+    box-shadow: 0 0 20px rgba($neon-pink, 0.4);
+  }
+}
+
+.btn-dark {
+  background: $cyber-surface;
+  border: 1px solid $cyber-border !important;
+  color: $text-primary !important;
+
+  &:hover {
+    background: $cyber-surface-light;
+    border-color: $neon-cyan !important;
+    box-shadow: 0 0 15px rgba($neon-cyan, 0.3);
+  }
+}
+
+// ============================================
+// TABLES
+// ============================================
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: #{$text-primary};
+  --bs-table-striped-bg: #{rgba($cyber-surface, 0.5)};
+  --bs-table-striped-color: #{$text-primary};
+  --bs-table-hover-bg: #{rgba($neon-cyan, 0.1)};
+  --bs-table-hover-color: #{$text-primary};
+
+  thead {
+    background: linear-gradient(90deg, $cyber-surface, $cyber-surface-light);
+    border-bottom: 2px solid $neon-cyan;
+
+    th {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: $neon-cyan;
+      padding: 1rem;
+      border: none;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid rgba($cyber-border, 0.5);
+      transition: all 0.2s ease;
+      background: transparent !important;
+
+      &:hover {
+        background: rgba($neon-cyan, 0.05) !important;
+      }
+
+      // Override Bootstrap contextual classes
+      &.table-warning {
+        --bs-table-bg: #{rgba($neon-orange, 0.15)} !important;
+        --bs-table-color: #{$text-primary};
+        background: rgba($neon-orange, 0.15) !important;
+        border-left: 3px solid $neon-orange;
+      }
+
+      &.table-secondary {
+        --bs-table-bg: #{rgba($text-secondary, 0.1)} !important;
+        --bs-table-color: #{$text-primary};
+        background: rgba($text-secondary, 0.1) !important;
+        border-left: 3px solid $text-secondary;
+      }
+
+      &.table-info {
+        --bs-table-bg: #{rgba($neon-cyan, 0.1)} !important;
+        --bs-table-color: #{$text-primary};
+        background: rgba($neon-cyan, 0.1) !important;
+        border-left: 3px solid rgba($neon-orange, 0.5);
+      }
+    }
+
+    td {
+      font-family: 'Rajdhani', sans-serif;
+      padding: 1rem;
+      vertical-align: middle;
+      border: none;
+      color: $text-primary;
+
+      a {
+        color: $neon-cyan;
+
+        &:hover {
+          color: $neon-magenta;
+        }
+      }
+    }
+
+    th {
+      font-family: 'Share Tech Mono', monospace;
+      color: $neon-cyan;
+      font-size: 1.2rem;
+    }
+  }
+
+  // Striped table override
+  &.table-striped > tbody > tr:nth-of-type(odd) > * {
+    --bs-table-bg-type: #{rgba($cyber-surface, 0.3)};
+    color: $text-primary;
+  }
+
+  &.table-striped > tbody > tr:nth-of-type(even) > * {
+    --bs-table-bg-type: transparent;
+    color: $text-primary;
+  }
+}
+
+// ============================================
+// SCOREBOARD
+// ============================================
+
+#score-graph {
+  min-height: 500px;
+  background: $cyber-surface;
+  border: 1px solid $cyber-border;
+  margin-bottom: 2rem;
+  position: relative;
+
+  // Chart container
+  > div:first-child {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+#scoreboard {
+  .nav-pills {
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+
+    .nav-link {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: $text-secondary;
+      background: transparent;
+      border: 1px solid $cyber-border;
+      padding: 0.75rem 1.5rem;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: $neon-cyan;
+        color: $neon-cyan;
+      }
+
+      &.active {
+        background: $neon-cyan !important;
+        border-color: $neon-cyan;
+        color: $cyber-dark !important;
+      }
+    }
+  }
+
+  .badge {
+    font-family: 'Share Tech Mono', monospace;
+
+    &.bg-primary {
+      background: transparent !important;
+      border: 1px solid $neon-cyan;
+      color: $neon-cyan;
+    }
+
+    &.bg-secondary {
+      background: rgba($cyber-border, 0.5) !important;
+      color: $text-secondary;
+    }
+  }
+}
+
+// ============================================
+// SCOREBOARD
+// ============================================
+
+#score-graph {
+  background: $cyber-surface;
+  border: 1px solid $cyber-border;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      linear-gradient(rgba($neon-cyan, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba($neon-cyan, 0.02) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+  }
+
+  // Style pour la légende du graphique (ECharts)
+  // La légende est dans un div avec position absolute en bas
+  div[style*="position: absolute"] {
+    // Fond semi-transparent pour la légende
+    background: rgba($cyber-surface, 0.9) !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 4px;
+  }
+}
+
+.nav-pills {
+  .nav-link {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: $text-secondary;
+    background: transparent;
+    border: 1px solid $cyber-border;
+    margin: 0 0.25rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba($neon-cyan, 0.1);
+      border-color: $neon-cyan;
+      color: $neon-cyan;
+    }
+
+    &.active {
+      background: $neon-cyan;
+      border-color: $neon-cyan;
+      color: $cyber-black;
+      box-shadow: 0 0 15px rgba($neon-cyan, 0.4);
+    }
+  }
+}
+
+// ============================================
+// CARDS
+// ============================================
+
+.card {
+  background: $cyber-surface;
+  border: 1px solid $cyber-border;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $neon-cyan, $neon-magenta);
+  }
+
+  .card-header {
+    background: rgba($cyber-surface-light, 0.5);
+    border-bottom: 1px solid $cyber-border;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: $text-primary;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+// ============================================
+// BADGES
+// ============================================
+
+.badge {
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 400;
+  letter-spacing: 1px;
+  padding: 0.4rem 0.8rem;
+
+  &.bg-primary {
+    background: rgba($neon-cyan, 0.2) !important;
+    color: $neon-cyan;
+    border: 1px solid $neon-cyan;
+  }
+
+  &.bg-secondary {
+    background: rgba($text-secondary, 0.2) !important;
+    color: $text-secondary;
+    border: 1px solid $text-secondary;
+  }
+
+  &.bg-success {
+    background: rgba($neon-green, 0.2) !important;
+    color: $neon-green;
+    border: 1px solid $neon-green;
+  }
+
+  &.bg-danger {
+    background: rgba($neon-pink, 0.2) !important;
+    color: $neon-pink;
+    border: 1px solid $neon-pink;
+  }
+
+  &.bg-warning {
+    background: rgba($neon-orange, 0.2) !important;
+    color: $neon-orange;
+    border: 1px solid $neon-orange;
+  }
+
+  &.bg-info {
+    background: rgba($neon-blue, 0.2) !important;
+    color: $neon-blue;
+    border: 1px solid $neon-blue;
+  }
+
+  &.bg-dark {
+    background: rgba($neon-purple, 0.2) !important;
+    color: $neon-purple;
+    border: 1px solid $neon-purple;
+  }
+}
+
+// ============================================
+// ALERTS
+// ============================================
+
+.alert {
+  border: none;
+  border-left: 4px solid;
+  background: $cyber-surface;
+  font-family: 'Rajdhani', sans-serif;
+
+  &.alert-success {
+    border-left-color: $neon-green;
+    background: linear-gradient(90deg, rgba($neon-green, 0.1), transparent);
+    color: $neon-green;
+  }
+
+  &.alert-danger {
+    border-left-color: $neon-pink;
+    background: linear-gradient(90deg, rgba($neon-pink, 0.1), transparent);
+    color: $neon-pink;
+  }
+
+  &.alert-warning {
+    border-left-color: $neon-orange;
+    background: linear-gradient(90deg, rgba($neon-orange, 0.1), transparent);
+    color: $neon-orange;
+  }
+
+  &.alert-info {
+    border-left-color: $neon-cyan;
+    background: linear-gradient(90deg, rgba($neon-cyan, 0.1), transparent);
+    color: $neon-cyan;
+  }
+}
+
+// ============================================
+// FOOTER
+// ============================================
+
+.footer {
+  background: $cyber-dark;
+  border-top: 1px solid rgba($neon-cyan, 0.2);
+  padding: 2rem 0;
+  margin-top: auto;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, $neon-cyan 50%, transparent);
+  }
+
+  a {
+    color: $text-muted !important;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+
+    &:hover {
+      color: $neon-cyan !important;
+    }
+  }
+}
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
+
+.glow-cyan {
+  text-shadow: 0 0 10px $neon-cyan;
+  color: $neon-cyan;
+}
+
+.glow-magenta {
+  text-shadow: 0 0 10px $neon-magenta;
+  color: $neon-magenta;
+}
+
+.glow-green {
+  text-shadow: 0 0 10px $neon-green;
+  color: $neon-green;
+}
+
+.text-neon-cyan { color: $neon-cyan !important; }
+.text-neon-magenta { color: $neon-magenta !important; }
+.text-neon-green { color: $neon-green !important; }
+.text-neon-pink { color: $neon-pink !important; }
+.text-neon-orange { color: $neon-orange !important; }
+.text-neon-purple { color: $neon-purple !important; }
+
+.min-vh-25 { min-height: 25vh; }
+.min-vh-50 { min-height: 50vh; }
+.min-vh-75 { min-height: 75vh; }
+
+.cursor-pointer { cursor: pointer; }
+
+// ============================================
+// SCROLLBAR
+// ============================================
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $cyber-dark;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $cyber-border;
+  border-radius: 0;
+
+  &:hover {
+    background: $neon-cyan;
+    box-shadow: 0 0 10px $neon-cyan;
+  }
+}
+
+// ============================================
+// SELECTION
+// ============================================
+
+::selection {
+  background: $neon-cyan;
+  color: $cyber-black;
+}
+
+// ============================================
+// ADDITIONAL COMPONENTS
+// ============================================
+
+.toast {
+  background: $cyber-surface !important;
+  border: 1px solid $neon-cyan;
+  box-shadow: 0 0 20px rgba($neon-cyan, 0.3);
+}
+
+.settings-section {
+  background: $cyber-surface;
+  border: 1px solid $cyber-border;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+
+  h4 {
+    font-family: 'Orbitron', sans-serif;
+    color: $neon-cyan;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba($neon-cyan, 0.2);
+  }
+}
+
+.fa-spin.spinner {
+  color: $neon-cyan;
+  text-shadow: 0 0 20px $neon-cyan;
+}
+
+blockquote {
+  border-left: 4px solid $neon-cyan;
+  padding-left: 15px;
+  color: $text-secondary;
+}
+
+hr {
+  border-color: rgba($neon-cyan, 0.2);
+}
+
+.list-group-item {
+  background: transparent;
+  border-color: $cyber-border;
+  color: $text-primary;
+}
+
+.page-link {
+  background: $cyber-surface;
+  border-color: $cyber-border;
+  color: $text-primary;
+
+  &:hover {
+    background: rgba($neon-cyan, 0.1);
+    border-color: $neon-cyan;
+    color: $neon-cyan;
+  }
+}
+
+.page-item.active .page-link {
+  background: $neon-cyan;
+  border-color: $neon-cyan;
+  color: $cyber-black;
+}
+
+.page-item.disabled .page-link {
+  background: $cyber-darker;
+  border-color: $cyber-border;
+  color: $text-muted;
+}
+
+.input-group-text {
+  background: $cyber-darker;
+  border-color: $cyber-border;
+  color: $text-secondary;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: $text-muted !important;
+  opacity: 1;
+}
+
+// ============================================
+// GLOBAL STYLES FOR ALL PAGES
+// ============================================
+
+// Tables - global dark theme
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: #{$text-primary};
+  --bs-table-border-color: #{$cyber-border};
+  --bs-table-striped-bg: rgba(255, 255, 255, 0.02);
+  --bs-table-hover-bg: rgba(0, 255, 245, 0.05);
+  color: $text-primary;
+
+  th {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: $neon-cyan;
+    border-bottom-color: $cyber-border;
+    background: rgba($neon-cyan, 0.05);
+  }
+
+  td {
+    border-bottom-color: $cyber-border;
+    vertical-align: middle;
+  }
+
+  a {
+    color: $neon-cyan;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // Override Bootstrap contextual classes
+  .table-warning, .table-secondary, .table-info, .table-success, .table-danger {
+    --bs-table-bg: transparent !important;
+    --bs-table-color: #{$text-primary} !important;
+    background: transparent !important;
+    color: $text-primary !important;
+  }
+}
+
+// Cards
+.card {
+  background: $cyber-surface;
+  border: 1px solid $cyber-border;
+  border-radius: 0;
+
+  .card-header {
+    background: rgba($neon-cyan, 0.05);
+    border-bottom-color: $cyber-border;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    color: $neon-cyan;
+  }
+
+  .card-body {
+    color: $text-secondary;
+  }
+
+  .card-footer {
+    background: transparent;
+    border-top-color: $cyber-border;
+  }
+}
+
+// Buttons global styling
+.btn {
+  border-radius: 0;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: $neon-cyan;
+  border-color: $neon-cyan;
+  color: $cyber-black;
+
+  &:hover {
+    background: lighten($neon-cyan, 10%);
+    border-color: lighten($neon-cyan, 10%);
+    box-shadow: 0 0 15px rgba($neon-cyan, 0.4);
+  }
+}
+
+.btn-outline-primary {
+  border-color: $neon-cyan;
+  color: $neon-cyan;
+
+  &:hover {
+    background: rgba($neon-cyan, 0.1);
+    border-color: $neon-cyan;
+    color: $neon-cyan;
+  }
+}
+
+.btn-secondary {
+  background: $cyber-surface-light;
+  border-color: $cyber-border;
+  color: $text-primary;
+
+  &:hover {
+    background: $cyber-surface;
+    border-color: $text-muted;
+  }
+}
+
+.btn-outline-secondary {
+  border-color: $cyber-border;
+  color: $text-secondary;
+
+  &:hover {
+    background: rgba($cyber-border, 0.3);
+    border-color: $text-muted;
+    color: $text-primary;
+  }
+}
+
+.btn-success {
+  background: $neon-green;
+  border-color: $neon-green;
+  color: $cyber-black;
+}
+
+.btn-danger {
+  background: $neon-pink;
+  border-color: $neon-pink;
+  color: white;
+}
+
+.btn-info {
+  background: $neon-blue;
+  border-color: $neon-blue;
+  color: $cyber-black;
+}
+
+// List groups
+.list-group-item {
+  background: $cyber-surface;
+  border-color: $cyber-border;
+  color: $text-primary;
+
+  &.active {
+    background: rgba($neon-cyan, 0.1);
+    border-color: $neon-cyan;
+    color: $neon-cyan;
+  }
+}
+
+// Badges
+.badge {
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 400;
+  letter-spacing: 1px;
+  border-radius: 0;
+}
+
+.bg-primary {
+  background: $neon-cyan !important;
+  color: $cyber-black !important;
+}
+
+.bg-secondary {
+  background: $cyber-surface-light !important;
+}
+
+.bg-success {
+  background: $neon-green !important;
+  color: $cyber-black !important;
+}
+
+.bg-danger {
+  background: $neon-pink !important;
+}
+
+.bg-warning {
+  background: $neon-orange !important;
+  color: $cyber-black !important;
+}
+
+.bg-info {
+  background: $neon-blue !important;
+  color: $cyber-black !important;
+}
+
+// Text colors
+.text-primary {
+  color: $neon-cyan !important;
+}
+
+.text-muted {
+  color: $text-muted !important;
+}
+
+.text-secondary {
+  color: $text-secondary !important;
+}
+
+// Links
+a {
+  color: $neon-cyan;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: lighten($neon-cyan, 15%);
+  }
+}
+
+// Dropdowns
+.dropdown-menu {
+  background: $cyber-surface;
+  border: 1px solid $cyber-border;
+  border-radius: 0;
+}
+
+.dropdown-item {
+  color: $text-primary;
+
+  &:hover, &:focus {
+    background: rgba($neon-cyan, 0.1);
+    color: $neon-cyan;
+  }
+
+  &.active {
+    background: $neon-cyan;
+    color: $cyber-black;
+  }
+}
+
+// Horizontal rules
+hr {
+  border-color: $cyber-border;
+  opacity: 1;
+}
+
+// Progress bars
+.progress {
+  background: $cyber-darker;
+  border-radius: 0;
+}
+
+.progress-bar {
+  background: $neon-cyan;
+}
+
+// Small text
+small, .small {
+  color: $text-muted;
+}
+
+// Code blocks
+code {
+  background: $cyber-darker;
+  color: $neon-cyan;
+  padding: 0.2rem 0.4rem;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+pre {
+  background: $cyber-darker;
+  border: 1px solid $cyber-border;
+  padding: 1rem;
+  color: $text-primary;
+
+  code {
+    background: transparent;
+    padding: 0;
+  }
+}
+
+// First Blood spectacular animation
+@import "first-blood";

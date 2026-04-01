@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADN Helix Renderer</title>
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden;
+            background: white;
+        }
+        canvas { 
+            display: block; 
+        }
+        #status {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #333;
+            font-family: monospace;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>    
+    <div id="mount" style="width: 100vw; height: 100vh;"></div>
+    <script src="./three.min.js"></script>
+    <script>
+        const mount = document.getElementById('mount');
+        const status = document.getElementById('status');
+        window.renderReady = false;
+        window.renderError = null;
+
+        function updateStatus(msg) {
+            //console.log('[STATUS]', msg);
+            //status.textContent = msg;
+        }
+
+        // Get sequence from URL
+        const params = new URLSearchParams(window.location.search);
+        const sequence = params.get('seq');
+        const length = sequence.length;
+        const zoom = length > 0 ? length * 0.25 : 2.5;
+        updateStatus(`Loading: ${sequence}`);
+
+        // Wait for Three.js to load
+        function waitForThree() {
+            return new Promise((resolve) => {
+                if (typeof THREE !== 'undefined') {
+                    resolve();
+                } else {
+                    const listener = () => {
+                        if (typeof THREE !== 'undefined') {
+                            window.removeEventListener('load', listener);
+                            resolve();
+                        }
+                    };
+                    window.addEventListener('load', listener);
+                    setTimeout(() => {
+                        if (typeof THREE !== 'undefined') {
+                            window.removeEventListener('load', listener);
+                            resolve();
+                        } else {
+                            window.removeEventListener('load', listener);
+                            window.renderError = "THREE.js failed to load";
+                        }
+                    }, 5000);
+                }
+            });
+        }
+
+        async function renderHelix(sequenceADN) {
+            try {
+                await waitForThree();
+                updateStatus('THREE.js loaded, rendering...');
+
+                const baseCouleurs = {
+                    A: 0xff7b7b,
+                    T: 0x7bffb0,
+                    G: 0x7bbcff,
+                    C: 0xfff27b,
+                };
+
+                const baseComplementaire = {
+                    A: "T",
+                    T: "A",
+                    G: "C",
+                    C: "G",
+                };
+
+                const seq = sequenceADN
+                    .toUpperCase()
+                    .split("")
+                    .filter(char => ["A", "T", "G", "C"].includes(char));
+
+                if (seq.length === 0) {
+                    updateStatus("Invalid sequence");
+                    window.renderError = "Invalid sequence";
+                    return;
+                }
+
+                updateStatus(`Rendering ${seq.length} bases...`);
+
+                const scene = new THREE.Scene();
+                scene.background = new THREE.Color(0xffffff);
+
+                const width = 1024;
+                const height = 768;
+
+                const camera = new THREE.PerspectiveCamera(zoom, width / height, 0.9, 1000);              
+                camera.position.set(180, 0, 0);                
+                camera.lookAt(0, 0, 0);
+
+                const renderer = new THREE.WebGLRenderer({ 
+                    antialias: true, 
+                    preserveDrawingBuffer: true,
+                    canvas: mount.querySelector('canvas') || undefined
+                });
+                renderer.setSize(width, height);
+                renderer.setPixelRatio(window.devicePixelRatio || 1);
+                mount.appendChild(renderer.domElement);
+
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+                scene.add(ambientLight);
+                const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+                dirLight.position.set(10, 10, 10);
+                scene.add(dirLight);
+
+                const radius = 2;
+                const pitch = 1;
+                const rotationParBase = Math.PI / 5;
+                const totalBases = seq.length;
+
+                const group = new THREE.Group();
+
+                const brin1Pts = [];
+                const brin2Pts = [];
+
+                for (let i = 0; i < totalBases; i++) {
+                    const angle = i * rotationParBase;
+                    const z = (i - totalBases / 2) * pitch;
+                    const x1 = radius * Math.cos(angle);
+                    const y1 = radius * Math.sin(angle);
+                    const x2 = radius * Math.cos(angle + Math.PI);
+                    const y2 = radius * Math.sin(angle + Math.PI);
+                    brin1Pts.push(new THREE.Vector3(x1, y1, z));
+                    brin2Pts.push(new THREE.Vector3(x2, y2, z));
+                }
+
+                const matBrin1 = new THREE.LineBasicMaterial({ color: 0xfb1828 });
+                const matBrin2 = new THREE.LineBasicMaterial({ color: 0xd6a4e7 });
+                const brin1 = new THREE.Line(
+                    new THREE.BufferGeometry().setFromPoints(brin1Pts),
+                    matBrin1
+                );
+                const brin2 = new THREE.Line(
+                    new THREE.BufferGeometry().setFromPoints(brin2Pts),
+                    matBrin2
+                );
+                group.add(brin1, brin2);
+
+                const sphereGeo = new THREE.SphereGeometry(0.25, 16, 16);
+                for (let i = 0; i < totalBases; i++) {
+                    const base1 = seq[i];
+                    const base2 = baseComplementaire[base1];
+
+                    const matBase1 = new THREE.MeshStandardMaterial({ color: baseCouleurs[base1] });
+                    const meshBase1 = new THREE.Mesh(sphereGeo, matBase1);
+                    meshBase1.position.copy(brin1Pts[i]);
+                    group.add(meshBase1);
+
+                    const matBase2 = new THREE.MeshStandardMaterial({ color: baseCouleurs[base2] });
+                    const meshBase2 = new THREE.Mesh(sphereGeo, matBase2);
+                    meshBase2.position.copy(brin2Pts[i]);
+                    group.add(meshBase2);
+
+                    const stickMat = new THREE.LineBasicMaterial({ color: 0x222222 });
+                    const stickGeo = new THREE.BufferGeometry().setFromPoints([
+                        brin1Pts[i],
+                        brin2Pts[i],
+                    ]);
+                    const stick = new THREE.Line(stickGeo, stickMat);
+                    group.add(stick);
+                }
+
+                scene.add(group);
+
+                updateStatus('Rendering animation...');
+
+                let rotation = 0;
+                let frameCount = 0;
+                
+                function animate() {
+                    frameCount++;
+                    group.rotation.z = rotation;
+                    rotation += 0.01;
+                    renderer.render(scene, camera);
+                    
+                    if (frameCount < 99999) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        updateStatus('✓ Ready');
+                    }
+                }
+                animate();
+
+                // Expose for Puppeteer to check
+                window.renderReady = true;
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`);
+                window.renderError = error.message;
+                console.error('Render error:', error);
+            }
+        }
+
+        renderHelix(sequence);
+    </script>
+</body>
+</html>

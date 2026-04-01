@@ -1,0 +1,41 @@
+name: "Robot Hacking"
+author: "Andy"
+category: Reverse
+
+description_image: files/challenge.png
+
+description: |
+  Vous êtes dans un laboratoire futuriste du MIT, aux côtés de Cynthia Breazeal
+  (robots sociaux empathiques comme **Kismet** et **Jibo**).
+  Un assistant a laissé traîner un fichier objet **robot_control_module.o** censé contrôler un robot amical...
+  mais il contient un secret : un **flag caché**.
+
+value: 50
+type: dynamic
+state: visible
+
+extra:
+  initial: 50
+  decay: 40
+  minimum: 20
+
+tags:
+  - INTRO
+  - REVERSE
+
+flags:
+  - flag: "NHK26{Designing_Sociable_Robots}"
+    type: static
+
+files:
+  - files/robot_control_module.o
+
+hints:
+  - content: "Les chaînes visibles avec `strings` ne sont pas toutes bonnes (pièges)."
+    cost: 0
+  - content: "Cherchez un tableau de nombres étranges dans la section `.data`."
+    cost: 0
+  - content: "Un chiffrement bit à bit très simple est utilisé (indice clé : la grande question sur la vie, l'univers et le reste)."
+    cost: 0
+
+max_attempts: 0

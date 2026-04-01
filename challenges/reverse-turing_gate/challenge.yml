@@ -1,0 +1,31 @@
+name: "Turing’s Gate"
+author: "Bruce"
+category: Reverse                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png
+
+description: |
+  Un petit exécutable demande un mot de passe.
+  Le mot de passe correct est présent en clair dans le binaire.
+
+  L'objectif est de retrouver la chaîne la plus simplement possible et la soumettre comme flag.
+
+value: 50
+type: dynamic
+state : visible  
+
+extra:
+  initial: 50                   # POur gerer le dynamisme du scoring
+  decay: 40                      # facteur de decroissance
+  minimum: 20                   # Minimum
+
+tags:
+  - INTRO
+  - REVERSE
+
+flags:
+  - flag: "NHK26{turing_pass}"
+    type: static
+  
+files:
+  - files/turing_gate

@@ -1,0 +1,48 @@
+# TEMPLATE: Challenge sans Docker (Crypto, Forensic, OSINT, etc.)
+# Dossier: categorie-nom (ex: crypto-caesar)
+
+name: "Image de Babbage"
+author: "Valou"
+category: Reverse                 # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+
+  En allant dans un musée, vous tombez sur une toile plutôt intrigante.
+
+  Une signature est dessus avec les initiales BC et le texte suivant :
+
+  "Pourriez-vous trouver le programme et déchiffrer son message ?
+  À vous de trouver le programme et de le modifier pour connaître ses secrets."
+
+  Décodez le script caché dans la toile pour comprendre son fonctionnement afin de pouvoir récupérer le flag.
+
+
+value: 500
+type: dynamic
+state: hidden
+
+extra:
+  initial: 500                   # = value
+  decay: 6
+  minimum: 300                    # ~50% de initial
+
+flags:
+  - flag: "NHK26{B4BB4G3_15_7H3_F47H3R_0F_C0MPU73R5}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - DIFFICILE
+  - REVERSE
+
+# Fichiers donnes aux participants
+#files:
+ # - files/message.tx
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

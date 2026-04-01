@@ -1,0 +1,152 @@
+
+services:
+  # ============================================
+  # CTFd Application
+  # ============================================
+  ctfd:
+    build: .
+    user: root
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - UPLOAD_FOLDER=/var/uploads
+      - DATABASE_URL=mysql+pymysql://ctfd:${DB_PASSWORD}@mxs:4006/ctfd
+      - REDIS_URL=redis://redis-master:6379
+      - WORKERS=4
+      - LOG_FOLDER=/var/log/CTFd
+      - ACCESS_LOG=-
+      - ERROR_LOG=-
+      - REVERSE_PROXY=true
+      - SKIP_DB_PING=true
+    volumes:
+      - .data/CTFd/logs:/var/log/CTFd
+      - .data/CTFd/uploads:/var/uploads
+      - .:/opt/CTFd:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      mxs:
+        condition: service_started
+      redis-master:
+        condition: service_started
+    networks:
+      - default
+      - internal
+
+  # Nginx Reverse Proxy
+
+  nginx:
+    image: nginx:stable
+    restart: always
+    volumes:
+      - ./_archive/conf/nginx/http.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - ctfd
+    networks:
+      - default
+      - internal
+
+  # MariaDB Galera Cluster (3 nodes)
+
+  db1:
+    image: mariadb:10.11
+    hostname: db1
+    restart: always
+    entrypoint: ["/scripts/db1-entrypoint.sh"]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MARIADB_USER=ctfd
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_DATABASE=ctfd
+    volumes:
+      - .data/mysql1:/var/lib/mysql
+      - ./_archive/conf/galera/galera.cnf:/etc/mysql/mariadb.conf.d/60-galera.cnf
+      - ./scripts/init-maxscale-user.sql:/docker-entrypoint-initdb.d/init-maxscale-user.sql:ro
+      - ./scripts/db1-entrypoint.sh:/scripts/db1-entrypoint.sh:ro
+    networks:
+      internal:
+        ipv4_address: 172.20.0.10
+
+  db2:
+    image: mariadb:10.11
+    hostname: db2
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - .data/mysql2:/var/lib/mysql
+      - ./_archive/conf/galera/galera.cnf:/etc/mysql/mariadb.conf.d/60-galera.cnf
+    command:
+      - --wsrep-node-address=db2
+      - --wsrep-node-name=node2
+    depends_on:
+      - db1
+    networks:
+      internal:
+        ipv4_address: 172.20.0.11
+
+  db3:
+    image: mariadb:10.11
+    hostname: db3
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - .data/mysql3:/var/lib/mysql
+      - ./_archive/conf/galera/galera.cnf:/etc/mysql/mariadb.conf.d/60-galera.cnf
+    command:
+      - --wsrep-node-address=db3
+      - --wsrep-node-name=node3
+    depends_on:
+      - db1
+    networks:
+      internal:
+        ipv4_address: 172.20.0.12
+
+
+  # MaxScale - Database Proxy (ReadWriteSplit)
+
+  mxs:
+    image: mariadb/maxscale:latest
+    hostname: mxs
+    restart: always
+    volumes:
+      - ./_archive/conf/maxscale/custom.cnf:/etc/maxscale.cnf.d/custom.cnf
+    ports:
+      - "8989:8989"
+    depends_on:
+      db1:
+        condition: service_healthy
+    networks:
+      - internal
+
+
+  # Redis Cache
+
+  redis-master:
+    image: redis:7-alpine
+    hostname: redis-master
+    restart: always
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    volumes:
+      - .data/redis:/data
+    networks:
+      internal:
+        ipv4_address: 172.20.0.20
+
+networks:
+  default:
+  internal:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

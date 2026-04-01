@@ -1,0 +1,47 @@
+name: "Constellation Microdots"
+author: "EnderMan"
+category: Misc
+
+description_image: files/challenge.png
+
+description: |
+  Mary Adela Blagg (1858-1944) a passé sa vie à cartographier des points dans le ciel 
+  chaque étoile, chaque cratère lunaire, méticuleusement répertoriés.
+  Son nom n'est presque jamais cité. Pourtant ses catalogues servent encore aujourd'hui.
+
+  Un rapport d'observation portant son nom a été intercepté.
+  Il semble banal. Mais regarde de plus près : certaines imprimantes laissent
+  des traces invisibles sur chaque page — de minuscules points disposés en grille.
+
+  Ces points ne sont pas du bruit. Ils encodent quelque chose.
+
+  Trouve ce qu'ils cachent et construis le flag au format :
+  
+  `NHK26{jour_mois_annee_heures_minutes_secondes_numeroserie}`
+
+value: 300
+type: firstblood
+state: hidden
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+first_blood_bonus:
+  - 250
+
+tags:
+  - MOYEN
+  - MISC
+  - FIRST BLOOD
+
+flags:
+  - flag: "NHK26{18_08_2024_14_37_52_70419583266500}"
+    type: static
+
+files:
+  - files/challenge.png
+  - files/rapport_BLAGG01b.pdf
+
+max_attempts: 0

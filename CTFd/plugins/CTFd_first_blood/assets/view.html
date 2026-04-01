@@ -1,0 +1,11 @@
+{% extends "challenge.html" %}
+
+{% block description %}
+    {{ challenge.html }}
+
+    <ul>
+    {% for points in challenge.first_blood_bonus %}
+        <li>Bonus for {{ (loop.index0 + 1)|ordinalize }} solve: <b>{{ points }}</b></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

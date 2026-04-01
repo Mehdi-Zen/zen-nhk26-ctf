@@ -1,0 +1,36 @@
+name: "gaillardement_instable_2"
+author: "Malth"
+category: OSINT                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+files:
+ -files/hotel.png
+ 
+description: |
+  Félicitation, vous avez réussi la première étape ! La DGSE a réussi a trouvé une image de la chambre d'hôtel de Mr Gaillard.
+  Vous devez ici retrouver dans quel hôtel réside notre cible. N'oubliez pas la ville dans laquelle il se trouve et que l'agent qui crée cela a une passion pour mélanger les caractères ! Bon chance !
+
+value: 1
+type: dynamic
+state : visible
+
+extra:
+  initial: 1                   
+  decay: 13                      
+  minimum: 1
+
+tags:
+  - TIROIR
+  - DIFFICILE
+  - OSINT
+
+flags:
+  - flag: "NHK26{R4d1ss0n_Blu}"
+    type: static
+
+requirements:
+  prerequisites:
+    - "gaillardement_instable_1"
+
+next: "gaillardement_instable_3"

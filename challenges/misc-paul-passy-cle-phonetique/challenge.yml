@@ -1,0 +1,32 @@
+name: "Paul Passy et la clé phonétique"
+author: "Bioubiou666"
+category: Misc                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Trois amis utilisent la même méthode pour verrouiller leurs téléphones. Si Hervé déverrouille son téléphone avec le code 1822, Béa avec le code 0201, quel est le code de Théo ?
+
+  `Format du flag : NHK26{CODE}`
+
+value: 50                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 50                   # POur gerer le dynamisme du scoring
+  decay: 40                      # facteur de decroissance
+  minimum: 20                   # Minimum
+
+tags:
+  - INTRO
+  - MISC
+
+flags:
+  - flag: "NHK26{2015}"
+    type: static
+
+# Indices payants
+hints:
+  - content: "Quelles lettres correspondent à la phonétique du nom ? (Pensez aux syllabes)"
+    cost: 0

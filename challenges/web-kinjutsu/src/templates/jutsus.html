@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinjutsu — 術の書</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;600;800&family=Zen+Old+Mincho:wght@400;700;900&family=Fira+Code:wght@400;500&display=swap');
+
+        :root {
+            --ink: #0b0b12;
+            --ink-light: #12121f;
+            --vermillion: #c23038;
+            --vermillion-dim: rgba(194, 48, 56, 0.35);
+            --gold: #c4a44a;
+            --gold-dim: rgba(196, 164, 74, 0.25);
+            --text: #d0cfd8;
+            --text-dim: rgba(200, 200, 215, 0.4);
+            --paper: rgba(245, 235, 220, 0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--ink);
+            color: var(--text);
+            font-family: 'Shippori Mincho B1', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* === BACKGROUND === */
+        .ink-wash {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 40% at 20% 20%, rgba(194, 48, 56, 0.035) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 50% at 80% 80%, rgba(196, 164, 74, 0.025) 0%, transparent 50%),
+                radial-gradient(ellipse 100% 100% at 50% 50%, rgba(15, 15, 25, 1) 0%, var(--ink) 100%);
+            z-index: 0;
+        }
+
+        .ink-wash::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            opacity: 0.35;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+            background-size: 128px 128px;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        /* === SMOKE PARTICLES === */
+        .smoke {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .smoke-wisp {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(200, 200, 220, 0.015) 0%, transparent 70%);
+            animation: wisp ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes wisp {
+            0%, 100% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+            30% { opacity: 1; }
+            70% { opacity: 0.5; }
+            100% { opacity: 0; transform: translate(-100px, -200px) scale(2); }
+        }
+
+        .smoke-wisp:nth-child(1) { bottom: 0; left: 10%; animation-duration: 15s; animation-delay: 0s; }
+        .smoke-wisp:nth-child(2) { bottom: 0; left: 40%; animation-duration: 20s; animation-delay: 3s; width: 150px; height: 150px; }
+        .smoke-wisp:nth-child(3) { bottom: 0; left: 70%; animation-duration: 18s; animation-delay: 7s; width: 250px; height: 250px; }
+        .smoke-wisp:nth-child(4) { bottom: 0; left: 25%; animation-duration: 22s; animation-delay: 10s; }
+        .smoke-wisp:nth-child(5) { bottom: 0; left: 85%; animation-duration: 16s; animation-delay: 5s; width: 180px; height: 180px; }
+
+        /* === LAYOUT === */
+        .scene {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            padding: 3rem 1.5rem 4rem;
+        }
+
+        /* === BACK LINK === */
+        .back-link {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.8rem;
+            z-index: 20;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover { color: var(--text); }
+
+        .back-link .arrow {
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--text-dim);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .back-link .arrow::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -3px;
+            width: 7px;
+            height: 7px;
+            border-left: 1px solid var(--text-dim);
+            border-bottom: 1px solid var(--text-dim);
+            transform: rotate(45deg);
+            transition: border-color 0.3s;
+        }
+
+        .back-link:hover .arrow { background: var(--text); }
+        .back-link:hover .arrow::before { border-color: var(--text); }
+
+        /* === HEADER === */
+        .header {
+            text-align: center;
+            padding: 4rem 0 3rem;
+            animation: fade-down 1s ease-out both;
+        }
+
+        @keyframes fade-down {
+            0%   { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-kanji {
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(194, 48, 56, 0.12);
+            letter-spacing: 0.3em;
+            margin-bottom: 1rem;
+            user-select: none;
+        }
+
+        .header-title {
+            font-family: 'Zen Old Mincho', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 900;
+            color: #eae8f0;
+            letter-spacing: 0.08em;
+        }
+
+        .header-title .no { color: var(--vermillion); }
+
+        .header-sub {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            margin-top: 0.6rem;
+        }
+
+        .ink-stroke {
+            width: 120px;
+            height: 3px;
+            margin: 2rem auto 0;
+            background: linear-gradient(90deg, transparent, var(--vermillion-dim), var(--vermillion), var(--vermillion-dim), transparent);
+            border-radius: 2px;
+        }
+
+        /* === GRID === */
+        .jutsu-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem 0;
+        }
+
+        /* === JUTSU CARD === */
+        .jutsu-card {
+            position: relative;
+            background:
+                linear-gradient(135deg, var(--paper) 0%, transparent 50%),
+                rgba(255, 255, 255, 0.012);
+            border: 1px solid rgba(194, 48, 56, 0.1);
+            border-radius: 2px;
+            padding: 1.8rem 1.5rem;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
+            animation: card-in 0.8s ease-out both;
+        }
+
+        .jutsu-card:nth-child(1)  { animation-delay: 0.1s; }
+        .jutsu-card:nth-child(2)  { animation-delay: 0.15s; }
+        .jutsu-card:nth-child(3)  { animation-delay: 0.2s; }
+        .jutsu-card:nth-child(4)  { animation-delay: 0.25s; }
+        .jutsu-card:nth-child(5)  { animation-delay: 0.3s; }
+        .jutsu-card:nth-child(6)  { animation-delay: 0.35s; }
+        .jutsu-card:nth-child(7)  { animation-delay: 0.4s; }
+        .jutsu-card:nth-child(8)  { animation-delay: 0.45s; }
+        .jutsu-card:nth-child(9)  { animation-delay: 0.5s; }
+        .jutsu-card:nth-child(10) { animation-delay: 0.55s; }
+
+        @keyframes card-in {
+            0%   { opacity: 0; transform: translateY(25px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .jutsu-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(194, 48, 56, 0.06) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .jutsu-card:hover::before { opacity: 1; }
+
+        .jutsu-card:hover {
+            border-color: rgba(194, 48, 56, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(194, 48, 56, 0.05);
+        }
+
+        /* Background kanji watermark */
+        .jutsu-bg-kanji {
+            position: absolute;
+            top: 50%;
+            right: -10px;
+            transform: translateY(-50%);
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 7rem;
+            font-weight: 900;
+            color: rgba(194, 48, 56, 0.04);
+            pointer-events: none;
+            user-select: none;
+            line-height: 1;
+            transition: color 0.5s;
+        }
+
+        .jutsu-card:hover .jutsu-bg-kanji {
+            color: rgba(194, 48, 56, 0.07);
+        }
+
+        /* Card header */
+        .jutsu-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .jutsu-kanji {
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: rgba(194, 48, 56, 0.6);
+            line-height: 1;
+            transition: color 0.3s;
+        }
+
+        .jutsu-card:hover .jutsu-kanji {
+            color: rgba(194, 48, 56, 0.8);
+        }
+
+        .jutsu-rank {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2px;
+            text-transform: uppercase;
+        }
+
+        .rank-s {
+            background: rgba(196, 164, 74, 0.1);
+            border: 1px solid rgba(196, 164, 74, 0.25);
+            color: rgba(196, 164, 74, 0.8);
+        }
+
+        .rank-a {
+            background: rgba(194, 48, 56, 0.08);
+            border: 1px solid rgba(194, 48, 56, 0.2);
+            color: rgba(194, 48, 56, 0.7);
+        }
+
+        .rank-b {
+            background: rgba(100, 140, 200, 0.08);
+            border: 1px solid rgba(100, 140, 200, 0.2);
+            color: rgba(100, 140, 200, 0.7);
+        }
+
+        .rank-c {
+            background: rgba(200, 200, 215, 0.06);
+            border: 1px solid rgba(200, 200, 215, 0.12);
+            color: rgba(200, 200, 215, 0.5);
+        }
+
+        /* Card body */
+        .jutsu-name {
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: rgba(230, 228, 240, 0.85);
+            margin-bottom: 0.3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .jutsu-romaji {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .jutsu-divider {
+            width: 30px;
+            height: 1px;
+            background: rgba(194, 48, 56, 0.2);
+            margin-bottom: 0.8rem;
+        }
+
+        .jutsu-desc {
+            font-size: 0.82rem;
+            color: rgba(200, 200, 215, 0.45);
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        .jutsu-nature {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.8rem;
+            font-size: 0.65rem;
+            color: rgba(200, 200, 215, 0.3);
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .jutsu-nature .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(194, 48, 56, 0.3);
+        }
+
+        /* === FOOTER === */
+        .footer {
+            text-align: center;
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-kanji {
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 0.8rem;
+            color: rgba(200, 200, 215, 0.1);
+            letter-spacing: 0.6em;
+        }
+
+        .footer-line {
+            width: 30px;
+            height: 1px;
+            background: rgba(194, 48, 56, 0.15);
+            margin: 0.8rem auto;
+        }
+
+        .footer-text {
+            font-size: 0.6rem;
+            color: rgba(200, 200, 215, 0.08);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 680px) {
+            .jutsu-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem 0;
+            }
+            .header { padding: 3rem 0 2rem; }
+            .header-kanji { font-size: 2.5rem; }
+            .back-link { top: 1rem; left: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background -->
+    <div class="ink-wash"></div>
+
+    <!-- Smoke -->
+    <div class="smoke">
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+    </div>
+
+    <!-- Back -->
+    <a href="/" class="back-link">
+        <span class="arrow"></span>
+        retour
+    </a>
+
+    <div class="scene">
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-kanji">術の書</div>
+            <h1 class="header-title">Kin<span class="no">jutsu</span></h1>
+            <p class="header-sub">Le Livre des Techniques Secrètes</p>
+            <div class="ink-stroke"></div>
+        </div>
+
+        <!-- Jutsu Grid -->
+        <div class="jutsu-grid">
+
+            <!-- Rasengan -->
+            <div class="jutsu-card">
+                <div class="jutsu-bg-kanji">螺</div>
+                <div class="jutsu-header">
+                    <div class="jutsu-kanji">螺旋丸</div>
+                    <span class="jutsu-rank rank-a">Rang A</span>
+                </div>
+                <div class="jutsu-name">Rasengan</div>
+                <div class="jutsu-romaji">rasengan</div>
+                <div class="jutsu-divider"></div>
+                <p class="jutsu-desc">Sphère de chakra en rotation concentrée dans la paume. Technique inachevée du 4ème Hokage, perfectionnée par son fils.</p>
+                <div class="jutsu-nature"><span class="dot"></span> Ninjutsu — Aucune affinité</div>
+            </div>
+
+            <!-- Chidori -->
+            <div class="jutsu-card">
+                <div class="jutsu-bg-kanji">千</div>
+                <div class="jutsu-header">
+                    <div class="jutsu-kanji">千鳥</div>
+                    <span class="jutsu-rank rank-a">Rang A</span>
+                </div>
+                <div class="jutsu-name">Chidori</div>
+                <div class="jutsu-romaji">chidori</div>
+                <div class="jutsu-divider"></div>
+                <p class="jutsu-desc">Concentration de chakra Raiton dans la main, produisant un son semblable à mille oiseaux. Technique signature de Kakashi Hatake.</p>
+                <div class="jutsu-nature"><span class="dot"></span> Ninjutsu — Raiton (Foudre)</div>
+            </div>
+
+            <!-- Kage Bunshin -->
+            <div class="jutsu-card">
+                <div class="jutsu-bg-kanji">影</div>
+                <div class="jutsu-header">
+                    <div class="jutsu-kanji">影分身の術</div>
+                    <span class="jutsu-rank rank-b">Rang B</span>
+                </div>
+                <div class="jutsu-name">Kage Bunshin no Jutsu</div>
+                <div class="jutsu-romaji">kage bunshin no jutsu</div>
+                <div class="jutsu-divider"></div>
+                <p class="jutsu-desc">Crée des clones physiques réels capables d'interagir avec l'environnement. Technique interdite du village de Konoha.</p>
+                <div class="jutsu-nature"><span class="dot"></span> Ninjutsu — Clone</div>
+            </div>
+
+            <!-- Amaterasu -->
+            <div class="jutsu-card">
+                <div class="jutsu-bg-kanji">天</div>
+                <div class="jutsu-header">
+                    <div class="jutsu-kanji">天照</div>
+                    <span class="jutsu-rank rank-s">Rang S</span>
+                </div>
+                <div class="jutsu-name">Amaterasu</div>
+                <div class="jutsu-romaji">amaterasu</div>
+                <div class="jutsu-divider"></div>
+                <p class="jutsu-desc">Flammes noires inextinguibles générées par le Mangekyō Sharingan. Brûle tout ce que l'utilisateur fixe du regard, pendant sept jours et sept nuits.</p>
+                <div class="jutsu-nature"><span class="dot"></span> Kekkei Genkai — Katon</div>
+            </div>
+
+            <!-- Susanoo -->
+            <div class="jutsu-card">
+                <div class="jutsu-bg-kanji">須</div>
+                <div class="jutsu-header">
+                    <div class="jutsu-kanji">須佐能乎</div>
+                    <span class="jutsu-rank rank-s">Rang S</span>
+                </div>
+                <div class="jutsu-name">Susanoo</div>
+                <div class="jutsu-romaji">susanoo</div>
+                <div class="jutsu-divider"></div>
+                <p class="jutsu-desc">Avatar guerrier spectral invoqué par le Mangekyō Sharingan. Forme ultime de défense et d'attaque du clan Uchiha.</p>
+                <div class="jutsu-nature"><span class="dot"></span> Kekkei Genkai — Dōjutsu</div>
+            </div>
+
+            <!-- Tsukuyomi -->
+            <div class="jutsu-card">
+                <div class="jutsu-bg-kanji">月</div>
+                <div class="jutsu-header">
+                    <div class="jutsu-kanji">月読</div>
+                    <span class="jutsu-rank rank-s">Rang S</span>
+                </div>
+                <div class="jutsu-name">Tsukuyomi</div>
+                <div class="jutsu-romaji">tsukuyomi</div>
+                <div class="jutsu-divider"></div>
+                <p class="jutsu-desc">Genjutsu suprême piégeant la victime dans un monde illusoire où le lanceur contrôle l'espace, le temps et la matière.</p>
+                <div class="jutsu-nature"><span class="dot"></span> Genjutsu — Dōjutsu</div>
+            </div>
+
+            <!-- Kamui -->
+            <div class="jutsu-card">
+                <div class="jutsu-bg-kanji">神</div>
+                <div class="jutsu-header">
+                    <div class="jutsu-kanji">神威</div>
+                    <span class="jutsu-rank rank-s">Rang S</span>
+                </div>
+                <div class="jutsu-name">Kamui</div>
+                <div class="jutsu-romaji">kamui</div>
+                <div class="jutsu-divider"></div>
+                <p class="jutsu-desc">Technique spatio-temporelle transférant des objets vers une dimension parallèle. Permet l'intangibilité et la téléportation.</p>
+                <div class="jutsu-nature"><span class="dot"></span> Ninjutsu — Jiku (Espace-Temps)</div>
+            </div>
+
+            <!-- Edo Tensei -->
+            <div class="jutsu-card">
+                <div class="jutsu-bg-kanji">穢</div>
+                <div class="jutsu-header">
+                    <div class="jutsu-kanji">穢土転生</div>
+                    <span class="jutsu-rank rank-s">Rang S</span>
+                </div>
+                <div class="jutsu-name">Edo Tensei</div>
+                <div class="jutsu-romaji">edo tensei</div>
+                <div class="jutsu-divider"></div>
+                <p class="jutsu-desc">Technique de réincarnation interdite ramenant les morts. Nécessite un sacrifice vivant et l'ADN du défunt. Kinjutsu de rang S.</p>
+                <div class="jutsu-nature"><span class="dot"></span> Kinjutsu — Invocation</div>
+            </div>
+
+            <!-- Shinra Tensei -->
+            <div class="jutsu-card">
+                <div class="jutsu-bg-kanji">神</div>
+                <div class="jutsu-header">
+                    <div class="jutsu-kanji">神羅天征</div>
+                    <span class="jutsu-rank rank-s">Rang S</span>
+                </div>
+                <div class="jutsu-name">Shinra Tensei</div>
+                <div class="jutsu-romaji">shinra tensei</div>
+                <div class="jutsu-divider"></div>
+                <p class="jutsu-desc">Force de répulsion gravitationnelle issue du Rinnegan. Capable de détruire un village entier d'une seule impulsion.</p>
+                <div class="jutsu-nature"><span class="dot"></span> Dōjutsu — Rinnegan</div>
+            </div>
+
+            <!-- Bijuu Dama -->
+            <div class="jutsu-card">
+                <div class="jutsu-bg-kanji">尾</div>
+                <div class="jutsu-header">
+                    <div class="jutsu-kanji">尾獣玉</div>
+                    <span class="jutsu-rank rank-s">Rang S</span>
+                </div>
+                <div class="jutsu-name">Bijūdama</div>
+                <div class="jutsu-romaji">bijūdama</div>
+                <div class="jutsu-divider"></div>
+                <p class="jutsu-desc">Sphère de chakra noir compressé, ratio 8:2 positif/négatif. Technique ultime des Bijū capable de raser des montagnes.</p>
+                <div class="jutsu-nature"><span class="dot"></span> Bijū — Chakra brut</div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-kanji">忍 術 の 道</div>
+            <div class="footer-line"></div>
+            <div class="footer-text">The Book of Jutsu</div>
+        </div>
+
+    </div>
+
+</body>
+</html>

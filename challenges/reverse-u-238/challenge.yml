@@ -1,0 +1,37 @@
+name: "U-238"
+author: "segfault"
+category: Reverse                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Un ancien système de monitoring nucléaire, utilisé il y a 40 ans, a récemment été remis en service.
+
+  Ce programme contrôle cinq **doses d’exposition** censées maintenir le réacteur dans une plage sûre.
+
+  Cependant, une anomalie a été détectée. 
+
+  Le système calcule un **niveau de radiation global** à partir des cinq valeurs entrées.
+
+  Si ce niveau correspond à une signature précise, un **protocole secret** est déclenché… révélant un message chiffré.
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - REVERSE
+
+flags:
+  - flag: "NHK26{nucleaire}"
+    type: static
+    
+hints:
+  - content : "Chaque valeur est comprise entre -50 et 50."
+    cost: 25

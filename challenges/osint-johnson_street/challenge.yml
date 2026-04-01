@@ -1,0 +1,39 @@
+name: "Johnson’s Street"
+author: "Bruce"
+category: OSINT                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png
+
+description: |
+  Deux photographies ont été prises lors d’une mission de reconnaissance.
+
+  Les images contiennent suffisamment d’éléments pour identifier un lieu précis… à condition d’observer attentivement.
+
+  Votre objectif est de déterminer l’adresse exacte correspondant à la localisation finale.
+
+  Le flag doit être soumis sous forme d’adresse complète correctement normalisée.
+
+  `Format du flag : NHK26{Nom_De_La_Rue_Pays}`
+  
+  PS : il n'y a pas d'apostrophe
+
+value: 300
+type: dynamic
+state : visible  
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - OSINT
+
+flags:
+  - flag: "NHK26{Rue_des_Astres_Abidjan_Cote_dIvoire}"
+    type: static
+
+files:
+  - files/photo120.png
+  - files/photo121.png

@@ -1,0 +1,27 @@
+{
+  "name": "casino-royale",
+  "version": "1.0.0",
+  "description": "NHK26 - Crazy Casino INSANE Web Challenge",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1",
+    "redis": "^4.6.12",
+    "better-sqlite3": "^9.4.3",
+    "node-serialize": "^0.0.4",
+    "cookie-parser": "^1.4.6",
+    "express-rate-limit": "^7.1.5",
+    "ejs": "^3.1.9",
+    "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  },
+  "author": "Mehdi Belayachi",
+  "license": "MIT"
+}

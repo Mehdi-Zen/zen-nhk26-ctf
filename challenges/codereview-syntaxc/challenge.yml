@@ -1,0 +1,29 @@
+name: "C_la_vie"
+author: "Twistyle"
+category: Code Review                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Ida Rhodes n'arrive pas à faire fonctionner son code C, permettant de trouver le mot de passe
+  de son bureau.
+
+value: 100                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state: hidden                    # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 100                   # POur gerer le dynamisme du scoring
+  decay: 30                      # facteur de decroissance
+  minimum: 50                   # Minimum
+
+tags:
+  - FACILE
+  - CODE REVIEW
+
+files:
+   - files/syntaxerror.c
+
+flags:
+  - flag: "NHK26{trop_facile}"
+    type: static

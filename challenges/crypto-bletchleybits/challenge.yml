@@ -1,0 +1,28 @@
+name: "Bletchley bits"
+author: "M€dus@"
+category: Crypto                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Bletchley Park, 1940. Nous avons intercepté un flux. Nos services pensent qu'il s'agit d'une note d'Alan Turing, mais le secret est bien gardé. Un agent de terrain rapporte qu'il utilisait son identité combinée à l'année en cours comme verrou. Il paraît qu'il commençait toujours ses messages par un encouragement : 'Bravo!'
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - CRYPTO
+
+flags:
+  - flag: "NHK26{TURING-728b7e7161}"
+    type: static
+
+files:
+  - files/bletchley.txt

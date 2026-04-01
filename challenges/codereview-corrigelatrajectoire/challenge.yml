@@ -1,0 +1,25 @@
+name: "Corrige la trajectoire"
+author: "Kln"
+category: Code Review                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Mary Jackson a écrit un script pour calculer une trajectoire de fusée de manière simplifiée mais son code contient une erreur. Il faut corriger cette erreur pour donner l’angle que la fusée devrait effectuer normalement.
+
+value: 50                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 50                    # POur gerer le dynamisme du scoring
+  decay: 40                      # facteur de decroissance
+  minimum: 20                    # Minimum
+
+tags:
+  - INTRO
+  - CODE REVIEW
+
+flags:
+  - flag: "NHK26{26}"
+    type: static

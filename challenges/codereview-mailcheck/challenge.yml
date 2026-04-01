@@ -1,0 +1,49 @@
+name: "MailCheck"
+author: "EnderMan"
+category: Code Review
+
+description_image: files/challenge.png
+
+description: |
+  La Fondation Turing 2026 vient d'ouvrir les candidatures pour son concours annuel réservé aux grandes figures scientifiques.
+
+  Pour traiter les inscriptions, l'équipe technique a développé une API de validation d'adresses email. Le code source du client utilisé en interne vous a été transmis.
+
+  Un auditeur a signalé un comportement anormal de l'API sur certaines entrées, sans avoir eu le temps d'approfondir. À vous de relire le code, d'identifier la faille et de l'exploiter pour obtenir le flag.
+
+value: 300
+type: container
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+image: registry.gitlab.com/nhk26/challenges/code-review-mailcheck:latest
+port: 5000
+protocol: web
+
+tags:
+  - MOYEN
+  - CODE REVIEW
+
+flags:
+  - flag: "NHK26{r3d0s_b4cKtr4ck1ng_pwn3d_2026}"
+    type: static
+
+files:
+  - files/client.py
+  - files/config.ini
+  - files/config.py
+  - files/services.py
+  - files/utils.py
+  - files/validators.py
+
+hints:
+  - content: "Lis attentivement les fichiers Python fournis. Certaines constantes définissent les fragments de patterns..."
+    cost: 25
+  - content: "La classe PatternBuilder construit les regex dynamiquement. Regarde comment les fragments sont combinés dans la méthode email()."
+    cost: 60
+
+max_attempts: 0

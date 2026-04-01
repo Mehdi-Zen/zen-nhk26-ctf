@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinjutsu — 禁術</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;600;800&family=Zen+Old+Mincho:wght@400;700;900&family=Fira+Code:wght@400;500&display=swap');
+
+        :root {
+            --ink: #0b0b12;
+            --vermillion: #c23038;
+            --vermillion-dim: rgba(194, 48, 56, 0.35);
+            --gold: #c4a44a;
+            --gold-dim: rgba(196, 164, 74, 0.25);
+            --text: #d0cfd8;
+            --text-dim: rgba(200, 200, 215, 0.4);
+            --paper: rgba(245, 235, 220, 0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--ink);
+            color: var(--text);
+            font-family: 'Shippori Mincho B1', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* === BACKGROUND === */
+        .ink-wash {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 70% 50% at 30% 70%, rgba(194, 48, 56, 0.03) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 70% 30%, rgba(196, 164, 74, 0.025) 0%, transparent 50%),
+                radial-gradient(ellipse 100% 100% at 50% 50%, rgba(15, 15, 25, 1) 0%, var(--ink) 100%);
+            z-index: 0;
+        }
+
+        .ink-wash::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            opacity: 0.35;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+            background-size: 128px 128px;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        /* === FLOATING EMBERS === */
+        .embers {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .ember {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: radial-gradient(circle, rgba(255, 160, 60, 0.8) 0%, rgba(255, 100, 30, 0) 70%);
+            border-radius: 50%;
+            bottom: -10px;
+            animation: rise linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes rise {
+            0%   { opacity: 0; transform: translateX(0) scale(1); }
+            15%  { opacity: 0.8; }
+            85%  { opacity: 0.3; }
+            100% { opacity: 0; transform: translateX(-30px) translateY(-100vh) scale(0.3); }
+        }
+
+        .ember:nth-child(1)  { left: 12%; animation-duration: 8s; animation-delay: 0s; }
+        .ember:nth-child(2)  { left: 30%; animation-duration: 12s; animation-delay: 1s; width: 2px; height: 2px; }
+        .ember:nth-child(3)  { left: 50%; animation-duration: 10s; animation-delay: 3s; }
+        .ember:nth-child(4)  { left: 68%; animation-duration: 9s; animation-delay: 2s; width: 4px; height: 4px; }
+        .ember:nth-child(5)  { left: 85%; animation-duration: 14s; animation-delay: 4s; width: 2px; height: 2px; }
+        .ember:nth-child(6)  { left: 42%; animation-duration: 11s; animation-delay: 6s; }
+        .ember:nth-child(7)  { left: 75%; animation-duration: 13s; animation-delay: 1.5s; width: 2px; height: 2px; }
+        .ember:nth-child(8)  { left: 22%; animation-duration: 9s; animation-delay: 5s; }
+
+        /* === LAYOUT === */
+        .scene {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.5rem;
+        }
+
+        /* === BACK LINK === */
+        .back-link {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.8rem;
+            z-index: 20;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover { color: var(--text); }
+
+        .back-link .arrow {
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--text-dim);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .back-link .arrow::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -3px;
+            width: 7px;
+            height: 7px;
+            border-left: 1px solid var(--text-dim);
+            border-bottom: 1px solid var(--text-dim);
+            transform: rotate(45deg);
+            transition: border-color 0.3s;
+        }
+
+        .back-link:hover .arrow { background: var(--text); }
+        .back-link:hover .arrow::before { border-color: var(--text); }
+
+        /* === HEADER === */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fade-down 0.8s ease-out both;
+        }
+
+        @keyframes fade-down {
+            0%   { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .title {
+            font-family: 'Zen Old Mincho', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 900;
+            color: #eae8f0;
+            letter-spacing: 0.08em;
+        }
+
+        .title .no { color: var(--vermillion); }
+
+        /* === IDENTITY BAR === */
+        .identity {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            margin-top: 1rem;
+            animation: fade-down 0.8s ease-out 0.15s both;
+        }
+
+        .identity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .identity-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(194, 48, 56, 0.5);
+        }
+
+        .identity-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: rgba(210, 210, 220, 0.7);
+            padding: 0.15rem 0.6rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(200, 200, 215, 0.08);
+            border-radius: 2px;
+        }
+
+        /* === SCROLL CARD === */
+        .makimono {
+            max-width: 700px;
+            width: 100%;
+            position: relative;
+            animation: scroll-reveal 1s ease-out 0.3s both;
+        }
+
+        @keyframes scroll-reveal {
+            0%   { opacity: 0; transform: translateY(30px) scaleY(0.95); }
+            100% { opacity: 1; transform: translateY(0) scaleY(1); }
+        }
+
+        /* Scroll top roll */
+        .scroll-roll {
+            height: 8px;
+            background: linear-gradient(90deg,
+                transparent 5%,
+                rgba(120, 80, 40, 0.2) 15%,
+                rgba(160, 110, 50, 0.25) 50%,
+                rgba(120, 80, 40, 0.2) 85%,
+                transparent 95%
+            );
+            border-radius: 4px 4px 0 0;
+            margin: 0 2rem;
+        }
+
+        .scroll-body {
+            background:
+                linear-gradient(180deg, rgba(245, 235, 215, 0.04) 0%, rgba(245, 235, 215, 0.02) 50%, rgba(245, 235, 215, 0.04) 100%),
+                rgba(255, 255, 255, 0.015);
+            border-left: 1px solid rgba(194, 48, 56, 0.1);
+            border-right: 1px solid rgba(194, 48, 56, 0.1);
+            padding: 2rem 2rem;
+            position: relative;
+        }
+
+        /* Hanging seal */
+        .scroll-body::before {
+            content: '巻物';
+            position: absolute;
+            top: -1px;
+            left: 24px;
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 0.65rem;
+            color: rgba(194, 48, 56, 0.35);
+            letter-spacing: 0.3em;
+            background: rgba(11, 11, 18, 0.8);
+            padding: 0.2rem 0.5rem;
+            border: 1px solid rgba(194, 48, 56, 0.12);
+            border-top: none;
+        }
+
+        .scroll-roll-bottom {
+            height: 8px;
+            background: linear-gradient(90deg,
+                transparent 5%,
+                rgba(120, 80, 40, 0.2) 15%,
+                rgba(160, 110, 50, 0.25) 50%,
+                rgba(120, 80, 40, 0.2) 85%,
+                transparent 95%
+            );
+            border-radius: 0 0 4px 4px;
+            margin: 0 2rem;
+        }
+
+        /* === TOKEN DISPLAY === */
+        .token-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+            text-align: center;
+        }
+
+        .token-field {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(194, 48, 56, 0.1);
+            border-radius: 2px;
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.72rem;
+            line-height: 1.8;
+            word-break: break-all;
+            color: rgba(210, 210, 220, 0.75);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .token-field::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(194, 48, 56, 0.05), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .token-field:hover::before { left: 100%; }
+
+        .token-field:hover {
+            border-color: rgba(194, 48, 56, 0.3);
+            box-shadow: 0 0 30px rgba(194, 48, 56, 0.05), inset 0 0 30px rgba(194, 48, 56, 0.02);
+        }
+
+        /* === ACTION BUTTONS === */
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            border: 1px solid rgba(194, 48, 56, 0.2);
+            color: rgba(210, 210, 220, 0.6);
+            padding: 0.7rem 1.4rem;
+            font-family: 'Shippori Mincho B1', serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(194, 48, 56, 0.08) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .btn:hover::before { opacity: 1; }
+
+        .btn:hover {
+            border-color: rgba(194, 48, 56, 0.5);
+            color: #eae8f0;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 25px rgba(194, 48, 56, 0.12);
+        }
+
+        .btn .btn-kanji {
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 1rem;
+            color: var(--vermillion);
+            opacity: 0.5;
+            transition: opacity 0.4s;
+        }
+
+        .btn:hover .btn-kanji { opacity: 0.9; }
+
+        .btn.copied {
+            border-color: rgba(80, 200, 100, 0.4);
+            color: rgba(80, 200, 100, 0.8);
+        }
+
+        .btn.copied .btn-kanji { color: rgba(80, 200, 100, 0.7); }
+
+        /* === HINT === */
+        .hint {
+            margin-top: 1.8rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(200, 200, 215, 0.2);
+            font-style: italic;
+            line-height: 1.8;
+        }
+
+        .hint code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 0.1rem 0.4rem;
+            border-radius: 2px;
+            color: rgba(194, 48, 56, 0.4);
+        }
+
+        /* === NOTIFICATION === */
+        .notif {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(-120px);
+            background: rgba(11, 11, 18, 0.95);
+            border: 1px solid rgba(194, 48, 56, 0.3);
+            color: #eae8f0;
+            padding: 0.8rem 2rem;
+            border-radius: 2px;
+            font-size: 0.85rem;
+            z-index: 100;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .notif .notif-kanji {
+            font-family: 'Zen Old Mincho', serif;
+            color: var(--vermillion);
+            font-size: 1rem;
+        }
+
+        .notif.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* === FOOTER === */
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            animation: fade-down 0.8s ease-out 0.6s both;
+        }
+
+        .footer-kanji {
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 0.8rem;
+            color: rgba(200, 200, 215, 0.1);
+            letter-spacing: 0.6em;
+        }
+
+        @media (max-width: 480px) {
+            .scroll-body { padding: 1.5rem 1rem; }
+            .identity { gap: 1rem; flex-wrap: wrap; }
+            .actions { flex-direction: column; align-items: center; }
+            .back-link { top: 1rem; left: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background -->
+    <div class="ink-wash"></div>
+
+    <!-- Rising embers -->
+    <div class="embers">
+        <div class="ember"></div><div class="ember"></div><div class="ember"></div>
+        <div class="ember"></div><div class="ember"></div><div class="ember"></div>
+        <div class="ember"></div><div class="ember"></div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notif" class="notif">
+        <span class="notif-kanji">写</span> Token copié dans le presse-papier
+    </div>
+
+    <!-- Back -->
+    <a href="/" class="back-link">
+        <span class="arrow"></span>
+        retour
+    </a>
+
+    <div class="scene">
+
+        <!-- Header -->
+        <div class="header">
+            <h1 class="title">Kin<span class="no">jutsu</span></h1>
+            <div class="identity">
+                <div class="identity-item">
+                    <span class="identity-label">Shinobi</span>
+                    <span class="identity-value">{{ user }}</span>
+                </div>
+                <div class="identity-item">
+                    <span class="identity-label">Rang</span>
+                    <span class="identity-value">{{ role }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll -->
+        <div class="makimono">
+            <div class="scroll-roll"></div>
+            <div class="scroll-body">
+                <div class="token-label">Ton sceau d'identité</div>
+                <div class="token-field" id="token-field" onclick="copyToken()">{{ token }}</div>
+                <div class="actions">
+                    <button class="btn" id="copy-btn" onclick="copyToken()">
+                        <span class="btn-kanji">写</span>
+                        Copier le token
+                    </button>
+                </div>
+            </div>
+            <div class="scroll-roll-bottom"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-kanji">忍 術 の 道</div>
+        </div>
+
+    </div>
+
+    <script>
+        function copyToken() {
+            const tokenEl = document.getElementById('token-field');
+            const token = tokenEl.textContent.trim();
+            navigator.clipboard.writeText(token).then(function() {
+                const btn = document.getElementById('copy-btn');
+                const notif = document.getElementById('notif');
+
+                btn.classList.add('copied');
+                btn.innerHTML = '<span class="btn-kanji">✓</span> Copié !';
+                notif.classList.add('show');
+
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = '<span class="btn-kanji">写</span> Copier le token';
+                    notif.classList.remove('show');
+                }, 2500);
+            });
+        }
+    </script>
+
+</body>
+</html>

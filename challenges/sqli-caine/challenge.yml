@@ -1,0 +1,36 @@
+name: "Caine"
+author: "ErEn"
+category: SQLi
+
+description_image: files/challenge.jpg
+
+description: |
+  En 1947, Grace Hopper a documenté le premier "bug" informatique. Aujourd'hui, le bug est plus subtil. Ce service semble solide, mais la patience et la persévérance sont les clés.
+
+value: 500
+type: container
+state: visible
+
+extra:
+  initial: 500
+  decay: 6
+  minimum: 300
+
+image: 192.168.213.11:5000/web-caine:latest
+port: 5000
+protocol: Web
+
+environment:
+  PYTHONUNBUFFERED: "1"
+
+flags:
+  - flag: "NHK26{bl1nd_sql1_m4st3r_t1m3_b4s3d}"
+    type: static
+
+tags:
+  - DIFFICILE
+  - SQLI
+
+
+max_attempts: 0
+version: "1.0"

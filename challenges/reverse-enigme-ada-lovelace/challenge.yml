@@ -1,0 +1,29 @@
+name: "L’énigme d’Ada Lovelace"
+author: "Bioubiou666"
+category: Reverse                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Un utilisateur anonyme vous a envoyé un fichier qui serait un hommage à Ada Lovelace.
+  A vous de comprendre ce qui est demandé pour résoudre cette énigme.
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - REVERSE
+
+flags:
+  - flag: "NHK26{4D4_L0V3L4C3_C0D3_MULT1PL3}"
+    type: static
+    
+files:
+  - files/Tribute_to_Ada_Lovelace

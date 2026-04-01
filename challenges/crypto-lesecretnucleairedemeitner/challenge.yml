@@ -1,0 +1,33 @@
+name: "Le secret nucléaire de Meitner"
+author: "Leo"
+category: Crypto
+
+description_image: files/challenge.png
+
+description: |
+  Lise Meitner, pionnière de la physique nucléaire, a caché des notes cruciales sur la
+  fission dans un code secret pendant ses recherches en exil.
+  Le message intercepté semble anodin… mais Meitner ne laissait jamais d'informations
+  critiques à la vue de tous.
+
+value: 300
+type: dynamic
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+tags:
+  - MOYEN
+  - CRYPTO
+
+flags:
+  - flag: "NHK26{6Kv9LdE9kkH}"
+    type: static
+
+files:
+  - files/message_chiffre.bin
+  - files/confidentiel.bin
+  - files/note_meitner.txt

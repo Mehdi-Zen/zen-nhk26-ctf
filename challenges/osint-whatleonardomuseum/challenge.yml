@@ -1,0 +1,25 @@
+# whatleonardomuseum.yml
+name: "WhatLeonardoMuseum"
+author: "will"
+category: "OSINT"
+description_image: "files/challenge.jpeg"
+description: |
+  « Léonard de Vinci, inventeur et artiste de la Renaissance, a marqué l’histoire des sciences. Retrouve le musée qui lui rend hommage dans sa ville natale et indique trois mots correspondants à ce lieu. » 
+  
+  `Format du Flag : NHK26{mot1.mot2.mot3}`
+value: 50
+type: dynamic
+state: visible
+extra:
+  initial: 50
+  decay: 40
+  minimum: 20
+tags:
+  - "INTRO"
+  - "OSINT"
+flags:
+  - flag: "NHK26{assombrir.prouvons.dindon}"
+    type: "static"
+hints:
+  - content: "Un site internet peut vous aider à trouver les 3 mots"
+    cost: 0

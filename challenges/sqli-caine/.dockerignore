@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+docs/
+
+# Solution (ne pas inclure dans l'image)
+solve.py
+
+# Python cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode
+.idea
+.claude
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+test_*.py
+*_test.py
+
+# CTFd
+challenge.yml

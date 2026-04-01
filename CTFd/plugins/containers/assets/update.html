@@ -1,0 +1,175 @@
+{% extends "admin/challenges/update.html" %}
+
+{% block connection_info %}
+<div class="form-group d-none">
+	<label>
+		Connection Info<br>
+		<small class="form-text text-muted">
+			Use this to specify a link, hostname, or connection instructions for your challenge.
+		</small>
+	</label>
+	<input type="text" class="form-control chal-connection-info" name="connection_info"
+		value="{{ challenge.connection_info | default('Container', true) }}">
+</div>
+{% endblock %}
+
+{% block value %}
+<div class="form-group">
+	<label for="value">Current Value<br>
+		<small class="form-text text-muted">
+			This is how many points the challenge is worth right now.
+		</small>
+	</label>
+	<input type="number" class="form-control chal-value" name="value" value="{{ challenge.value }}" disabled>
+</div>
+
+<div class="form-group">
+	<label for="value">Initial Value<br>
+		<small class="form-text text-muted">
+			This is how many points the challenge was worth initially.
+		</small>
+	</label>
+	<input type="number" class="form-control chal-initial" name="initial" value="{{ challenge.initial }}" required>
+</div>
+
+<div class="form-group">
+	<label for="value">Decay Limit<br>
+		<small class="form-text text-muted">
+			The amount of solves before the challenge reaches its minimum value
+		</small>
+	</label>
+	<input type="number" class="form-control chal-decay" name="decay" value="{{ challenge.decay }}" required>
+</div>
+
+<div class="form-group">
+	<label for="value">Minimum Value<br>
+		<small class="form-text text-muted">
+			This is the lowest that the challenge can be worth
+		</small>
+	</label>
+	<input type="number" class="form-control chal-minimum" name="minimum" value="{{ challenge.minimum }}" required>
+</div>
+
+<div class="form-group">
+	<script>
+		var container_image_selected = "{{ challenge.image }}";
+	</script>
+	<label>
+		Image<br>
+		<small class="form-text text-muted">
+			Name of the Docker image to spin up
+		</small>
+	</label>
+	<select type="text" class="form-control" name="image" placeholder="Enter image" id="container-image"
+		title="Name of the Docker image to spin up" required disabled>
+		<option value="" id="container-image-default" disabled selected>Loading...</option>
+	</select>
+</div>
+
+<div class="form-group">
+	<label>
+		Connect type<br>
+		<small class="form-text text-muted">
+			Connect via web or tcp
+		</small>
+	</label>
+	<select type="text" class="form-control" name="connection_type" placeholder="Connect via" id="connect-type"
+		title="Connect via web or tcp" required>
+		<option value="" id="connect-type-default" selected disabled>Choose a value...</option>
+		<option value="web">Web</option>
+		<option value="tcp">TCP</option>
+	</select>
+</div>
+
+<div class="form-group">
+	<label>
+		Port<br>
+		<small class="form-text text-muted">
+			Internal container port that should be exposed (external port will be automatically assigned)
+		</small>
+	</label>
+	<input type="number" class="form-control" name="port" value="{{ challenge.port }}" required>
+</div>
+
+<div class="form-group">
+	<label>
+		Volumes<br>
+		<small class="form-text text-muted">
+			Custom volumes to mount, in JSON. E.g.
+			<pre>{"/home/user1/": {"bind": "/mnt/vol2", "mode": "rw"}, "/var/www": {"bind": "/mnt/vol1", "mode": "ro"}}</pre>
+		</small>
+	</label>
+	<input type="text" class="form-control" name="volumes" value="{{ challenge.volumes }}">
+</div>
+<!-- Flag Mode, Prefix, Suffix, Random Length -->
+<div class="form-group">
+	<label for="flag_mode">Flag Mode
+		<br>
+		<small class="form-text text-muted">
+			<ul>
+				<li><strong>Static Mode:</strong>
+					<ul>
+						<li>The flag follows a fixed format:
+							<code>&lt;prefix&gt; + &lt;flag content&gt; + &lt;suffix&gt;</code>
+						</li>
+						<li>Example: If your flag is <code>CTF{this_is_the_flag}</code>, you provide:
+							<ul>
+								<li><strong>Prefix:</strong> <code>CTF{this_is_the_flag</code></li>
+								<li><strong>Suffix:</strong> <code>}</code></li>
+								<li><strong>Random Length:</strong> Leave as default</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li><strong>Random Mode:</strong>
+					<ul>
+						<li>The flag follows the format:
+							<code>&lt;prefix&gt; + &lt;random part (length defined)&gt; + &lt;suffix&gt;</code>
+						</li>
+						<li>Example 1: If <code>random_length = 8</code>, a flag could be: <code>CTF{a1b2c3d4}</code>
+						</li>
+						<li>Example 2: The random part can be appended to a predefined flag:
+							<code>CTF{this_is_the_flag_a1b2c3d4}</code>
+						</li>
+						<li>You provide:
+							<ul>
+								<li><strong>Prefix:</strong> <code>CTF{</code></li>
+								<li><strong>Suffix:</strong> <code>}</code></li>
+								<li><strong>Random Length:</strong> <code>8</code></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			With this type of challenge, you don't need to specify flag in the popup (just leave empty)!
+		</small>
+	</label>
+	<select class="form-control" name="flag_mode" id="flag_mode">
+		<option value="static" {% if challenge.flag_mode=="static" %}selected{% endif %}>
+			Static
+		</option>
+		<option value="random" {% if challenge.flag_mode=="random" %}selected{% endif %}>
+			Random
+		</option>
+	</select>
+</div>
+
+<div class="form-group">
+	<label for="flag_prefix">Flag Prefix</label>
+	<input type="text" class="form-control" name="flag_prefix" id="flag_prefix"
+		value="{{ challenge.flag_prefix|default('CTF{') }}" />
+</div>
+
+<div class="form-group">
+	<label for="flag_suffix">Flag Suffix</label>
+	<input type="text" class="form-control" name="flag_suffix" id="flag_suffix"
+		value="{{ challenge.flag_suffix|default('}') }}" />
+</div>
+
+<div class="form-group">
+	<label for="random_flag_length">Random Flag Length</label>
+	<input type="number" class="form-control" name="random_flag_length" id="random_flag_length" min="1"
+		value="{{ challenge.random_flag_length|default(10) }}" />
+</div>
+
+{% endblock %}

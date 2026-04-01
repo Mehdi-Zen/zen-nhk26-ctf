@@ -1,0 +1,23 @@
+# reversexor.yml
+name: "ReverseXOR"
+author: "will"
+category: "Reverse"
+description_image: "files/challenge.jpeg"
+description: |
+  « Claude Shannon, père fondateur de la théorie de l’information, vous a laissé à disposition un exécutable contenant des informations de la plus haute importance. Oserez-vous l’exécuter pour voir ce qu’il renferme ».
+  
+value: 100
+type: dynamic
+state: visible
+extra:
+  initial: 100
+  decay: 30
+  minimum: 50
+tags:
+  - FACILE
+  - REVERSE
+flags:
+  - flag: "NHK26{Shannon_Information_Theory}"
+    type: "static"
+files:
+  - files/shannon_xor_challenge

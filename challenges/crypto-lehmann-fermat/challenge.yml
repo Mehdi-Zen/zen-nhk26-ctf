@@ -1,0 +1,36 @@
+name: "Le Nonce-Sens du professeur M.Lehmann"
+author: "Malth"
+category: Crypto                   # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.jpeg   # OBLIGATOIRE pour l'affichage dans la description
+
+files:
+ - files/file.txt
+ - files/file_2.txt
+ - files/file_3.enc
+ - files/travaux_chiffres.enc
+ - files/public.pem
+
+description: |
+  Le professeur Maxime Lehmann a voulu chiffrer son travail axés sur la pharmacologie et la biologie cellulaire appliqué au cancer du cerveau. Un influant lobby pharmaceutique souhaite subtiliser ses travaux afin de les exploiter de façon lucrative.
+  Pour se faire il a entendu l'existence d'un algorithme de cryptage plutôt répandu, AES.
+  Mais il n'a pas eu le temps de se renseigner sur les méthodes différentes que peut employer cet algorithme afin de fonctionner.
+  Vous devez réussir a extraire la formule chimique caché dans ses travaux.
+  Celle-ci aura la forme NHK26{...}.
+
+value: 500                       # Voir document de Camille
+type: dynamic
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                   # Minimum
+
+tags:
+  - DIFFICILE
+  - CRYPTO
+
+flags:
+  - flag: "NHK26{F3RM47_AT74CK_1S_T00_3@SY_F0R_YOU}"
+    type: static

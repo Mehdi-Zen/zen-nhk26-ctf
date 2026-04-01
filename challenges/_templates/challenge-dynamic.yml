@@ -1,0 +1,47 @@
+# TEMPLATE: Challenge sans Docker (Crypto, Forensic, OSINT, etc.)
+# Dossier: categorie-nom (ex: crypto-caesar)
+
+name: "Nom du Challenge"
+author: "TonPseudo"
+category: Crypto                 # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png    # OBLIGATOIRE
+
+description: |
+  Description du challenge.
+  Supporte le **markdown**.
+
+# Points: voir document de Camille
+value: 100
+type: dynamic
+state: visible
+
+extra:
+  initial: 100                   # = value
+  decay: 20
+  minimum: 50                    # ~50% de initial
+
+flags:
+  - flag: "NHK26{your_flag_here}"
+    type: static
+
+# Premier tag = difficulte (OBLIGATOIRE)
+tags:
+  - FACILE
+  - Crypto
+
+# Fichiers donnes aux participants
+files:
+  - files/message.txt
+
+# Optionnel - cout des indices: voir document de Camille
+hints:
+  - content: "Premier indice"
+    cost: 0
+
+# Prerequis (optionnel) - challenges a resoudre avant d'acceder a celui-ci
+# requirements:
+#   prerequisites:
+#     - "Nom du challenge prerequis"
+
+max_attempts: 0

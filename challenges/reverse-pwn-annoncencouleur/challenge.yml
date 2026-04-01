@@ -1,0 +1,31 @@
+name: "Annonce la couleur"
+author: "EL NiMoS"
+category: Reverse                   # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Intitulé « Annonce la couleur », ce challenge fait référence au domaine de la trichromie, un procédé permettant de générer une large gamme de couleurs à partir de trois couleurs primaires : rouge, vert et bleu. Les premières expériences dans ce domaine ont été menées par le physicien James Clerk Maxwell.
+
+  À partir de l’applicatif fourni, vous devrez analyser son fonctionnement pour retrouver la suite de valeurs RGB qui permettra d’obtenir le flag. Observez attentivement le programme afin de retrouver les trois couleurs permettant d'obtenir le flag !
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                    # Minimum
+
+tags:
+  - MOYEN
+  - REVERSE
+
+flags:
+  - flag: "NHK26{42_128_210}"
+    type: static
+files : 
+  - files/AnnonceLaCouleur.zip
+
+max_attempts: 0

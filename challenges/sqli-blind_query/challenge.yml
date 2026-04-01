@@ -1,0 +1,41 @@
+name: "Blind Query"
+author: "BloDiZz"
+category: SQLi                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Vous êtes face à une application web interne appartenant à un laboratoire de recherche scientifique.
+  Cette application permet aux scientifiques de se connecter à leur espace personnel.
+
+  D’après des sources internes l’identifiant serait sous le format suivant “prenom.nom” du scientifique. De plus nous savons qu’une scientifique française ayant effectué des travaux sur la radioactivité à travailler la bas ! 
+
+  Votre objectif est de récupérer une information confidentielle stockée dans la base de données en vous connectant à l’aide d’un compte existant.
+
+
+value: 100                      
+type: container
+
+image: 192.168.213.11:5000/sqli-blind_query:latest
+port: 80
+protocol: web
+state: visible                  
+
+extra:
+  initial: 100                   
+  decay: 30                      
+  minimum: 50                  
+
+tags:
+  - FACILE
+  - SQLI
+
+flags:
+  - flag: "NHK26{Marie_Curie_Grande_Physicienne}"
+    type: static
+    
+hints:
+  - content: "Cette scientifique a reçu deux prix Nobel"
+    cost: 5
+  - content: "L'injection se fait à la suite de l'identifiant !"
+    cost: 15

@@ -1,0 +1,42 @@
+name: "L'Automate Disparu de Jaquet-Droz"
+author: "Bioubiou666"
+category: Web                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Le Musée de l'Horlogerie annonce la découverte d'un nouvel automate de Pierre Jaquet-Droz capable de lire. Un secret se cache quelque part sur leur site web.
+  Trouvez le flag caché.
+
+value: 100                       # Voir document de Camille
+
+
+type: container
+
+image: registry.gitlab.com/web-automate-jaquet-droz:latest
+port: 80 # Port exposé dans votre Dockerfile
+protocol: web                    # ou: tcp
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 100                   # POur gerer le dynamisme du scoring
+  decay: 30                      # facteur de decroissance
+  minimum: 50                   # Minimum
+
+tags:
+  - FACILE
+  - WEB
+
+flags:
+  - flag: "NHK26{L3S_4UTOMAT3S_LIS3NT_4USSI_L3S_S3CR3TS}"
+    type: static
+
+type: container
+image: registry.gitlab.com/web-L_automate_disparu_de_Jaquet-Droz:latest
+port: 80 # Port exposé dans votre Dockerfile
+protocol: web                    # ou: tcp
+
+# Indices payants
+hints:
+  - content: "Mais comment les robots savent ce qu’ils ont le droit de lire sur ce site ?"
+    cost: 5

@@ -1,0 +1,27 @@
+name: "Les métadonnées parlent"
+author: "Kln"
+category: OSINT                 # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Donner le nom de l’observatoire en français dans lequel a été prise la photo suivante.
+
+  `Format du Flag : NHK26{Contenu_Du_Flag}`
+
+value: 100                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 100                   # POur gerer le dynamisme du scoring
+  decay: 30                      # facteur de decroissance
+  minimum: 50                    # Minimum
+
+tags:
+  - FACILE                        # OBLIGATOIRE en premier (voir tableau)
+  - OSINT
+
+flags:
+  - flag: "NHK26{Observatoire_Arcetri}"
+    type: static

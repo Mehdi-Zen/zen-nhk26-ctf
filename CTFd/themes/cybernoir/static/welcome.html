@@ -1,0 +1,388 @@
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+  .nhk-welcome-root {
+    font-family: 'Share Tech Mono', monospace;
+    color: #e8ecf4;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+    line-height: 1.7;
+  }
+
+  .nhk-hero {
+    text-align: center;
+    padding: 80px 0 20px;
+  }
+
+  .nhk-hero h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    color: #e8ecf4;
+    margin: 0 0 8px;
+    letter-spacing: 1px;
+  }
+
+  .nhk-hero h1 .nhk-dot {
+    color: #00fff5;
+  }
+
+  .nhk-hero-sub {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    color: #d0d8e8;
+    max-width: 650px;
+    margin: 16px auto 0;
+    line-height: 1.8;
+  }
+
+  .nhk-hero-sub em {
+    color: #d0d4e0;
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .nhk-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ffffff10, transparent);
+    margin: 35px 0;
+    border: none;
+  }
+
+  .nhk-section {
+    margin-bottom: 35px;
+  }
+
+  .nhk-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .nhk-section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #d0d4e0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .nhk-section-intro {
+    font-size: 13px;
+    color: #a0a8b8;
+    margin-bottom: 16px;
+  }
+
+  .nhk-rule {
+    background: #0a0a0f;
+    border: 1px solid #181a22;
+    border-left: 2px solid #2a2e3a;
+    padding: 14px 18px;
+    margin-bottom: 8px;
+    border-radius: 0 4px 4px 0;
+    transition: border-left-color 0.3s ease;
+  }
+
+  .nhk-rule:hover {
+    border-left-color: #505868;
+  }
+
+  .nhk-rule-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #d0d4e0;
+    margin-bottom: 3px;
+  }
+
+  .nhk-rule-text {
+    font-size: 12.5px;
+    color: #c0c8d8;
+    line-height: 1.6;
+  }
+
+  .nhk-rule-text code {
+    background: #14161e;
+    color: #00fff5;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+  }
+
+  .nhk-rule-text strong {
+    color: #e0e4f0;
+  }
+
+  .nhk-legal {
+    background: #08080c;
+    border: 1px solid #181a22;
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 8px;
+  }
+
+  .nhk-legal-item {
+    margin-bottom: 14px;
+  }
+
+  .nhk-legal-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .nhk-legal-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: #a0a8b8;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  .nhk-legal-text {
+    font-size: 12px;
+    color: #a0a8b8;
+    line-height: 1.6;
+  }
+
+  .nhk-mission {
+    background: #0a0a0f;
+    border: 1px solid #181a22;
+    border-radius: 6px;
+    padding: 28px;
+    text-align: center;
+  }
+
+  .nhk-mission-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #505868;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .nhk-mission-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #d0d4e0;
+    margin-bottom: 10px;
+  }
+
+  .nhk-mission-text {
+    font-size: 13px;
+    color: #c0c8d8;
+    line-height: 1.7;
+    max-width: 550px;
+    margin: 0 auto 20px;
+  }
+
+  .nhk-mission-text strong {
+    color: #00fff5;
+  }
+
+  .nhk-cta {
+    display: inline-block;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #050508;
+    background: #00fff5;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .nhk-cta:hover {
+    background: #00e0d8;
+    color: #050508;
+    text-decoration: none;
+  }
+
+  .nhk-footer-note {
+    text-align: center;
+    font-size: 11px;
+    color: #252830;
+    margin-top: 40px;
+    letter-spacing: 2px;
+  }
+
+  .nhk-terminal-prompt {
+    color: #505868;
+  }
+
+  /* Sponsors carousel */
+  .nhk-sponsors-track {
+    overflow: hidden;
+    padding: 20px 0;
+    background: #08080c;
+    border: 1px solid #181a22;
+    border-radius: 6px;
+  }
+  .nhk-sponsors-slide {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    animation: nhk-scroll 30s linear infinite;
+    width: max-content;
+  }
+  .nhk-sponsors-slide img {
+    height: 45px;
+    width: auto;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+    flex-shrink: 0;
+  }
+  .nhk-sponsors-slide img:hover {
+    opacity: 1;
+  }
+  @keyframes nhk-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+</style>
+
+<div class="nhk-welcome-root">
+
+  <div class="nhk-hero">
+    <img src="/themes/cybernoir/static/img/unenuitpourhacker-logo.svg" alt="Une Nuit Pour Hacker" style="max-width: clamp(180px, 30vw, 300px); height: auto; filter: brightness(0) invert(1); opacity: 0.9; margin-bottom: 1.2rem;">
+    <h1>Bienvenue, hacker<span class="nhk-dot">.</span></h1>
+    <p class="nhk-hero-sub">
+      Vous êtes ici pour résoudre des énigmes, exploiter des failles <em>(légalement)</em> et capturer des flags <em>(proprement)</em>.
+      <br>Bienvenue à la soirée <em>« Une nuit pour hacker »</em> — que le meilleur gagne !
+    </p>
+  </div>
+
+  <hr class="nhk-divider">
+
+  <!-- RÈGLEMENT -->
+  <div class="nhk-section">
+    <div class="nhk-section-header">
+      <span class="nhk-section-title">Règlement</span>
+    </div>
+    <p class="nhk-section-intro">
+      En validant votre premier challenge, vous acceptez les conditions suivantes :
+    </p>
+
+    <div class="nhk-rule">
+      <div class="nhk-rule-name">L'infrastructure est sacrée</div>
+      <div class="nhk-rule-text">Pas de brute force sur les challenges, pas de déni de service, pas d'attaque sur les serveurs ou le réseau de la compétition. Si vous faites tomber le CTF, le prix de la victoire sera une expulsion immédiate <strong>FOR SURE !</strong></div>
+    </div>
+
+    <div class="nhk-rule">
+      <div class="nhk-rule-name">Respect des autres participants</div>
+      <div class="nhk-rule-text">Aucune attaque informatique sur les équipements des autres participants. Adoptez une attitude positive et inclusive, respectez tout le monde par une communication appropriée et bienveillante.</div>
+    </div>
+
+    <div class="nhk-rule">
+      <div class="nhk-rule-name">Entraide oui, triche non</div>
+      <div class="nhk-rule-text">Vous pouvez discuter, échanger des pistes et vous entraider entre équipes , c'est l'esprit de la soirée ! Mais donner directement un flag ou une solution complète, c'est de la triche. Si plusieurs équipes collaborent pour le podium, elles seront fusionnées en une seule.</div>
+    </div>
+
+    <div class="nhk-rule">
+      <div class="nhk-rule-name">La loi du flag</div>
+      <div class="nhk-rule-text">Le format est <code>NHK26{ }</code>. Si vous ne trouvez pas le flag, ne blâmez pas le développeur (c'est moi, et je suis susceptible). Attention, c'est très sensible à la casse ce petit truc.</div>
+    </div>
+
+    <div class="nhk-rule">
+      <div class="nhk-rule-name">Le fair-play</div>
+      <div class="nhk-rule-text">Si vous trouvez un moyen de gagner sans jouer ou en exploitant une faille stupide, venez nous voir pour nous expliquer. On adore les génies, mais on préfère ceux qui restent polis. En plus, on a la gendarmerie sur place.</div>
+    </div>
+
+    <div class="nhk-rule">
+      <div class="nhk-rule-name">Sobriété</div>
+      <div class="nhk-rule-text">Pas d'état d'ébriété sur le lieu de la compétition ou sur le campus. Des éthylotests sont à disposition. On hack des serveurs, pas son foie.</div>
+    </div>
+
+    <p style="font-size: 11px; color: #e74c3c; margin-top: 14px; text-align: center; font-weight: bold;">Tout manquement à cette charte pourra conduire à une expulsion de l'événement, avec ou sans préavis.</p>
+  </div>
+
+  <hr class="nhk-divider">
+
+  <!-- RGPD -->
+  <div class="nhk-section">
+    <div class="nhk-section-header">
+      <span class="nhk-section-title">Mentions légales & RGPD</span>
+    </div>
+
+    <div class="nhk-legal">
+      <div class="nhk-legal-item">
+        <div class="nhk-legal-label">Données personnelles</div>
+        <div class="nhk-legal-text">Nous ne collectons que votre pseudonyme et e-mail pour la gestion du classement. Aucune donnée ne sera revendue. Tout sera supprimé dans les 7 jours suivant l'événement.</div>
+      </div>
+      <div class="nhk-legal-item">
+        <div class="nhk-legal-label">Droit à l'image</div>
+        <div class="nhk-legal-text">Des photos et vidéos seront réalisées au cours de l'événement pour le souvenir. Si vous ne souhaitez pas apparaître, signalez-le aux organisateurs dès votre arrivée pour recevoir un signe distinctif.</div>
+      </div>
+      <div class="nhk-legal-item" style="margin-top: 16px; border-top: 1px solid #181a22; padding-top: 14px;">
+        <div class="nhk-legal-label">Validation du règlement</div>
+        <div class="nhk-legal-text">En participant à cet événement, vous acceptez l'ensemble des règles ci-dessus. Pour confirmer votre lecture, voici votre sésame : <code style="background: #14161e; color: #00fff5; padding: 2px 6px; border-radius: 3px; font-family: 'Share Tech Mono', monospace;">NHK26{G_reuci_ah_me_K0necter!}</code></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="nhk-divider">
+
+  <!-- PREMIÈRE MISSION -->
+  <div class="nhk-section">
+    <div class="nhk-mission">
+      <span class="nhk-mission-tag">objectif prioritaire</span>
+      <div class="nhk-mission-title">Première mission</div>
+      <p class="nhk-mission-text">
+        Trouvez le challenge de la catégorie <strong>warmup</strong> et validez votre présence ainsi que les règles du royaume.<br>
+        Si vous n'y arrivez pas, c'est peut-être le signe que la Red Bull n'a pas encore fait effet… ou qu'il faut demander de l'aide à un organisateur.
+      </p>
+      <a href="/challenges" class="nhk-cta">Accéder aux challenges</a>
+    </div>
+  </div>
+
+  <!-- SPONSORS -->
+  <p style="text-align: center; font-size: 12px; color: #a0a8b8; margin-bottom: 12px; letter-spacing: 1px;">Merci à nos partenaires pour leur soutien et leur confiance.</p>
+  <div class="nhk-sponsors-track">
+    <div class="nhk-sponsors-slide">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_absys.png" alt="Absys">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_ba115.jpeg" alt="BA115">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_eva.png" alt="EVA">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_irt.svg" alt="IRT">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_isover.png" alt="Isover" style="background: white; padding: 4px 8px; border-radius: 4px;">
+      <img src="/themes/cybernoir/static/img/sponsors/logo-ldlc-avignon-mistral-7-bleu-cyan.png" alt="LDLC" style="height: 60px;">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_nvs.png" alt="NVS">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_organic_web.png" alt="Organic Web">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_pentesterlab.svg" alt="PentesterLab">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_proxmox.svg" alt="Proxmox">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_radiofrance.png" alt="Radio France">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_secretduphoenix.png" alt="Secret du Phoenix">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_thucy.png" alt="Thucy">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_absys.png" alt="Absys">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_ba115.jpeg" alt="BA115">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_eva.png" alt="EVA">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_irt.svg" alt="IRT">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_isover.png" alt="Isover" style="background: white; padding: 4px 8px; border-radius: 4px;">
+      <img src="/themes/cybernoir/static/img/sponsors/logo-ldlc-avignon-mistral-7-bleu-cyan.png" alt="LDLC" style="height: 60px;">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_nvs.png" alt="NVS">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_organic_web.png" alt="Organic Web">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_pentesterlab.svg" alt="PentesterLab">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_proxmox.svg" alt="Proxmox">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_radiofrance.png" alt="Radio France">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_secretduphoenix.png" alt="Secret du Phoenix">
+      <img src="/themes/cybernoir/static/img/sponsors/logo_thucy.png" alt="Thucy">
+    </div>
+  </div>
+
+  <p class="nhk-footer-note">
+    <span class="nhk-terminal-prompt">$</span> root@nhk26:~# ./hack_the_planet.sh
+  </p>
+
+</div>

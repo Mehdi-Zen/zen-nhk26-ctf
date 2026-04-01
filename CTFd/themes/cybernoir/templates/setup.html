@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="jumbotron">
+    <div class="container">
+      <h1 data-text="{% trans %}Setup{% endtrans %}">
+        <span class="glow-cyan">//</span> {% trans %}Setup{% endtrans %}
+      </h1>
+    </div>
+  </div>
+
+  <div class="container" x-data="Setup">
+    {% include "components/errors.html" %}
+
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="settings-section">
+          <h4><i class="fas fa-cog me-2"></i>{% trans %}Initial Setup{% endtrans %}</h4>
+          <p class="text-muted">{% trans %}Configure your CTFd instance{% endtrans %}</p>
+
+          <form method="POST" x-ref="setupForm">
+            <div class="mb-4">
+              <label class="form-label">{% trans %}CTF Name{% endtrans %}</label>
+              <input type="text" name="ctf_name" class="form-control" placeholder="Enter CTF name" required>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">{% trans %}CTF Description{% endtrans %}</label>
+              <textarea name="ctf_description" class="form-control" rows="3" placeholder="Describe your CTF"></textarea>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">{% trans %}User Mode{% endtrans %}</label>
+              <select name="user_mode" class="form-select">
+                <option value="users">{% trans %}Users{% endtrans %}</option>
+                <option value="teams">{% trans %}Teams{% endtrans %}</option>
+              </select>
+            </div>
+
+            <hr class="my-4">
+
+            <h5 class="mb-3"><i class="fas fa-user-shield me-2"></i>{% trans %}Admin Account{% endtrans %}</h5>
+
+            <div class="mb-4">
+              <label class="form-label">{% trans %}Admin Username{% endtrans %}</label>
+              <input type="text" name="name" class="form-control" placeholder="Admin username" required>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">{% trans %}Admin Email{% endtrans %}</label>
+              <input type="email" name="email" class="form-control" placeholder="admin@example.com" required>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">{% trans %}Admin Password{% endtrans %}</label>
+              <input type="password" name="password" class="form-control" placeholder="Strong password" required>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-rocket me-2"></i>{% trans %}Complete Setup{% endtrans %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ Assets.js("assets/js/setup.js") }}
+{% endblock %}

@@ -1,0 +1,62 @@
+name: "gaillardement_instable_4"
+author: "Malth"
+category: OSINT                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+files:
+ - files/sky.png
+ - files/README.md
+ 
+description: |
+  Nous y sommes.
+
+  Après des semaines d’investigation, de recoupements et de fausses pistes,
+  il ne reste plus qu’un seul mystère à résoudre.
+
+  Le  /05/2024, à une heure précise,
+  Michel Gaillard a levé les yeux vers le ciel.
+  Une photographie a été prise.
+
+  Aucun bâtiment.
+  Aucun panneau.
+  Aucun repère évident.
+
+  Seulement les étoiles.
+
+  Mais le ciel ne ment jamais.
+
+  À partir de cette image, vous devez déterminer
+  la position exacte depuis laquelle la photo a été capturée.
+
+  Latitude. Longitude.
+  Pas une approximation.
+  Une certitude.
+
+  Les étoiles savent.
+  À vous de les lire.
+
+  Format du flag :
+  NHK26{xxxxx_xxxxx}
+
+value: 500
+type: dynamic
+state : visible
+
+extra:
+  initial: 500                   
+  decay: 6                      
+  minimum: 300
+
+tags:
+  - TIROIR
+  - DIFFICILE
+  - OSINT
+
+flags:
+  - flag: "NHK26{47.2N_39.6E}"
+    type: static
+    
+requirements:
+  prerequisites:
+    - "gaillardement_instable_3"

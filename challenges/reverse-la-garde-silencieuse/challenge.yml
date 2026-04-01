@@ -1,0 +1,29 @@
+name: "La Garde Silencieuse"
+author: "Wumbou"
+category: Reverse                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Ada Lovelace, la visionnaire, a conçu ce prototype de carnet de notes numérique. 
+
+  Est-ce vraiment aussi sécurisé qu'elle le prétend, ou a-t-elle laissé une porte entrouverte pour les esprits curieux capable de lire entre les lignes...?.
+
+value: 300                       # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : hidden                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 300                   # POur gerer le dynamisme du scoring
+  decay: 13                      # facteur de decroissance
+  minimum: 100                   # Minimum
+
+tags:
+  - MOYEN
+  - REVERSE
+files:
+  - files/securenotes.exe
+
+flags:
+  - flag: "NHK26{St4ck_C4n4ry_&_R3t_2_W1n}"
+    type: static

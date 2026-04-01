@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireless Gateway - Diagnostic Réseau</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 Wireless Gateway</h1>
+        <p class="subtitle">Module de Diagnostic Réseau - Version 2.1.4</p>
+        
+        <div class="quote">
+            "From a long view of the history of mankind, seen from, say, ten thousand years from now, there can be little doubt that the most significant event of the 19th century will be judged as Maxwell's discovery of the laws of electrodynamics."
+            <br><strong>— Richard Feynman, à propos de James Clerk Maxwell</strong>
+        </div>
+        
+        <form id="diagnosticForm">
+            <div class="form-group">
+                <label for="url">🔍 URL à diagnostiquer :</label>
+                <input 
+                    type="text" 
+                    id="url" 
+                    name="url" 
+                    placeholder="https://example.com"
+                    required
+                >
+            </div>
+            
+            <button type="submit">Lancer le diagnostic</button>
+        </form>
+        
+        <div id="result"></div>
+        
+        <div class="hint">
+            💡 <strong>Hint:</strong> Les ondes électromagnétiques peuvent prendre différentes formes... Tout comme les adresses IP.
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('diagnosticForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const url = document.getElementById('url').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.className = '';
+            resultDiv.innerHTML = '⏳ Diagnostic en cours...';
+            
+            try {
+                const response = await fetch('/diagnostic', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `url=${encodeURIComponent(url)}`
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `
+                        <strong>✅ Diagnostic réussi</strong><br>
+                        <strong>Status Code:</strong> ${data.status_code}<br>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.innerHTML = `
+                        <strong>❌ Erreur</strong><br>
+                        ${data.error}<br>
+                        ${data.reason ? `<em>${data.reason}</em>` : ''}
+                    `;
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `<strong>❌ Erreur réseau:</strong> ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
+

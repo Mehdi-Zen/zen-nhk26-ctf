@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette | Crazy Casino</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/roulette.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>">
+</head>
+<body>
+    <div class="casino-bg">
+        <div class="roulette-container">
+            <header class="site-header">
+                <div class="header-brand">
+                    <span class="brand-logo">🎰 Roulette</span>
+                    <span class="brand-divider"></span>
+                    <span class="brand-tagline">Spin to Win</span>
+                </div>
+                <div class="header-user">
+                    <div class="user-balance">
+                        <span class="balance-icon">◆</span>
+                        <span class="balance-amount" id="balance">0</span>
+                        <span class="balance-label">chips</span>
+                    </div>
+                    <a href="/dashboard" class="btn-secondary">Back to Floor</a>
+                </div>
+            </header>
+
+            <main class="roulette-main">
+                <div class="wheel-section">
+                    <div class="wheel-wrapper">
+                        <div class="wheel-pointer"></div>
+                        <canvas id="roulette-canvas" width="340" height="340"></canvas>
+                    </div>
+                    <div class="result-display" id="result-display">
+                        <div class="result-number" id="result-number">0</div>
+                        <span class="result-text">Place your bet</span>
+                    </div>
+                    <div class="last-results" id="last-results"></div>
+                </div>
+
+                <div class="betting-section">
+                    <div class="bet-amount-control">
+                        <label>Bet Amount</label>
+                        <input type="number" id="bet-amount" value="100" min="10" max="10000" step="10">
+                    </div>
+
+                    <div class="bet-options">
+                        <div class="bet-group">
+                            <h3>Colors</h3>
+                            <button class="bet-btn red" data-type="color" data-value="red">Red (2x)</button>
+                            <button class="bet-btn black" data-type="color" data-value="black">Black (2x)</button>
+                        </div>
+
+                        <div class="bet-group">
+                            <h3>Even/Odd</h3>
+                            <button class="bet-btn" data-type="even_odd" data-value="even">Even (2x)</button>
+                            <button class="bet-btn" data-type="even_odd" data-value="odd">Odd (2x)</button>
+                        </div>
+
+                        <div class="bet-group">
+                            <h3>Halves</h3>
+                            <button class="bet-btn" data-type="half" data-value="1-18">1-18 (2x)</button>
+                            <button class="bet-btn" data-type="half" data-value="19-36">19-36 (2x)</button>
+                        </div>
+
+                        <div class="bet-group">
+                            <h3>Dozens</h3>
+                            <button class="bet-btn" data-type="dozen" data-value="1-12">1-12 (3x)</button>
+                            <button class="bet-btn" data-type="dozen" data-value="13-24">13-24 (3x)</button>
+                            <button class="bet-btn" data-type="dozen" data-value="25-36">25-36 (3x)</button>
+                        </div>
+                    </div>
+
+                    <div class="number-grid">
+                        <h3>Straight Up (35x)</h3>
+                        <div class="numbers">
+                            <button class="num-btn green" data-type="number" data-value="0">0</button>
+                        </div>
+                        <div class="numbers" id="number-buttons"></div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="site-footer">
+                <div class="footer-suits">♠ ♥ ♦ ♣</div>
+                <p>Play responsibly. The house always wins.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/roulette3d.js"></script>
+    <script src="/static/js/roulette.js"></script>
+</body>
+</html>

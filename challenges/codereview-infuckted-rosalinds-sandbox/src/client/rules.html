@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V01D.onion — Board Rules</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon_V01D.svg">
+<style>
+  @view-transition {
+    navigation: auto;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root { 
+    --bg: #050505; --bg2: #0a0a0a; --bg3: #0f0f0f; 
+    --border: #1a1a1a; --border2: #222; 
+    --green: #00ff41; --green-dim: #00aa2a; --green-faint: #003310; 
+    --red: #ff2020; --red-dim: #801010; 
+    --amber: #ffb300; --amber-dim: #7a5500; 
+    --gray: #444; --gray2: #2a2a2a; 
+    --text: #b0b0b0; --text-dim: #555; --white: #d0d0d0; 
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Courier Prime', monospace; font-size: 14px; line-height: 1.6; min-height: 100vh; cursor: crosshair; }
+  body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px); pointer-events: none; z-index: 9999; }
+  @keyframes flicker { 0%, 100% { opacity: 1; } 92% { opacity: 1; } 93% { opacity: 0.8; } 94% { opacity: 1; } 96% { opacity: 0.9; } 97% { opacity: 1; } }
+  body { animation: flicker 8s infinite; }
+  #wrapper { max-width: 860px; margin: 0 auto; padding: 0 16px 80px; }
+  
+  header { border-bottom: 1px solid var(--border2); padding: 24px 0 16px; margin-bottom: 32px; }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .site-logo { font-family: 'VT323', monospace; font-size: 52px; color: var(--green); text-shadow: 0 0 20px rgba(0,255,65,0.4); letter-spacing: 4px; line-height: 1; }
+  .site-logo span { color: var(--red); }
+  .site-tagline { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 4px; letter-spacing: 2px; line-height: 1.5; }
+  .readonly-badge { border: 1px dotted var(--red-dim); background: rgba(255, 32, 32, 0.05); padding: 6px 12px; font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text-dim); text-align: right; line-height: 1.4; letter-spacing: 1px; flex-shrink: 0; }
+  .readonly-badge span { color: var(--red); }
+  .site-nav { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 20px; font-family: 'Share Tech Mono', monospace; font-size: 11px; }
+  .site-nav a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+  .site-nav a:hover { color: var(--green); }
+  .site-nav a.active { color: var(--amber); }
+
+  @media (max-width: 450px) { .site-logo { font-size: 36px; } }
+
+  .thread-header { border-left: 3px solid var(--red); padding: 16px 20px; background: var(--bg2); margin-bottom: 2px; }
+  .thread-title { font-family: 'VT323', monospace; font-size: 26px; color: var(--white); letter-spacing: 1px; }
+
+  .messages { border: 1px solid var(--border2); border-top: none; }
+  .msg { display: grid; grid-template-columns: 120px 1fr; border-bottom: 1px solid var(--border); min-height: 80px; }
+  .msg-sidebar { background: var(--bg3); border-right: 1px solid var(--border); padding: 14px 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .msg-avatar { font-family: 'VT323', monospace; font-size: 32px; line-height: 1; }
+  .msg-username { font-family: 'Share Tech Mono', monospace; font-size: 10px; text-align: center; letter-spacing: 1px; }
+  .msg-role { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--text-dim); text-align: center; }
+  .msg.system-msg .msg-username { color: var(--red); } .msg.system-msg .msg-avatar { color: var(--red); }
+  .msg-body { padding: 14px 18px; background: var(--bg); }
+  .msg-text { color: var(--text); line-height: 1.75; font-size: 13.5px; }
+  .msg-text p { margin-bottom: 10px; }
+  .msg-text blockquote { border-left: 2px solid var(--red-dim); padding-left: 12px; color: var(--text-dim); margin: 15px 0; font-family: 'Share Tech Mono', monospace; font-size: 12px;}
+  
+  footer { border-top: 1px solid var(--border2); padding: 20px 0; margin-top: 60px; font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--text-dim); letter-spacing: 1px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+<div id="wrapper">
+
+  <header>
+    <div class="header-top">
+      <div style="min-width: 0;">
+        <div class="site-logo">V<span>0</span>1D.onion</div>
+        <div class="site-tagline">// anonymous bulletin — no logs — no trust — no gods //</div>
+      </div>
+      <div class="readonly-badge">
+        USER: ANONYMOUS<br>
+        PERMS: <span>READ-ONLY</span>
+      </div>
+    </div>
+    
+    <nav class="site-nav">
+      <a href="/">[boards]</a>
+      <a href="/leaks">[leaks]</a>
+      <a href="/tools">[tools]</a>
+      <a href="/pgp">[pgp]</a>
+      <a href="/rules" class="active">[rules]</a>
+    </nav>
+  </header>
+
+  <div class="thread-header" style="border-left-color: var(--red);">
+    <div class="thread-title" style="color: var(--red);">// SYSTEM: BOARD RULES & GUIDELINES</div>
+  </div>
+
+  <div class="messages">
+    <div class="msg system-msg">
+      <div class="msg-sidebar">
+        <div class="msg-avatar">⚠</div>
+        <div class="msg-username">SYSTEM</div>
+        <div class="msg-role">admin</div>
+      </div>
+      <div class="msg-body">
+        <div class="msg-text">
+          <p>This board operates under strict operational security. Failure to comply results in a permanent ban and IP logging via our exit nodes.</p>
+          <blockquote>
+            1. No CP. Automatic permaban. No appeals.<br><br>
+            2. Do not post clear-net links. Onion routing, I2P, or Freenet links only.<br><br>
+            3. All transaction hashes and high-value leaks must be verified via PGP.<br><br>
+            4. If sharing malware, explicitly state if it is a live sample. Use password-protected zips (standard pwd: infected).<br><br>
+            5. Do not ask for hand-holding. If you don't know how to compile C or reverse a basic binary, go back to the clear web.
+          </blockquote>
+          <p style="color: var(--red);">We are not responsible for burned nodes or compromised systems. Act like a ghost.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>V01D.onion — est. ████ — no logs kept — jurisdiction: none</span>
+    <span>tor only — js disabled recommended — pgp key: 0x████████</span>
+  </footer>
+
+</div>
+</body>
+</html>

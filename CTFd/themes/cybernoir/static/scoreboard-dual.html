@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SCOREBOARD</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #050508;
+      --bg2:       #0a0a12;
+      --bg3:       #0f0f1a;
+      --panel:     #0d0d18;
+      --border:    #1a1a2e;
+      --cyan:      #00fff5;
+      --magenta:   #ff00ff;
+      --green:     #00ff41;
+      --gold:      #ffd700;
+      --silver:    #c0c0c0;
+      --bronze:    #cd7f32;
+      --dim:       #3a3a5c;
+      --text:      #c8c8e8;
+      --text-dim:  #6060a0;
+      --glow-c:    0 0 8px #00fff5, 0 0 20px #00fff566;
+      --glow-m:    0 0 8px #ff00ff, 0 0 20px #ff00ff66;
+      --glow-g:    0 0 8px #00ff41, 0 0 20px #00ff4166;
+      --chart-h:   220px;
+      --refresh:   30;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      overflow-x: hidden;
+    }
+
+    /* Scanline overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,255,245,0.015) 2px,
+        rgba(0,255,245,0.015) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── Layout ────────────────────────────────────────────── */
+    .page { display: flex; flex-direction: column; min-height: 100vh; padding: 0 0 2rem; }
+
+    /* ─── Header ────────────────────────────────────────────── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: linear-gradient(180deg, #050508 80%, transparent);
+      padding: 1rem 2rem 0;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .logo-hex {
+      width: 48px;
+      height: 48px;
+      position: relative;
+    }
+
+    .logo-hex svg { width: 100%; height: 100%; }
+
+    .site-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+
+    .title-area {
+      flex: 1;
+      text-align: center;
+    }
+
+    .main-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.6rem, 4vw, 3rem);
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--cyan));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+      text-shadow: none;
+      filter: drop-shadow(0 0 12px #00fff588);
+    }
+
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+
+    .sub-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5em;
+      color: var(--text-dim);
+      margin-top: 0.15rem;
+      text-transform: uppercase;
+    }
+
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.35rem;
+      flex-shrink: 0;
+    }
+
+    .live-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: var(--glow-g);
+      animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .live-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: 0.2em;
+    }
+
+    .clock {
+      font-size: 1.1rem;
+      color: var(--cyan);
+      text-shadow: var(--glow-c);
+      letter-spacing: 0.1em;
+    }
+
+    /* Progress bar */
+    .refresh-bar-wrap {
+      margin: 0.6rem 2rem 0;
+      height: 2px;
+      background: var(--border);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .refresh-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      box-shadow: 0 0 8px var(--cyan);
+      transform-origin: left;
+      animation: shrink calc(var(--refresh) * 1s) linear forwards;
+    }
+
+    @keyframes shrink {
+      from { transform: scaleX(1); }
+      to   { transform: scaleX(0); }
+    }
+
+    /* ─── Stats Bar ─────────────────────────────────────────── */
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 0.75rem 2rem;
+      margin: 0.5rem 2rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+    }
+
+    .stat-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-shadow: var(--glow-c);
+    }
+
+    .stat-value.magenta { color: var(--magenta); text-shadow: var(--glow-m); }
+    .stat-value.green   { color: var(--green);   text-shadow: var(--glow-g); }
+
+    .stat-sep {
+      color: var(--dim);
+      font-size: 0.8rem;
+      margin: 0 0.25rem;
+    }
+
+    .stat-refresh {
+      margin-left: auto;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── Brackets Grid ─────────────────────────────────────── */
+    .brackets-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      padding: 0 2rem;
+      flex: 1;
+    }
+
+    @media (max-width: 900px) {
+      .brackets-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── Bracket Panel ─────────────────────────────────────── */
+    .bracket-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .bracket-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 6px;
+      pointer-events: none;
+    }
+
+    .bracket-panel.b1::before { box-shadow: inset 0 0 40px rgba(0,255,245,0.04); }
+    .bracket-panel.b2::before { box-shadow: inset 0 0 40px rgba(255,0,255,0.04); }
+
+    /* Panel accent line */
+    .bracket-panel.b1 { border-top: 2px solid var(--cyan); }
+    .bracket-panel.b2 { border-top: 2px solid var(--magenta); }
+
+    /* Panel header */
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bracket-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .b1 .bracket-name { color: var(--cyan); text-shadow: var(--glow-c); }
+    .b2 .bracket-name { color: var(--magenta); text-shadow: var(--glow-m); }
+
+    .bracket-badge {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+    }
+
+    .b1 .bracket-badge { color: var(--cyan); border: 1px solid var(--cyan); }
+    .b2 .bracket-badge { color: var(--magenta); border: 1px solid var(--magenta); }
+
+    /* Chart area */
+    .chart-section {
+      padding: 0.75rem 1rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .chart-wrap {
+      height: var(--chart-h);
+      position: relative;
+    }
+
+    .chart-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+    }
+
+    /* Podium */
+    .podium-section {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .podium {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 0.5rem;
+      height: 120px;
+    }
+
+    .podium-slot {
+      flex: 1;
+      max-width: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* Crown above #1 */
+    .crown {
+      font-size: 1.2rem;
+      line-height: 1;
+      animation: crown-float 2.5s ease-in-out infinite;
+      filter: drop-shadow(0 0 6px var(--gold));
+    }
+
+    @keyframes crown-float {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50%       { transform: translateY(-5px) rotate(3deg); }
+    }
+
+    .podium-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      text-align: center;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .podium-score {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+    }
+
+    .podium-block {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .podium-block::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%);
+    }
+
+    .rank-1 .podium-block { height: 80px; background: linear-gradient(180deg, #ffd700, #b8860b); color: #000; box-shadow: 0 0 20px rgba(255,215,0,0.4); }
+    .rank-2 .podium-block { height: 56px; background: linear-gradient(180deg, #c0c0c0, #808080); color: #000; }
+    .rank-3 .podium-block { height: 40px; background: linear-gradient(180deg, #cd7f32, #7b4010); color: #fff; }
+
+    /* Table */
+    .table-section {
+      padding: 0.5rem 1rem 1rem;
+      flex: 1;
+    }
+
+    .rank-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .rank-table thead tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rank-table th {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      padding: 0.3rem 0.4rem;
+      text-align: left;
+    }
+
+    .rank-table th:last-child { text-align: right; }
+
+    .rank-table tbody tr {
+      border-bottom: 1px solid rgba(26,26,46,0.6);
+      transition: background 0.15s;
+    }
+
+    .rank-table tbody tr:hover { background: rgba(0,255,245,0.04); }
+
+    .rank-table td {
+      padding: 0.4rem 0.4rem;
+      font-size: 0.78rem;
+      vertical-align: middle;
+    }
+
+    .rank-num {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      width: 28px;
+    }
+
+    .team-name-cell {
+      max-width: 0;
+      width: 99%;
+    }
+
+    .team-name-inner {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    .score-bar-cell { width: 100px; }
+
+    .score-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .score-bar-bg {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+
+    .b1 .score-bar-fill { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+    .b2 .score-bar-fill { background: var(--magenta); box-shadow: 0 0 6px var(--magenta); }
+
+    .score-val {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+      text-align: right;
+      min-width: 38px;
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(5,5,8,0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      z-index: 50;
+      border-radius: 6px;
+      transition: opacity 0.4s;
+    }
+
+    .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--border);
+      border-top-color: var(--cyan);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      color: var(--text-dim);
+    }
+
+    /* Error state */
+    .error-msg {
+      display: none;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #ff4466;
+      letter-spacing: 0.1em;
+    }
+
+    /* Keyboard hint */
+    .kb-hint {
+      text-align: center;
+      padding: 0.5rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      letter-spacing: 0.2em;
+    }
+
+    .kb-key {
+      display: inline-block;
+      padding: 0.1rem 0.35rem;
+      border: 1px solid var(--dim);
+      border-radius: 2px;
+      color: var(--text);
+      font-size: 0.6rem;
+      margin: 0 0.15rem;
+    }
+
+    /* No data */
+    .no-data {
+      padding: 2rem 1rem;
+      text-align: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+
+    /* Flicker on refresh */
+    @keyframes flicker {
+      0%   { opacity: 1; }
+      10%  { opacity: 0.7; }
+      12%  { opacity: 1; }
+      30%  { opacity: 0.85; }
+      32%  { opacity: 1; }
+      100% { opacity: 1; }
+    }
+
+    .refreshing { animation: flicker 0.4s ease; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Header ──────────────────────────────────────────── -->
+  <header>
+    <div class="header-top">
+      <!-- Logo -->
+      <div class="logo-area">
+        <div class="logo-hex">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="24,2 44,13 44,35 24,46 4,35 4,13" stroke="#00fff5" stroke-width="1.5" fill="rgba(0,255,245,0.06)"/>
+            <polygon points="24,8 39,16.5 39,33.5 24,42 9,33.5 9,16.5" stroke="#ff00ff" stroke-width="0.8" fill="none" opacity="0.5"/>
+            <text x="24" y="30" text-anchor="middle" font-family="Orbitron,sans-serif" font-size="14" font-weight="900" fill="#00fff5">C</text>
+          </svg>
+        </div>
+        <div class="site-name">CYBERNOIR<br>CTFd</div>
+      </div>
+
+      <!-- Title -->
+      <div class="title-area">
+        <div class="main-title">SCOREBOARD</div>
+        <div class="sub-title">DUAL BRACKET : LIVE RANKINGS</div>
+      </div>
+
+      <!-- Right side -->
+      <div class="header-right">
+        <div class="live-row">
+          <div class="live-dot"></div>
+          <span class="live-label">LIVE</span>
+        </div>
+        <div class="clock" id="clock">--:--:--</div>
+      </div>
+    </div>
+
+    <!-- Refresh progress bar -->
+    <div class="refresh-bar-wrap">
+      <div class="refresh-bar" id="refreshBar"></div>
+    </div>
+  </header>
+
+  <!-- ── Stats Bar ───────────────────────────────────────── -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-item">
+      <span class="stat-label">Teams</span>
+      <span class="stat-value" id="statTotalTeams">—</span>
+    </div>
+    <span class="stat-sep">|</span>
+    <div class="stat-item">
+      <span class="stat-label" id="statB1Label">Bracket 1 Leader</span>
+      <span class="stat-value magenta" id="statB1Top">—</span>
+    </div>
+    <span class="stat-sep">|</span>
+    <div class="stat-item">
+      <span class="stat-label" id="statB2Label">Bracket 2 Leader</span>
+      <span class="stat-value green" id="statB2Top">—</span>
+    </div>
+    <div class="stat-refresh" id="statRefresh">REFRESH #0</div>
+  </div>
+
+  <!-- ── Brackets Grid ───────────────────────────────────── -->
+  <div class="brackets-grid">
+
+    <!-- Bracket 1 -->
+    <div class="bracket-panel b1" id="panel1">
+      <div class="loading-overlay" id="loading1">
+        <div class="spinner"></div>
+        <div class="loading-text">FETCHING DATA…</div>
+      </div>
+
+      <div class="panel-header">
+        <span class="bracket-name" id="b1Name">BRACKET I</span>
+        <span class="bracket-badge">DIVISION A</span>
+      </div>
+
+      <div class="chart-section">
+        <div class="section-label">Score Evolution — Top 5</div>
+        <div class="chart-wrap">
+          <canvas id="chart1"></canvas>
+          <div class="chart-empty" id="chartEmpty1">NO DATA YET</div>
+        </div>
+      </div>
+
+      <div class="podium-section">
+        <div class="section-label">Top 3 Teams</div>
+        <div class="podium" id="podium1"></div>
+      </div>
+
+      <div class="table-section">
+        <div class="section-label">Rankings — Position 4+</div>
+        <div id="tableWrap1">
+          <div class="no-data">Awaiting data…</div>
+        </div>
+        <div class="error-msg" id="err1">Failed to load bracket data. Retrying…</div>
+      </div>
+    </div>
+
+    <!-- Bracket 2 -->
+    <div class="bracket-panel b2" id="panel2">
+      <div class="loading-overlay" id="loading2">
+        <div class="spinner" style="border-top-color: var(--magenta)"></div>
+        <div class="loading-text">FETCHING DATA…</div>
+      </div>
+
+      <div class="panel-header">
+        <span class="bracket-name" id="b2Name">BRACKET II</span>
+        <span class="bracket-badge">DIVISION B</span>
+      </div>
+
+      <div class="chart-section">
+        <div class="section-label">Score Evolution — Top 5</div>
+        <div class="chart-wrap">
+          <canvas id="chart2"></canvas>
+          <div class="chart-empty" id="chartEmpty2">NO DATA YET</div>
+        </div>
+      </div>
+
+      <div class="podium-section">
+        <div class="section-label">Top 3 Teams</div>
+        <div class="podium" id="podium2"></div>
+      </div>
+
+      <div class="table-section">
+        <div class="section-label">Rankings — Position 4+</div>
+        <div id="tableWrap2">
+          <div class="no-data">Awaiting data…</div>
+        </div>
+        <div class="error-msg" id="err2">Failed to load bracket data. Retrying…</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Keyboard hint -->
+  <div class="kb-hint">
+    <span class="kb-key">F</span> Fullscreen
+    &nbsp;·&nbsp;
+    <span class="kb-key">R</span> Manual Refresh
+  </div>
+
+</div><!-- /page -->
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── Constants ──────────────────────────────────────── */
+  const REFRESH_INTERVAL = 30;   // seconds
+  const TOP_N            = 100;  // fetch all teams
+  const CHART_TOP        = 10;   // chart top 10
+  const API_B1           = '/api/v1/scoreboard/top/' + TOP_N + '?bracket_id=1';
+  const API_B2           = '/api/v1/scoreboard/top/' + TOP_N + '?bracket_id=2';
+  const API_BRACKETS     = '/api/v1/brackets';
+
+  // Cybernoir palette
+  const PALETTE = [
+    '#00fff5', '#ff00ff', '#00ff41', '#ff6e00',
+    '#a855f7', '#f59e0b'
+  ];
+
+  /* ── State ──────────────────────────────────────────── */
+  let refreshCount   = 0;
+  let refreshTimer   = null;
+  let countdownTimer = null;
+  let bracketNames   = { 1: 'BRACKET I', 2: 'BRACKET II' };
+
+  // Score history: { [bracketId]: { [teamName]: { timestamps: [], scores: [] } } }
+  const scoreHistory = { 1: {}, 2: {} };
+
+  /* ── Chart instances ─────────────────────────────────── */
+  const charts = {};
+
+  function createChart(canvasId, bracketId) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    const accentColor = bracketId === 1 ? '#00fff5' : '#ff00ff';
+
+    const cfg = {
+      type: 'line',
+      data: { labels: [], datasets: [] },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 600, easing: 'easeInOutQuart' },
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              color: '#6060a0',
+              font: { family: 'Rajdhani', size: 10, weight: '600' },
+              boxWidth: 10,
+              padding: 8,
+              usePointStyle: true,
+              pointStyle: 'circle'
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(10,10,18,0.95)',
+            borderColor: accentColor,
+            borderWidth: 1,
+            titleColor: accentColor,
+            bodyColor: '#c8c8e8',
+            titleFont: { family: 'Orbitron', size: 10 },
+            bodyFont: { family: 'Share Tech Mono', size: 11 },
+            padding: 10,
+            callbacks: {
+              label: function(ctx) {
+                return ' ' + ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + ' pts';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid:  { color: 'rgba(26,26,46,0.8)', drawTicks: false },
+            border:{ color: 'rgba(26,26,46,0.8)' },
+            ticks: { color: '#3a3a5c', font: { family: 'Share Tech Mono', size: 9 }, maxTicksLimit: 8 }
+          },
+          y: {
+            grid:  { color: 'rgba(26,26,46,0.8)', drawTicks: false },
+            border:{ color: 'rgba(26,26,46,0.8)', dash: [4,4] },
+            ticks: {
+              color: '#3a3a5c',
+              font: { family: 'Share Tech Mono', size: 9 },
+              maxTicksLimit: 5,
+              callback: v => (v >= 1000 ? (v / 1000).toFixed(1) + 'k' : v)
+            },
+            beginAtZero: true
+          }
+        }
+      }
+    };
+
+    const instance = new Chart(ctx, cfg);
+    charts[bracketId] = instance;
+    return instance;
+  }
+
+  function updateChart(bracketId, topTeams) {
+    const chart     = charts[bracketId];
+    const emptyEl   = document.getElementById('chartEmpty' + bracketId);
+    const history   = scoreHistory[bracketId];
+    const timestamp = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    if (!topTeams || topTeams.length === 0) {
+      emptyEl.style.display = 'flex';
+      return;
+    }
+
+    emptyEl.style.display = 'none';
+
+    // Record current scores
+    topTeams.slice(0, CHART_TOP).forEach(function(team) {
+      const name = team.name;
+      if (!history[name]) history[name] = { timestamps: [], scores: [] };
+      history[name].timestamps.push(timestamp);
+      history[name].scores.push(team.score);
+      // Keep last 20 data points
+      if (history[name].timestamps.length > 20) {
+        history[name].timestamps.shift();
+        history[name].scores.shift();
+      }
+    });
+
+    // Build unified label set from first tracked team
+    const firstTeam = topTeams[0] ? history[topTeams[0].name] : null;
+    const labels    = firstTeam ? firstTeam.timestamps : [timestamp];
+
+    chart.data.labels = labels;
+    chart.data.datasets = topTeams.slice(0, CHART_TOP).map(function(team, i) {
+      const h     = history[team.name] || { timestamps: [], scores: [] };
+      const color = PALETTE[i % PALETTE.length];
+      return {
+        label:           team.name,
+        data:            h.scores,
+        borderColor:     color,
+        backgroundColor: color + '18',
+        borderWidth:     2,
+        pointRadius:     3,
+        pointHoverRadius:5,
+        tension:         0.35,
+        fill:            false
+      };
+    });
+
+    chart.update();
+  }
+
+  /* ── Podium ──────────────────────────────────────────── */
+  function renderPodium(containerId, top3) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = '';
+
+    if (!top3 || top3.length === 0) return;
+
+    // Display order: 2nd, 1st, 3rd
+    const order = [
+      top3[1] || null,
+      top3[0] || null,
+      top3[2] || null
+    ];
+    const rankClasses = ['rank-2', 'rank-1', 'rank-3'];
+    const rankNums    = [2, 1, 3];
+
+    order.forEach(function(team, idx) {
+      if (!team) return;
+
+      const slot = document.createElement('div');
+      slot.className = 'podium-slot ' + rankClasses[idx];
+
+      // Crown for #1
+      if (rankNums[idx] === 1) {
+        const crown = document.createElement('div');
+        crown.className = 'crown';
+        crown.textContent = '♛';
+        slot.appendChild(crown);
+      }
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'podium-name';
+      nameEl.textContent = team.name;
+
+      const scoreEl = document.createElement('div');
+      scoreEl.className = 'podium-score';
+      scoreEl.textContent = team.score.toLocaleString() + ' pts';
+
+      const block = document.createElement('div');
+      block.className = 'podium-block';
+      block.textContent = '#' + rankNums[idx];
+
+      slot.appendChild(nameEl);
+      slot.appendChild(scoreEl);
+      slot.appendChild(block);
+      el.appendChild(slot);
+    });
+  }
+
+  /* ── Ranking Table (rank 4+) ─────────────────────────── */
+  function renderTable(wrapId, teams, bracketId) {
+    const wrap = document.getElementById(wrapId);
+    wrap.innerHTML = '';
+
+    const rest = teams.slice(3);
+    if (rest.length === 0) {
+      const msg = document.createElement('div');
+      msg.className = 'no-data';
+      msg.textContent = 'No additional teams.';
+      wrap.appendChild(msg);
+      return;
+    }
+
+    const topScore = teams.length > 0 ? teams[0].score : 1;
+
+    const table = document.createElement('table');
+    table.className = 'rank-table';
+
+    // Header
+    const thead = document.createElement('thead');
+    const hr    = document.createElement('tr');
+    ['#', 'Team', 'Score'].forEach(function(h, i) {
+      const th = document.createElement('th');
+      th.textContent = h;
+      if (i === 2) th.style.textAlign = 'right';
+      hr.appendChild(th);
+    });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    // Body
+    const tbody = document.createElement('tbody');
+    rest.forEach(function(team, i) {
+      const rank = i + 4;
+      const tr   = document.createElement('tr');
+
+      // Rank
+      const tdR = document.createElement('td');
+      tdR.className = 'rank-num';
+      tdR.textContent = rank;
+
+      // Name
+      const tdN = document.createElement('td');
+      tdN.className = 'team-name-cell';
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'team-name-inner';
+      nameSpan.textContent = team.name;
+      tdN.appendChild(nameSpan);
+
+      // Score bar
+      const tdS   = document.createElement('td');
+      tdS.className = 'score-bar-cell';
+      const barWrap = document.createElement('div');
+      barWrap.className = 'score-bar-wrap';
+      const barBg = document.createElement('div');
+      barBg.className = 'score-bar-bg';
+      const barFill = document.createElement('div');
+      barFill.className = 'score-bar-fill';
+      const pct = topScore > 0 ? Math.round((team.score / topScore) * 100) : 0;
+      barFill.style.width = pct + '%';
+      barBg.appendChild(barFill);
+
+      const scoreVal = document.createElement('span');
+      scoreVal.className = 'score-val';
+      scoreVal.textContent = team.score.toLocaleString();
+
+      barWrap.appendChild(barBg);
+      barWrap.appendChild(scoreVal);
+      tdS.appendChild(barWrap);
+
+      tr.appendChild(tdR);
+      tr.appendChild(tdN);
+      tr.appendChild(tdS);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+  }
+
+  /* ── Stats Bar ───────────────────────────────────────── */
+  function updateStats(b1Data, b2Data) {
+    const totalTeams = (b1Data ? b1Data.length : 0) + (b2Data ? b2Data.length : 0);
+    document.getElementById('statTotalTeams').textContent = totalTeams || '—';
+
+    if (b1Data && b1Data.length > 0) {
+      const leader = b1Data[0];
+      document.getElementById('statB1Top').textContent = leader.name + ' · ' + leader.score.toLocaleString();
+    } else {
+      document.getElementById('statB1Top').textContent = '—';
+    }
+
+    if (b2Data && b2Data.length > 0) {
+      const leader = b2Data[0];
+      document.getElementById('statB2Top').textContent = leader.name + ' · ' + leader.score.toLocaleString();
+    } else {
+      document.getElementById('statB2Top').textContent = '—';
+    }
+
+    document.getElementById('statRefresh').textContent = 'REFRESH #' + refreshCount;
+  }
+
+  /* ── API helpers ─────────────────────────────────────── */
+  function apiFetch(url) {
+    return fetch(url, { credentials: 'same-origin' })
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      });
+  }
+
+  /**
+   * CTFd's /api/v1/scoreboard/top/:count returns:
+   *   { success: true, data: { "1": { id, name, score, solves: [...] }, ... } }
+   * Convert to sorted array.
+   */
+  function parseScoreboard(json) {
+    if (!json || !json.success || !json.data) return [];
+    return Object.values(json.data)
+      .map(function(entry) {
+        return { name: entry.name, score: entry.score || 0 };
+      })
+      .sort(function(a, b) { return b.score - a.score; });
+  }
+
+  /* ── Bracket names ───────────────────────────────────── */
+  function loadBracketNames() {
+    apiFetch(API_BRACKETS)
+      .then(function(json) {
+        if (!json || !json.success || !Array.isArray(json.data)) return;
+        json.data.forEach(function(b) {
+          if (b.id === 1 || b.id === '1') {
+            bracketNames[1] = (b.name || 'Bracket I').toUpperCase();
+            const el = document.getElementById('b1Name');
+            if (el) el.textContent = bracketNames[1];
+            const lbl = document.getElementById('statB1Label');
+            if (lbl) lbl.textContent = bracketNames[1] + ' Leader';
+          }
+          if (b.id === 2 || b.id === '2') {
+            bracketNames[2] = (b.name || 'Bracket II').toUpperCase();
+            const el = document.getElementById('b2Name');
+            if (el) el.textContent = bracketNames[2];
+            const lbl = document.getElementById('statB2Label');
+            if (lbl) lbl.textContent = bracketNames[2] + ' Leader';
+          }
+        });
+      })
+      .catch(function() { /* non-critical */ });
+  }
+
+  /* ── Render bracket ──────────────────────────────────── */
+  function renderBracket(bracketId, teams) {
+    const sfx = bracketId;
+    renderPodium('podium' + sfx, teams.slice(0, 3));
+    renderTable('tableWrap' + sfx, teams, bracketId);
+    updateChart(bracketId, teams);
+  }
+
+  /* ── Main fetch ──────────────────────────────────────── */
+  function fetchAll() {
+    refreshCount++;
+    document.getElementById('statRefresh').textContent = 'REFRESH #' + refreshCount;
+
+    // Trigger flicker effect
+    document.querySelectorAll('.bracket-panel').forEach(function(p) {
+      p.classList.remove('refreshing');
+      void p.offsetWidth; // reflow
+      p.classList.add('refreshing');
+    });
+
+    let b1Result = null;
+    let b2Result = null;
+
+    function maybeFinalise() {
+      if (b1Result !== undefined && b2Result !== undefined) {
+        updateStats(b1Result, b2Result);
+      }
+    }
+
+    // Bracket 1
+    document.getElementById('err1').style.display = 'none';
+    apiFetch(API_B1)
+      .then(function(json) {
+        const teams = parseScoreboard(json);
+        b1Result = teams;
+        hideLoading(1);
+        renderBracket(1, teams);
+        maybeFinalise();
+      })
+      .catch(function() {
+        b1Result = null;
+        hideLoading(1);
+        document.getElementById('err1').style.display = 'block';
+        maybeFinalise();
+      });
+
+    // Bracket 2
+    document.getElementById('err2').style.display = 'none';
+    apiFetch(API_B2)
+      .then(function(json) {
+        const teams = parseScoreboard(json);
+        b2Result = teams;
+        hideLoading(2);
+        renderBracket(2, teams);
+        maybeFinalise();
+      })
+      .catch(function() {
+        b2Result = null;
+        hideLoading(2);
+        document.getElementById('err2').style.display = 'block';
+        maybeFinalise();
+      });
+
+    resetRefreshBar();
+  }
+
+  function hideLoading(bracketId) {
+    const el = document.getElementById('loading' + bracketId);
+    if (el) el.classList.add('hidden');
+  }
+
+  /* ── Refresh bar ─────────────────────────────────────── */
+  function resetRefreshBar() {
+    const bar = document.getElementById('refreshBar');
+    // Re-trigger animation by cloning
+    const newBar = bar.cloneNode(true);
+    bar.parentNode.replaceChild(newBar, bar);
+  }
+
+  /* ── Clock ───────────────────────────────────────────── */
+  function updateClock() {
+    const el = document.getElementById('clock');
+    if (el) {
+      el.textContent = new Date().toLocaleTimeString('en-GB', { hour12: false });
+    }
+  }
+
+  /* ── Auto refresh ────────────────────────────────────── */
+  function startAutoRefresh() {
+    if (refreshTimer) clearInterval(refreshTimer);
+    refreshTimer = setInterval(fetchAll, REFRESH_INTERVAL * 1000);
+  }
+
+  /* ── Keyboard shortcuts ──────────────────────────────── */
+  document.addEventListener('keydown', function(e) {
+    const key = e.key.toUpperCase();
+    if (key === 'F') {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(function() {});
+      } else {
+        document.exitFullscreen().catch(function() {});
+      }
+    }
+    if (key === 'R') {
+      fetchAll();
+    }
+  });
+
+  /* ── Init ────────────────────────────────────────────── */
+  function init() {
+    // Charts
+    createChart('chart1', 1);
+    createChart('chart2', 2);
+
+    // Clock
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Load names, then data
+    loadBracketNames();
+    fetchAll();
+    startAutoRefresh();
+  }
+
+  // Wait for Chart.js to be ready
+  if (typeof Chart !== 'undefined') {
+    init();
+  } else {
+    window.addEventListener('load', init);
+  }
+
+}());
+</script>
+</body>
+</html>

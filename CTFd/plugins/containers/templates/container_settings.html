@@ -1,0 +1,84 @@
+{% extends "container_base.html" %}
+
+
+{% block menu %}
+<li class="nav-item">
+    <a class="nav-link" href="/containers/admin/dashboard">&#128279; Instances</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link active" data-toggle="pill" href="#settings">Settings</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="/containers/admin/cheat">&#128279; Share flag</a>
+</li>
+{% endblock %}
+
+{% block panel %}
+{% include "components/errors.html" %}
+<div role="tabpanel" class="tab-pane config-section active" id="settings">
+    <form method="post" action="/containers/admin/api/settings" accept-charset="utf-8" autocomplete="off" role="form"
+        class="form-horizontal" enctype="multipart/form-data">
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="docker" role="tabpanel" aria-autocomplete="none">
+                <h5>Instructions</h5>
+                <p class="form-text text-muted">
+                    The Base URL should be the local socket address of the Docker daemon, i.e. <code>unix://var/run/docker.sock</code>, or it can be a remote SSH address, e.g. <code>ssh://root@example.com</code>. In either case, sudo will not be executed. For a local socket, the user CTFd is running as should have permissions for Docker; for SSH connections, the SSH user in the Base URL should be root or have Docker permissions.
+                </p>
+
+                <div class="form-group">
+                    <label for="docker_base_url">
+                        Base URL (see instructions)
+                    </label>
+                    <input class="form-control" type="text" name="docker_base_url" id="docker_base_url"
+                        placeholder="E.g. unix://var/run/docker.sock or ssh://root@example.com"
+                        value='{{ settings.docker_base_url|default("") }}' />
+                </div>
+
+                <div class="form-group">
+                    <label for="docker_hostname">
+                        Hostname for Docker Host (this is what's displayed to the user in the connection string)
+                    </label>
+                    <input class="form-control" type="text" name="docker_hostname" id="docker_hostname"
+                        placeholder="e.g. example.com or 10.0.1.8" value='{{ settings.docker_hostname|default("") }}' />
+                </div>
+                <div class="form-group">
+                    <label for="container_expiration">
+                        Container Expiration in Minutes (how long a container will last before it's killed; 0 = never)
+                    </label>
+                    <input class="form-control" type="text" name="container_expiration" id="container_expiration"
+                        placeholder="e.g. 30" value='{{ settings.container_expiration|default("") }}' />
+                </div>
+                <div class="form-group">
+                    <label for="max_containers">
+                        Max Containers Per User/Team
+                    </label>
+                    <input class="form-control" type="number" name="max_containers" id="max_containers"
+                        placeholder="e.g. 3" value='{{ settings.max_containers|default("3") }}' />
+                </div>
+                <div class="form-group">
+                    <label for="container_maxmemory">
+                        Maximum per-container memory usage (in MB)
+                    </label>
+                    <input class="form-control" type="number" name="container_maxmemory" id="container_maxmemory"
+                        placeholder="e.g. 1000" value='{{ settings.container_maxmemory|default("") }}' />
+                </div>
+                <div class="form-group">
+                    <label for="container_maxcpu">
+                        Maximum per-container CPUs (float, e.g 1.5 means 1.5 cores at most)
+                    </label>
+                    <input class="form-control" type="text" name="container_maxcpu" id="container_maxcpu"
+                        placeholder="e.g. 1.5" value='{{ settings.container_maxcpu|default("") }}' />
+                </div>
+
+                <div class="submit-row float-right">
+                    <button type="submit" tabindex="0" class="btn btn-md btn-primary btn-outlined">
+                        Submit
+                    </button>
+                    <input type="hidden" name="nonce" value="{{ Session.nonce }}">
+                </div>
+            </div>
+        </div>
+    </form>
+    {% include "config/container_status.html" %}
+</div>
+{% endblock %}

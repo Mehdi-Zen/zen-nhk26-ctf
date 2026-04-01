@@ -1,0 +1,29 @@
+name: "Fan site Leonard Da Vinci…"
+author: "Kisane"
+category: Web                    # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  J'ai créé mon fansite sur leonard da vinci, bon je dois supprimer des trucs mais je pourrais voir ça plus tard ;)
+
+value: 300
+type: container
+state: visible
+
+extra:
+  initial: 300
+  decay: 13
+  minimum: 100
+
+image: registry.gitlab.com/music-music1/music-music/web-fan_site_leonard_da_vinci:latest
+port: 580
+protocol: web
+
+tags:
+  - MOYEN
+  - WEB
+
+flags:
+  - flag: "NHK26{R€n41ss4nc3}"
+    type: static

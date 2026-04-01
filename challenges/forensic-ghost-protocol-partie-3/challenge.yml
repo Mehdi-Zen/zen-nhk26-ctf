@@ -1,0 +1,44 @@
+name: "Ghost Protocol - Partie 3"
+requirements:
+  prerequisites:
+    - "Ghost Protocol - Partie 1"
+    - "Ghost Protocol - Partie 2"
+author: "Wumbou"
+category: Forensic                   # Web, Code Review, Crypto, Forensic, Reverse, OSINT, Misc
+
+description_image: files/challenge.png   # OBLIGATOIRE pour l'affichage dans la description
+
+description: |
+  Après avoir identifié le contrat malveillant, les analystes soupçonnent qu’il n’a pas servi uniquement à déplacer des fonds : il aurait aussi été utilisé comme canal de communication.  
+  Une dead drop a été dissimulée dans les traces on-chain du contrat, noyée dans le bruit.
+
+  Un laptop saisi a également révélé un message chiffré lié à ce rendez-vous. Les artefacts fournis contiennent tout le nécessaire pour retrouver la référence, puis déverrouiller et déchiffrer le message à partir des éléments reconstitués.
+
+  Vous n’avez aucun accès à Internet : tout ce dont vous avez besoin est dans les fichiers fournis.
+
+
+value: 500                      # Voir document de Camille
+type: dynamic                    # ou: container, firstblood
+state : visible                  # Permet de voir l'état dans le panel admin
+
+extra:
+  initial: 500                   # POur gerer le dynamisme du scoring
+  decay: 6                      # facteur de decroissance
+  minimum: 300                   # Minimum
+
+tags:
+  - TIROIR
+  - DIFFICILE
+  - FORENSICS
+files:
+  - files/ghost-protocol-pack.zip
+
+flags:
+  - flag: "NHK26{PIER_7_DEAD_DROP}"
+    type: static
+
+requirements:
+  prerequisites:
+    - "Ghost Protocol - Partie 2"
+
+max_attempts: 3
