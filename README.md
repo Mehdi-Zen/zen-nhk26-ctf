@@ -64,7 +64,6 @@ Le `docker-compose.yml` lance :
 - **MariaDB Galera Cluster** (3 noeuds) + **MaxScale** (proxy readwritesplit)
 - **Redis** (cache + sessions)
 - **Nginx** (reverse proxy)
-- **Registry Docker** (images des challenges)
 
 ## Challenges
 
@@ -82,11 +81,11 @@ Le `docker-compose.yml` lance :
 | Misc | ~10 |
 
 Chaque challenge contient :
-- `challenge.yml` — metadonnees, flag, scoring
-- `Dockerfile` — image Docker (si container)
-- `src/` — code source
-- `files/` — fichiers distribues aux participants
-- `WALKTHROUGH.md` — solution (certains challenges)
+- `challenge.yml`  metadonnees, flag, scoring
+- `Dockerfile`  image Docker (si container)
+- `src/`  code source
+- `files/`  fichiers distribues aux participants
+- `WALKTHROUGH.md`  solution (certains challenges)
 
 ### Scoring dynamique
 
@@ -135,7 +134,7 @@ Pour plus d'infos sur le plugin : [github.com/TheFlash2k/containers](https://git
 ## Inspirations
 
 - [CTFd](https://github.com/CTFd/CTFd)  La plateforme CTF open source
-- [TheFlash2k/containers](https://github.com/TheFlash2k/containers) — Plugin de challenges containerises
+- [TheFlash2k/containers](https://github.com/TheFlash2k/containers)  Plugin de challenges containerises
 - [PwnTheMall](https://github.com/pwnthemall/pwnthemall) les cracks 
 
 ## Licence
@@ -144,4 +143,4 @@ Base sur [CTFd](https://github.com/CTFd/CTFd) (Apache 2.0).
 
 ## Credits
 
-Organise par l'equipe NHK26 — Avignon, Mars 2026.
+Organise par l'equipe NHK26  CCI Avignon, Mars 2026.
