@@ -4,6 +4,15 @@
   <img src="unenuitpourhacker-logo-cyan.svg" alt="NHK26" width="300">
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-Linux-blue?logo=linux&logoColor=white" alt="Linux">
+  <img src="https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/CTFd-3.8-orange?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PC9zdmc+" alt="CTFd">
+  <img src="https://img.shields.io/badge/Challenges-80%2B-green" alt="Challenges">
+  <img src="https://img.shields.io/badge/License-Apache%202.0-red" alt="License">
+  <img src="https://img.shields.io/github/actions/workflow/status/Mehdi-Zen/zen-nhk26-ctf/build-challenges.yml?label=Build%20Images&logo=github" alt="Build">
+</p>
+
 Version conteneurisee de la plateforme CTF presentee lors de l'evenement **"Une Nuit Pour Hacker"** (NHK 2026), basee sur [CTFd](https://ctfd.io) avec un theme custom **Cybernoir**.
 
 ## Prerequis
