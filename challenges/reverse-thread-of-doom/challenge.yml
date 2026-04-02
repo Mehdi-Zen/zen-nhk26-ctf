@@ -14,7 +14,7 @@ state : visible
 extra:
   initial: 1000
   decay: 3                      
-  minimum: 500 # MODIFIER
+  minimum: 500
 
 tags:
   - INSANE
